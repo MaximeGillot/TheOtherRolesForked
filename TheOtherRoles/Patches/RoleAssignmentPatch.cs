@@ -117,6 +117,11 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Witch, CustomOptionHolder.witchSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.Transporter, CustomOptionHolder.transporterSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.GhostLord, CustomOptionHolder.ghostLordSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.Undertaker, CustomOptionHolder.undertakerSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.Invisible, CustomOptionHolder.invisibleSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.MrFreeze, CustomOptionHolder.mrFreezeSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Bomber, CustomOptionHolder.bomberSpawnRate.getSelection());
 
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.getSelection());

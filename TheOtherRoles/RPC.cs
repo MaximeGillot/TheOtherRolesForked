@@ -63,6 +63,11 @@ namespace TheOtherRoles
         Ninja,
         Thief,
         Bomber,
+        GhostLord,
+        Undertaker,
+        MrFreeze,
+        Transporter,
+        Invisible,
         Crewmate,
         Impostor,
         // Modifier ---
@@ -148,6 +153,12 @@ namespace TheOtherRoles
         PlaceBomb,
         DefuseBomb,
         ShareRoom,
+        DragBody,
+        DropBody,
+        InvisibleInvis,
+        MrFreezeFreeze,
+        GhostLordTurnIntoGhost,
+        TransporterSwap,
 
         // Gamemode
         SetGuesserGm,
@@ -363,6 +374,21 @@ namespace TheOtherRoles
                     case RoleId.Thief:
                         Thief.thief = player;
                         break;
+                    case RoleId.Invisible:
+                        Invisible.invisible = player;
+                        break;
+                    case RoleId.MrFreeze:
+                        MrFreeze.mrFreeze = player;
+                        break;
+                    case RoleId.Undertaker:
+                        Undertaker.undertaker = player;
+                        break;
+                    case RoleId.GhostLord:
+                        GhostLord.ghostLord = player;
+                        break;
+                    case RoleId.Transporter:
+                        Transporter.transporter = player;
+                        break;                   
                     case RoleId.Bomber:
                         Bomber.bomber = player;
                         break;
@@ -804,7 +830,14 @@ namespace TheOtherRoles
                 target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(1f);
 
                 if (Camouflager.camouflageTimer <= 0) target.setDefaultLook();
-                Ninja.isInvisble = false;
+                if(target == Ninja.ninja)
+                {
+                    Ninja.isInvisble = false;
+                }
+                else if(target == Invisible.invisible)
+                {
+                    Invisible.isInvis = false;
+                }
                 return;
             }
 
@@ -814,10 +847,23 @@ namespace TheOtherRoles
             if (canSee) color.a = 0.1f;
             target.cosmetics.currentBodySprite.BodySprite.color = color;
             target.cosmetics.colorBlindText.gameObject.SetActive(false);
+            if (target == Ninja.ninja)
+            {
+                Ninja.invisibleTimer = Ninja.invisibleDuration;
+                Ninja.isInvisble = true;
+            }
+            else if (target == Invisible.invisible)
+            {
+                Invisible.invisibleTimer = Invisible.duration;
+                Invisible.isInvis = true;
+            }
             target.cosmetics.colorBlindText.color = target.cosmetics.colorBlindText.color.SetAlpha(canSee ? 0.1f : 0f);
             Ninja.invisibleTimer = Ninja.invisibleDuration;
             Ninja.isInvisble = true;
         }
+
+        }
+
 
         public static void placePortal(byte[] buff) {
             Vector3 position = Vector2.zero;
@@ -1209,6 +1255,14 @@ namespace TheOtherRoles
         }
     }
 
+        public static void ghostLordTurnIntoGhost()
+        {
+            if (GhostLord.ghostLord == null) return;
+            GhostLord.ghostTimer = GhostLord.duration;
+        }
+
+    }   
+
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     class RPCHandlerPatch
     {
@@ -1453,6 +1507,21 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.ShareGamemode:
                     byte gm = reader.ReadByte();
                     RPCProcedure.shareGamemode(gm);
+                    break;
+                case (byte)CustomRPC.DragBody:
+                    RPCProcedure.dragBody(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.DropBody:
+                    RPCProcedure.dropBody(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.TransporterSwap:
+                    RPCProcedure.TransporterSwap(reader.ReadByte());
+                    break;
+                case (byte)CustomRPC.GhostLordTurnIntoGhost:
+                    RPCProcedure.ghostLordTurnIntoGhost();
+                    break;
+                case (byte)CustomRPC.MrFreezeFreeze:
+                    RPCProcedure.mrFreezeFreeze();
                     break;
 
                 // Game mode
