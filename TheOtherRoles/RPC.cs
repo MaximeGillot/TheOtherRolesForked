@@ -16,6 +16,8 @@ using TheOtherRoles.CustomGameModes;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using UnityEngine.UIElements;
+using System.Drawing;
+using Color = UnityEngine.Color;
 
 namespace TheOtherRoles
 {
@@ -1255,11 +1257,26 @@ namespace TheOtherRoles
         }
     }
 
-        public static void ghostLordTurnIntoGhost()
+        public static void ghostLordTurnIntoGhost(byte flag)
         {
-            if (GhostLord.ghostLord == null) return;
+            if (GhostLord.ghostLord == null) return;          
+            if (flag == byte.MaxValue) // si max value on supprime le ghost
+            {
+                Color bodySprite = GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color;
+                bodySprite.a = 1f;
+                GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color = bodySprite;
+                GhostLord.ghostLord.setDefaultLook();
+                return;
+            }
+
             GhostLord.ghostTimer = GhostLord.duration;
+            GhostLord.ghostLord.setLook("", GhostLord.ghostLord.Data.DefaultOutfit.ColorId, "", "", "", "");
+            Color color = GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color;
+            color.a = 0.60f;
+            GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color = color;
+
         }
+        
 
     }   
 
@@ -1518,7 +1535,8 @@ namespace TheOtherRoles
                     RPCProcedure.TransporterSwap(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.GhostLordTurnIntoGhost:
-                    RPCProcedure.ghostLordTurnIntoGhost();
+                    byte ghostLordFlag = reader.ReadByte();
+                    RPCProcedure.ghostLordTurnIntoGhost(ghostLordFlag);
                     break;
                 case (byte)CustomRPC.MrFreezeFreeze:
                     RPCProcedure.mrFreezeFreeze();
