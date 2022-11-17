@@ -66,6 +66,7 @@ namespace TheOtherRoles
             Transporter.clearAndReload();
             GhostLord.clearAndReload();
             MrFreeze.clearAndReload();
+            EvilHacker.clearAndReload();
             Bomber.clearAndReload();
 
             // Modifier
@@ -1808,6 +1809,32 @@ namespace TheOtherRoles
             mrFreezeTimer = -1f;
             cooldown = CustomOptionHolder.mrFreezeCooldown.getFloat();
             duration = CustomOptionHolder.mrFreezeDuration.getFloat();
+        }
+    }
+
+    public static class EvilHacker
+    {
+        public static PlayerControl evilHacker;
+        public static Color color = Palette.ImpostorRed;
+
+        public static float cooldown = 27.5f;
+        public static float duration = 5f;
+        public static bool cantMove = true;
+
+        private static Sprite buttonSprite;
+        public static Sprite getButtonSprite()
+        {
+            if (buttonSprite) return buttonSprite;
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.MrFreezeButton.png", 115f);
+            return buttonSprite;
+        }
+
+        public static void clearAndReload()
+        {
+            evilHacker = null;            
+            cooldown = CustomOptionHolder.evilHackerCooldown.getFloat();
+            duration = CustomOptionHolder.evilHackerDuration.getFloat();
+            cantMove = CustomOptionHolder.evilHackerNoMove.getBool();
         }
     }
 

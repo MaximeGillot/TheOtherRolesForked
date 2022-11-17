@@ -70,6 +70,7 @@ namespace TheOtherRoles
         MrFreeze,
         Transporter,
         Invisible,
+        EvilHacker,
         Crewmate,
         Impostor,
         // Modifier ---
@@ -393,6 +394,9 @@ namespace TheOtherRoles
                         break;                   
                     case RoleId.Bomber:
                         Bomber.bomber = player;
+                        break;
+                    case RoleId.EvilHacker:
+                        EvilHacker.evilHacker = player;
                         break;
                     }
         }
@@ -734,7 +738,7 @@ namespace TheOtherRoles
             if (player == Spy.spy) Spy.clearAndReload();
             if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
             if (player == Medium.medium) Medium.clearAndReload();
-            if (player == Trapper.trapper) Trapper.clearAndReload();
+            if (player == Trapper.trapper) Trapper.clearAndReload();            
 
             // Impostor roles
             if (player == Morphling.morphling) Morphling.clearAndReload();
@@ -750,6 +754,7 @@ namespace TheOtherRoles
             if (player == Witch.witch) Witch.clearAndReload();
             if (player == Ninja.ninja) Ninja.clearAndReload();
             if (player == Bomber.bomber) Bomber.clearAndReload();
+            if (player == EvilHacker.evilHacker) EvilHacker.clearAndReload();
 
             // Other roles
             if (player == Jester.jester) Jester.clearAndReload();
