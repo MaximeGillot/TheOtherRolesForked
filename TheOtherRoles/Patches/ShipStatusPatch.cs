@@ -23,6 +23,10 @@ namespace TheOtherRoles.Patches {
                 if (Helpers.hasImpVision(player)) {
                     //__result = __instance.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
                     __result = GetNeutralLightRadius(__instance, true);
+                    if (EvilMimic.evilMimic != null && EvilMimic.evilMimic.PlayerId == player.PlayerId && EvilMimic.haveKilledLighter)
+                    {
+                        __result *= 2;
+                    }
                     return false;
                 }
             }
@@ -63,7 +67,7 @@ namespace TheOtherRoles.Patches {
                 __result = GetNeutralLightRadius(__instance, false);
             }
             if (Sunglasses.sunglasses.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Sunglasses
-                __result *= 1f - Sunglasses.vision * 0.1f;
+                __result *= 1f - Sunglasses.vision * 0.1f; 
 
             return false;
         }
