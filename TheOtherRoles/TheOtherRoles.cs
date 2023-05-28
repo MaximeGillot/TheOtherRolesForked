@@ -1858,6 +1858,7 @@ namespace TheOtherRoles
         public static bool haveKilledSheriff = false;
         public static bool haveKilledEngineer = false;
         public static bool haveKilledMayor = false;
+        public static bool havekilledMedium = false;
         // tracker
         public static List<Arrow> localTrackerArrows = new List<Arrow>();
         // snitch
@@ -1886,7 +1887,8 @@ namespace TheOtherRoles
                 haveKilledSheriff = false;
                 haveKilledEngineer = false;
                 haveKilledMayor = false;
-                if (localTrackerArrows != null)
+                havekilledMedium = false;
+            if (localTrackerArrows != null)
                 {
                     foreach (Arrow arrow in localTrackerArrows)
                         if (arrow?.arrow != null)
