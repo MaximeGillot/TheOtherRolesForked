@@ -44,6 +44,7 @@ namespace TheOtherRoles
             Vampire.clearAndReload();
             Snitch.clearAndReload();
             Jackal.clearAndReload();
+            Logger.clearAndReload();
             Sidekick.clearAndReload();
             Eraser.clearAndReload();
             Spy.clearAndReload();
@@ -579,6 +580,33 @@ namespace TheOtherRoles
             soulDuration = CustomOptionHolder.seerSoulDuration.getFloat();
             mode = CustomOptionHolder.seerMode.getSelection();
         }
+    }
+
+    public static class Logger
+    {
+
+        public static PlayerControl logger;
+        public static Color color = new Color32(139, 69, 19, byte.MaxValue);
+        public static float maxTrap;
+        public static float nbRecordPerTrap;
+        public static float cooldown;
+        private static Sprite placeLogTrapButtonSprite;
+
+        public static Sprite getPlaceLogTrapButtonSprite()
+        {
+            if (placeLogTrapButtonSprite) return placeLogTrapButtonSprite;
+            placeLogTrapButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LoggerButton.png", 150f);
+            return placeLogTrapButtonSprite;
+        }
+
+        public static void clearAndReload()
+        {
+            logger = null;
+            maxTrap = CustomOptionHolder.loggerMaxTrap.getFloat();
+            nbRecordPerTrap = CustomOptionHolder.loggerNbRecordPerTrap.getFloat();
+            cooldown = CustomOptionHolder.loggerCooldown.getFloat();
+        }
+
     }
 
     public static class Morphling {

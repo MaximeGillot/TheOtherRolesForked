@@ -249,6 +249,11 @@ namespace TheOtherRoles {
         public static CustomOption mediumOneTimeUse;
         public static CustomOption mediumChanceAdditionalInfo;
 
+        public static CustomOption loggerSpawnRate;
+        public static CustomOption loggerCooldown;
+        public static CustomOption loggerMaxTrap;
+        public static CustomOption loggerNbRecordPerTrap;
+
         public static CustomOption lawyerSpawnRate;
         public static CustomOption lawyerIsProsecutorChance;
         public static CustomOption lawyerTargetCanBeJester;
@@ -570,6 +575,11 @@ namespace TheOtherRoles {
             engineerNumberOfFixes = CustomOption.Create(91, Types.Crewmate, "Number Of Sabotage Fixes", 1f, 1f, 3f, 1f, engineerSpawnRate);
             engineerHighlightForImpostors = CustomOption.Create(92, Types.Crewmate, "Impostors See Vents Highlighted", true, engineerSpawnRate);
             engineerHighlightForTeamJackal = CustomOption.Create(93, Types.Crewmate, "Jackal and Sidekick See Vents Highlighted ", true, engineerSpawnRate);
+
+            loggerSpawnRate = CustomOption.Create(470, Types.Crewmate, cs(Logger.color, "Logger"), rates, null, true);
+            loggerCooldown = CustomOption.Create(471, Types.Crewmate, "Logger Cooldown", 30f, 2.5f, 60f, 2.5f, loggerSpawnRate);
+            loggerMaxTrap = CustomOption.Create(472, Types.Crewmate, "Maximun Number Of Trap", 3f, 1f, 3f, 1f, loggerSpawnRate);
+            loggerNbRecordPerTrap = CustomOption.Create(473, Types.Crewmate, "Maximun Number Of Log Per Trap", 5f, 1f, 15f, 1f, loggerSpawnRate);
 
             sheriffSpawnRate = CustomOption.Create(100, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
             sheriffCooldown = CustomOption.Create(101, Types.Crewmate, "Sheriff Cooldown", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
