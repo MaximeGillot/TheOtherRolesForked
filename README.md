@@ -36,6 +36,7 @@ Even more roles are coming soon. :)
 |  | [Medium](#medium) |  |  |
 |  | [Trapper](#trapper) |  |  |
 |  | [Nice Guesser](#guesser) |  |  |
+|  | [Logger](#logger) |  |  |
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
@@ -1748,6 +1749,19 @@ The souls will always prefer to answer with the role specific information first!
 | Medium Duration | The time it takes to question a soul
 | Medium Each Soul Can Only Be Questioned Once | If set to true, souls can only be questioned once and then disappear
 | Chance That The Answer Contains The Remaining Amount Of Killing Roles | Chance includes Sheriff and Thief
+-----------------------
+
+## Logger
+### **Team: Crewmates**
+Logger can place 3 rigged garlic that will log player walking on it (like sensor on mira HQ). player name for each garlic are written in chat (only for logger) at the beginning of next meeting.
+During Camouflage or comms, players are recorded as "Anonymous"
+Invisible isn't recorded durring his ability
+players are show in reverse chronologic order, that mean that the first name to appear is the last one that walked on log.
+
+### Game Options
+| Name | Description
+|----------|:-------------:|
+| Logger Spawn Chance | -
 -----------------------
 
 ## Trapper

@@ -344,6 +344,32 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        static void addLoggerInformationsPostfix(MeetingHud __instance)
+        {
+            bool isLogger = Logger.logger != null && PlayerControl.LocalPlayer == Logger.logger;
+            if (isLogger)
+            {
+                for (int i = 0; i < LogTrap.logTraps.Count; i++)
+                {
+                    string msg = $"log trap " + LogTrap.colorTrap[i] + ":";
+
+                    LogTrap.logTraps[i].playersName.Reverse();
+                    foreach (string playerName in LogTrap.logTraps[i].playersName)
+                    {
+                        msg += $" {playerName},";
+                    }
+                    if (msg.Last() == ',')
+                    {
+                        msg = msg.Remove(msg.Length - 1);
+                    }
+                    if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
+                    {
+                        DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
+                    }
+                }
+            }
+        }
+
         static void swapperConfirm(MeetingHud __instance) {
             __instance.playerStates[0].Cancel();  // This will stop the underlying buttons of the template from showing up
             if (__instance.state == MeetingHud.VoteStates.Results) return;
@@ -788,6 +814,7 @@ namespace TheOtherRoles.Patches {
             static void Postfix(MeetingHud __instance)
             {
                 populateButtonsPostfix(__instance);
+                addLoggerInformationsPostfix(__instance);
             }
         }
 
@@ -798,6 +825,7 @@ namespace TheOtherRoles.Patches {
                 // Add swapper buttons
                 if (initialState) {
                     populateButtonsPostfix(__instance);
+                    addLoggerInformationsPostfix(__instance);
                 }
             }
         }

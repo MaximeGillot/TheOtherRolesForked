@@ -69,6 +69,7 @@ namespace TheOtherRoles
         public static CustomButton invisibleButton;
         public static CustomButton transporterButton;
         public static CustomButton undertakerDragButton;
+        public static CustomButton loggerButton;
 
         public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons = null;
         public static PoolablePlayer targetDisplay;
@@ -168,6 +169,7 @@ namespace TheOtherRoles
             invisibleButton.EffectDuration = Invisible.duration;
             ghostLordButton.EffectDuration = GhostLord.duration;
             mrFreezeButton.EffectDuration = MrFreeze.duration;
+            loggerButton.MaxTimer = Logger.cooldown;
             // Already set the timer to the max, as the button is enabled during the game and not available at the start
             lightsOutButton.Timer = lightsOutButton.MaxTimer;
             zoomOutButton.MaxTimer = 0f;            
@@ -671,8 +673,7 @@ namespace TheOtherRoles
             hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
             evilHackerAdminTableButton = new CustomButton(
-               () => {
-                       // TODO à vérifier                      
+               () => {                    
                        if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
                        {
                            HudManager __instance = FastDestroyableSingleton<HudManager>.Instance;
@@ -1767,6 +1768,29 @@ namespace TheOtherRoles
                false,
                "Meeting"
            );
+
+            loggerButton = new CustomButton(
+            () => {
+                loggerButton.Timer = loggerButton.MaxTimer;
+                var pos = PlayerControl.LocalPlayer.transform.position;
+                byte[] buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlaceLogTrap, Hazel.SendOption.Reliable);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                RPCProcedure.placeLogTrap(buff);
+            },
+            () => { return Logger.logger != null && Logger.logger == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !LogTrap.hasLogTrapLimitReached(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && !LogTrap.hasLogTrapLimitReached(); },
+            () => {
+                loggerButton.Timer = loggerButton.MaxTimer;
+            },
+            Logger.getPlaceLogTrapButtonSprite(),
+            CustomButton.ButtonPositions.lowerRowRight,
+            __instance,
+            KeyCode.F
+        );
 
             // Trapper button
             trapperButton = new CustomButton(
