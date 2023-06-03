@@ -572,6 +572,7 @@ namespace TheOtherRoles.Patches {
                     int numberOfLeftTasks = playerTotal - playerCompleted;
                     if (numberOfLeftTasks <= 0 && roleInfo.roleId == RoleId.Snitch) continue;
                 }
+                if (EvilMimic.evilMimic != null && CachedPlayer.LocalPlayer.PlayerId == EvilMimic.evilMimic.PlayerId && EvilMimic.haveKilledSnitch) continue;
 
                 Transform buttonParent = (new GameObject()).transform;
                 buttonParent.SetParent(container);
