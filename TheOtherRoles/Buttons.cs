@@ -34,7 +34,7 @@ namespace TheOtherRoles
         private static CustomButton hackerButton;
         public static CustomButton hackerVitalsButton;
         public static CustomButton hackerAdminTableButton;
-        public static CustomButton evilHackerAdminTableButton;
+    //    public static CustomButton evilHackerAdminTableButton;
         private static CustomButton trackerTrackPlayerButton;
         private static CustomButton trackerTrackCorpsesButton;
         public static CustomButton vampireKillButton;
@@ -112,7 +112,7 @@ namespace TheOtherRoles
             hackerButton.MaxTimer = Hacker.cooldown;
             hackerVitalsButton.MaxTimer = Hacker.cooldown;
             hackerAdminTableButton.MaxTimer = Hacker.cooldown;
-            evilHackerAdminTableButton.MaxTimer = EvilHacker.cooldown;
+          //  evilHackerAdminTableButton.MaxTimer = EvilHacker.cooldown;
             vampireKillButton.MaxTimer = Vampire.cooldown;
             trackerTrackPlayerButton.MaxTimer = 0f;
             garlicButton.MaxTimer = 0f;
@@ -153,7 +153,7 @@ namespace TheOtherRoles
             hackerButton.EffectDuration = Hacker.duration;
             hackerVitalsButton.EffectDuration = Hacker.duration;
             hackerAdminTableButton.EffectDuration = Hacker.duration;
-            evilHackerAdminTableButton.EffectDuration = EvilHacker.duration;
+       //     evilHackerAdminTableButton.EffectDuration = EvilHacker.duration;
             vampireKillButton.EffectDuration = Vampire.delay;
             camouflagerButton.EffectDuration = Camouflager.duration;
             morphlingButton.EffectDuration = Morphling.duration;
@@ -720,7 +720,7 @@ namespace TheOtherRoles
             hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
             hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-            evilHackerAdminTableButton = new CustomButton(
+        /*    evilHackerAdminTableButton = new CustomButton(
                () => {                    
                        if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
                        {
@@ -752,7 +752,7 @@ namespace TheOtherRoles
                },
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
                "EVIL ADMIN"
-           );
+           );*/
 
             hackerVitalsButton = new CustomButton(
                () => {
