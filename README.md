@@ -32,11 +32,12 @@ Even more roles are coming soon. :)
 | [Ninja](#ninja) | [Snitch](#snitch) |  |  |
 | [Bomber](#bomber) | [Spy](#spy) |  |  |
 | [Evil Guesser](#guesser) | [Portalmaker](#portalmaker) |  |  |
-|  | [Security Guard](#security-guard) |  |  |
-|  | [Medium](#medium) |  |  |
-|  | [Trapper](#trapper) |  |  |
-|  | [Nice Guesser](#guesser) |  |  |
-|  | [Logger](#logger) |  |  |
+| Evil mimic | [Security Guard](#security-guard) |  |  |
+| Evil Hacket  | [Medium](#medium) |  |  |
+| Undertaker | [Trapper](#trapper) |  |  |
+| Freezer | [Nice Guesser](#guesser) |  |  |
+| Transporteur | [Logger](#logger) |  |  |
+| Ghost Lord | |  |  |
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
