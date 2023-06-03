@@ -1177,6 +1177,8 @@ namespace TheOtherRoles.Patches {
                 EvilMimicUpdate();
                 // BountyHunter
                 bountyHunterUpdate();
+                // Logger
+                LogTrap.recordAllPlayerOnTraps();
                 // Vulture
                 vultureUpdate();
                 // Medium

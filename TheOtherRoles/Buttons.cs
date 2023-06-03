@@ -19,6 +19,7 @@ namespace TheOtherRoles
         private static bool initialized = false;
 
         private static CustomButton engineerRepairButton;
+        private static CustomButton engineerOpenDoorButton;
         private static CustomButton janitorCleanButton;
         public static CustomButton sheriffKillButton;
         private static CustomButton deputyHandcuffButton;
@@ -33,7 +34,7 @@ namespace TheOtherRoles
         private static CustomButton hackerButton;
         public static CustomButton hackerVitalsButton;
         public static CustomButton hackerAdminTableButton;
-        public static CustomButton evilHackerAdminTableButton;
+    //    public static CustomButton evilHackerAdminTableButton;
         private static CustomButton trackerTrackPlayerButton;
         private static CustomButton trackerTrackCorpsesButton;
         public static CustomButton vampireKillButton;
@@ -69,6 +70,7 @@ namespace TheOtherRoles
         public static CustomButton invisibleButton;
         public static CustomButton transporterButton;
         public static CustomButton undertakerDragButton;
+        public static CustomButton loggerButton;
 
         public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons = null;
         public static PoolablePlayer targetDisplay;
@@ -95,6 +97,7 @@ namespace TheOtherRoles
                 }
             }
             engineerRepairButton.MaxTimer = 0f;
+            engineerOpenDoorButton.MaxTimer = Engineer.openDoorCooldown;
             janitorCleanButton.MaxTimer = Janitor.cooldown;
             sheriffKillButton.MaxTimer = Sheriff.cooldown;
             deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
@@ -109,7 +112,7 @@ namespace TheOtherRoles
             hackerButton.MaxTimer = Hacker.cooldown;
             hackerVitalsButton.MaxTimer = Hacker.cooldown;
             hackerAdminTableButton.MaxTimer = Hacker.cooldown;
-            evilHackerAdminTableButton.MaxTimer = EvilHacker.cooldown;
+          //  evilHackerAdminTableButton.MaxTimer = EvilHacker.cooldown;
             vampireKillButton.MaxTimer = Vampire.cooldown;
             trackerTrackPlayerButton.MaxTimer = 0f;
             garlicButton.MaxTimer = 0f;
@@ -150,7 +153,7 @@ namespace TheOtherRoles
             hackerButton.EffectDuration = Hacker.duration;
             hackerVitalsButton.EffectDuration = Hacker.duration;
             hackerAdminTableButton.EffectDuration = Hacker.duration;
-            evilHackerAdminTableButton.EffectDuration = EvilHacker.duration;
+       //     evilHackerAdminTableButton.EffectDuration = EvilHacker.duration;
             vampireKillButton.EffectDuration = Vampire.delay;
             camouflagerButton.EffectDuration = Camouflager.duration;
             morphlingButton.EffectDuration = Morphling.duration;
@@ -168,6 +171,7 @@ namespace TheOtherRoles
             invisibleButton.EffectDuration = Invisible.duration;
             ghostLordButton.EffectDuration = GhostLord.duration;
             mrFreezeButton.EffectDuration = MrFreeze.duration;
+            loggerButton.MaxTimer = Logger.cooldown;
             // Already set the timer to the max, as the button is enabled during the game and not available at the start
             lightsOutButton.Timer = lightsOutButton.MaxTimer;
             zoomOutButton.MaxTimer = 0f;            
@@ -344,6 +348,52 @@ namespace TheOtherRoles
                 CustomButton.ButtonPositions.upperRowRight,
                 __instance,
                 KeyCode.F
+            );
+
+            // Engineer Open door
+            engineerOpenDoorButton = new CustomButton(
+                () => {
+                    PlainDoor targetDoor = null;
+                    float targetDoorDistance = float.MaxValue;
+                    float range = 2;
+
+                    foreach (PlainDoor door in MapUtilities.CachedShipStatus.AllDoors)
+                    {
+                        if (!door.Open)
+                        {
+                            DeconControl decon = door.GetComponentInChildren<DeconControl>();
+                            if (decon != null) { continue; }
+
+                            float currentTargetDoorDistance = Vector3.Distance(
+                                    CachedPlayer.LocalPlayer.PlayerControl.transform.position,
+                                    door.transform.position);
+
+                            if (currentTargetDoorDistance < range && currentTargetDoorDistance < targetDoorDistance)
+                            {
+                                targetDoor = door;
+                                targetDoorDistance = currentTargetDoorDistance;
+                                break;
+                            }
+                        }
+                    }
+                    if (targetDoor == null) return;
+
+                    if(!targetDoor.Open)
+                    {
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Doors, targetDoor.Id | 64);
+                        targetDoor.SetDoorway(true);                        
+                    }
+                    SoundEffectsManager.play("engineerRepair");
+                    engineerOpenDoorButton.Timer = engineerOpenDoorButton.MaxTimer;
+
+                },
+                () => { return Engineer.engineer != null && Engineer.engineer == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+               () => { return true; },
+                () => { engineerOpenDoorButton.Timer = engineerOpenDoorButton.MaxTimer; },
+                Engineer.getOpenDoorButtonSprite(),
+                CustomButton.ButtonPositions.upperRowCenter,
+                __instance,
+                KeyCode.R
             );
 
             // Janitor Clean
@@ -670,9 +720,8 @@ namespace TheOtherRoles
             hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
             hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-            evilHackerAdminTableButton = new CustomButton(
-               () => {
-                       // TODO à vérifier                      
+        /*    evilHackerAdminTableButton = new CustomButton(
+               () => {                    
                        if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
                        {
                            HudManager __instance = FastDestroyableSingleton<HudManager>.Instance;
@@ -703,7 +752,7 @@ namespace TheOtherRoles
                },
                 GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
                "EVIL ADMIN"
-           );
+           );*/
 
             hackerVitalsButton = new CustomButton(
                () => {
@@ -1767,6 +1816,29 @@ namespace TheOtherRoles
                false,
                "Meeting"
            );
+
+            loggerButton = new CustomButton(
+            () => {
+                loggerButton.Timer = loggerButton.MaxTimer;
+                var pos = PlayerControl.LocalPlayer.transform.position;
+                byte[] buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PlaceLogTrap, Hazel.SendOption.Reliable);
+                writer.WriteBytesAndSize(buff);
+                writer.EndMessage();
+                RPCProcedure.placeLogTrap(buff);
+            },
+            () => { return Logger.logger != null && Logger.logger == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead && !LogTrap.hasLogTrapLimitReached(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && !LogTrap.hasLogTrapLimitReached(); },
+            () => {
+                loggerButton.Timer = loggerButton.MaxTimer;
+            },
+            Logger.getPlaceLogTrapButtonSprite(),
+            CustomButton.ButtonPositions.lowerRowRight,
+            __instance,
+            KeyCode.F
+        );
 
             // Trapper button
             trapperButton = new CustomButton(

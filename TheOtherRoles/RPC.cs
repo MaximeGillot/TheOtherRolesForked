@@ -55,6 +55,7 @@ namespace TheOtherRoles
         EvilGuesser,
         NiceGuesser,
         BountyHunter,
+        Logger,
         Vulture,
         Medium,
         Trapper,
@@ -141,6 +142,7 @@ namespace TheOtherRoles
         PlaceCamera,
         SealVent,
         ArsonistWin,
+        PlaceLogTrap,
         GuesserShoot,
         LawyerSetTarget,
         LawyerPromotesToPursuer,
@@ -182,6 +184,7 @@ namespace TheOtherRoles
         public static void resetVariables() {
             Garlic.clearGarlics();
             JackInTheBox.clearJackInTheBoxes();
+            LogTrap.clearLogTraps();
             NinjaTrace.clearTraces();
             Portal.clearPortals();
             Bloodytrail.resetSprites();
@@ -344,6 +347,9 @@ namespace TheOtherRoles
                         break;
                     case RoleId.EvilGuesser:
                         Guesser.evilGuesser = player;
+                        break;
+                    case RoleId.Logger:
+                        Logger.logger = player;
                         break;
                     case RoleId.NiceGuesser:
                         Guesser.niceGuesser = player;
@@ -636,6 +642,14 @@ namespace TheOtherRoles
             Camouflager.camouflageTimer = Camouflager.duration;
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
                 player.setLook("", 6, "", "", "", "");
+        }
+
+        public static void placeLogTrap(byte[] buff)
+        {
+            Vector3 position = Vector3.zero;
+            position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+            position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+            new LogTrap(position);
         }
 
         public static void vampireSetBitten(byte targetId, byte performReset) {
@@ -1454,6 +1468,9 @@ namespace TheOtherRoles
                     break;
                 case (byte)CustomRPC.PlaceGarlic:
                     RPCProcedure.placeGarlic(reader.ReadBytesAndSize());
+                    break;
+                case (byte)CustomRPC.PlaceLogTrap:
+                    RPCProcedure.placeLogTrap(reader.ReadBytesAndSize());
                     break;
                 case (byte)CustomRPC.TrackerUsedTracker:
                     RPCProcedure.trackerUsedTracker(reader.ReadByte());

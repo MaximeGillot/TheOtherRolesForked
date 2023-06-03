@@ -54,6 +54,11 @@ namespace TheOtherRoles.Patches {
                 JackInTheBox.convertToVents();
             }
 
+            if (Logger.logger != null)
+            {
+                LogTrap.clearLogTrapsPlayerName();
+            }
+
             // Activate portals.
             Portal.meetingEndsUpdate();
 

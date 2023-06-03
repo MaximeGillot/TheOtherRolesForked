@@ -141,6 +141,8 @@ namespace TheOtherRoles {
         public static CustomOption engineerNumberOfFixes;
         public static CustomOption engineerHighlightForImpostors;
         public static CustomOption engineerHighlightForTeamJackal;
+        public static CustomOption engineerOpenDoorCooldown;
+        
 
         public static CustomOption sheriffSpawnRate;
         public static CustomOption sheriffCooldown;
@@ -248,6 +250,11 @@ namespace TheOtherRoles {
         public static CustomOption mediumDuration;
         public static CustomOption mediumOneTimeUse;
         public static CustomOption mediumChanceAdditionalInfo;
+
+        public static CustomOption loggerSpawnRate;
+        public static CustomOption loggerCooldown;
+        public static CustomOption loggerMaxTrap;
+        public static CustomOption loggerNbRecordPerTrap;
 
         public static CustomOption lawyerSpawnRate;
         public static CustomOption lawyerIsProsecutorChance;
@@ -428,11 +435,11 @@ namespace TheOtherRoles {
             janitorCooldown = CustomOption.Create(19, Types.Impostor, "Janitor Cooldown", 30f, 10f, 60f, 2.5f, mafiaSpawnRate);
 
             morphlingSpawnRate = CustomOption.Create(20, Types.Impostor, cs(Morphling.color, "Morphling"), rates, null, true);
-            morphlingCooldown = CustomOption.Create(21, Types.Impostor, "Morphling Cooldown", 30f, 10f, 60f, 2.5f, morphlingSpawnRate);
+            morphlingCooldown = CustomOption.Create(21, Types.Impostor, "Morphling Cooldown", 30f, 1f, 60f, 0.5f, morphlingSpawnRate);
             morphlingDuration = CustomOption.Create(22, Types.Impostor, "Morph Duration", 10f, 1f, 20f, 0.5f, morphlingSpawnRate);
 
             camouflagerSpawnRate = CustomOption.Create(30, Types.Impostor, cs(Camouflager.color, "Camouflager"), rates, null, true);
-            camouflagerCooldown = CustomOption.Create(31, Types.Impostor, "Camouflager Cooldown", 30f, 10f, 60f, 2.5f, camouflagerSpawnRate);
+            camouflagerCooldown = CustomOption.Create(31, Types.Impostor, "Camouflager Cooldown", 30f, 1f, 60f, 0.5f, camouflagerSpawnRate);
             camouflagerDuration = CustomOption.Create(32, Types.Impostor, "Camo Duration", 10f, 1f, 20f, 0.5f, camouflagerSpawnRate);
 
             vampireSpawnRate = CustomOption.Create(40, Types.Impostor, cs(Vampire.color, "Vampire"), rates, null, true);
@@ -441,16 +448,16 @@ namespace TheOtherRoles {
             vampireCanKillNearGarlics = CustomOption.Create(43, Types.Impostor, "Vampire Can Kill Near Garlics", true, vampireSpawnRate);
 
             eraserSpawnRate = CustomOption.Create(230, Types.Impostor, cs(Eraser.color, "Eraser"), rates, null, true);
-            eraserCooldown = CustomOption.Create(231, Types.Impostor, "Eraser Cooldown", 30f, 10f, 120f, 5f, eraserSpawnRate);
+            eraserCooldown = CustomOption.Create(231, Types.Impostor, "Eraser Cooldown", 30f, 1f, 120f, 1f, eraserSpawnRate);
             eraserCanEraseAnyone = CustomOption.Create(232, Types.Impostor, "Eraser Can Erase Anyone", false, eraserSpawnRate);
 
             tricksterSpawnRate = CustomOption.Create(250, Types.Impostor, cs(Trickster.color, "Trickster"), rates, null, true);
-            tricksterPlaceBoxCooldown = CustomOption.Create(251, Types.Impostor, "Trickster Box Cooldown", 10f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
-            tricksterLightsOutCooldown = CustomOption.Create(252, Types.Impostor, "Trickster Lights Out Cooldown", 30f, 10f, 60f, 5f, tricksterSpawnRate);
-            tricksterLightsOutDuration = CustomOption.Create(253, Types.Impostor, "Trickster Lights Out Duration", 15f, 5f, 60f, 2.5f, tricksterSpawnRate);
+            tricksterPlaceBoxCooldown = CustomOption.Create(251, Types.Impostor, "Trickster Box Cooldown", 10f, 1f, 30f, 1f, tricksterSpawnRate);
+            tricksterLightsOutCooldown = CustomOption.Create(252, Types.Impostor, "Trickster Lights Out Cooldown", 30f, 1f, 60f, 1f, tricksterSpawnRate);
+            tricksterLightsOutDuration = CustomOption.Create(253, Types.Impostor, "Trickster Lights Out Duration", 15f, 1f, 60f, 1f, tricksterSpawnRate);
 
             cleanerSpawnRate = CustomOption.Create(260, Types.Impostor, cs(Cleaner.color, "Cleaner"), rates, null, true);
-            cleanerCooldown = CustomOption.Create(261, Types.Impostor, "Cleaner Cooldown", 30f, 10f, 60f, 2.5f, cleanerSpawnRate);
+            cleanerCooldown = CustomOption.Create(261, Types.Impostor, "Cleaner Cooldown", 30f, 10f, 60f, 5f, cleanerSpawnRate);
 
             warlockSpawnRate = CustomOption.Create(270, Types.Impostor, cs(Cleaner.color, "Warlock"), rates, null, true);
             warlockCooldown = CustomOption.Create(271, Types.Impostor, "Warlock Cooldown", 30f, 10f, 60f, 2.5f, warlockSpawnRate);
@@ -479,18 +486,18 @@ namespace TheOtherRoles {
             ninjaInvisibleDuration = CustomOption.Create(385, Types.Impostor, "Time The Ninja Is Invisible", 3f, 0f, 20f, 1f, ninjaSpawnRate);
 
             invisibleSpawnRate = CustomOption.Create(510, Types.Impostor, cs(Invisible.color, "Invisible"), rates, null, true);
-            invisibleCooldown = CustomOption.Create(511, Types.Impostor, "Invisibility Cooldown", 27.5f, 10f, 60f, 2.5f, invisibleSpawnRate);
+            invisibleCooldown = CustomOption.Create(511, Types.Impostor, "Invisibility Cooldown", 27.5f, 1f, 60f, 0.5f, invisibleSpawnRate);
             invisibleDuration = CustomOption.Create(512, Types.Impostor, "Invisibility Duration", 6f, 1f, 20f, 0.5f, invisibleSpawnRate);
 
             mrFreezeSpawnRate = CustomOption.Create(520, Types.Impostor, cs(MrFreeze.color, "Mr Freeze"), rates, null, true);
-            mrFreezeCooldown = CustomOption.Create(521, Types.Impostor, "Mr Freeze Cooldown", 27.5f, 10f, 60f, 2.5f, mrFreezeSpawnRate);
+            mrFreezeCooldown = CustomOption.Create(521, Types.Impostor, "Mr Freeze Cooldown", 27.5f, 1f, 60f, 0.5f, mrFreezeSpawnRate);
             mrFreezeDuration = CustomOption.Create(522, Types.Impostor, "Freeze Duration", 5f, 1f, 20f, 0.5f, mrFreezeSpawnRate);
 
             undertakerSpawnRate = CustomOption.Create(530, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
             undertakerDragingDelaiAfterKill = CustomOption.Create(531, Types.Impostor, "Draging delai after kill", 2f, 0f, 15, 1f, undertakerSpawnRate);
 
             ghostLordSpawnRate = CustomOption.Create(540, Types.Impostor, cs(GhostLord.color, "Ghost Lord"), rates, null, true);
-            ghostLordCooldown = CustomOption.Create(541, Types.Impostor, "Ghost Lord Cooldown", 27.5f, 10f, 60f, 2.5f, ghostLordSpawnRate);
+            ghostLordCooldown = CustomOption.Create(541, Types.Impostor, "Ghost Lord Cooldown", 27.5f, 1f, 60f, 0.5f, ghostLordSpawnRate);
             ghostLordDuration = CustomOption.Create(542, Types.Impostor, "Ghost Lord Duration", 6f, 1f, 20f, 0.5f, ghostLordSpawnRate);
 
             transporterSpawnRate = CustomOption.Create(550, Types.Impostor, cs(Transporter.color, "Transporter"), rates, null, true);
@@ -500,7 +507,7 @@ namespace TheOtherRoles {
             transporterUpdateIntervall = CustomOption.Create(554, Types.Impostor, "Transporter Update Intervall", 0.5f, 0.2f, 5f, 0.2f, transporterSpawnRate);
 
             evilHackerSpawnRate = CustomOption.Create(560, Types.Impostor, cs(EvilHacker.color, "Evil Hacker"), rates, null, true);
-            evilHackerCooldown = CustomOption.Create(561, Types.Impostor, "Evil Hacker Cooldown", 27.5f, 10f, 60f, 2.5f, evilHackerSpawnRate);
+            evilHackerCooldown = CustomOption.Create(561, Types.Impostor, "Evil Hacker Cooldown", 27.5f, 1f, 60f, 0.5f, evilHackerSpawnRate);
             evilHackerDuration = CustomOption.Create(562, Types.Impostor, "Evil Hacker Duration", 6f, 1f, 20f, 0.5f, evilHackerSpawnRate);
             evilHackerNoMove = CustomOption.Create(563, Types.Impostor, "Cant Move During Mobile Gadget Duration", true, evilHackerSpawnRate);
 
@@ -570,6 +577,12 @@ namespace TheOtherRoles {
             engineerNumberOfFixes = CustomOption.Create(91, Types.Crewmate, "Number Of Sabotage Fixes", 1f, 1f, 3f, 1f, engineerSpawnRate);
             engineerHighlightForImpostors = CustomOption.Create(92, Types.Crewmate, "Impostors See Vents Highlighted", true, engineerSpawnRate);
             engineerHighlightForTeamJackal = CustomOption.Create(93, Types.Crewmate, "Jackal and Sidekick See Vents Highlighted ", true, engineerSpawnRate);
+            engineerOpenDoorCooldown = CustomOption.Create(94, Types.Crewmate, "Open door Cooldown", 0f, 0f, 30f, 1f, engineerSpawnRate);
+
+            loggerSpawnRate = CustomOption.Create(470, Types.Crewmate, cs(Logger.color, "Logger"), rates, null, true);
+            loggerCooldown = CustomOption.Create(471, Types.Crewmate, "Logger Cooldown", 30f, 2.5f, 60f, 2.5f, loggerSpawnRate);
+            loggerMaxTrap = CustomOption.Create(472, Types.Crewmate, "Maximun Number Of Trap", 3f, 1f, 3f, 1f, loggerSpawnRate);
+            loggerNbRecordPerTrap = CustomOption.Create(473, Types.Crewmate, "Maximun Number Of Log Per Trap", 5f, 1f, 15f, 1f, loggerSpawnRate);
 
             sheriffSpawnRate = CustomOption.Create(100, Types.Crewmate, cs(Sheriff.color, "Sheriff"), rates, null, true);
             sheriffCooldown = CustomOption.Create(101, Types.Crewmate, "Sheriff Cooldown", 30f, 10f, 60f, 2.5f, sheriffSpawnRate);
