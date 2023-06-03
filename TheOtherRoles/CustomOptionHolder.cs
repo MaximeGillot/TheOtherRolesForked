@@ -141,6 +141,8 @@ namespace TheOtherRoles {
         public static CustomOption engineerNumberOfFixes;
         public static CustomOption engineerHighlightForImpostors;
         public static CustomOption engineerHighlightForTeamJackal;
+        public static CustomOption engineerOpenDoorCooldown;
+        
 
         public static CustomOption sheriffSpawnRate;
         public static CustomOption sheriffCooldown;
@@ -575,6 +577,7 @@ namespace TheOtherRoles {
             engineerNumberOfFixes = CustomOption.Create(91, Types.Crewmate, "Number Of Sabotage Fixes", 1f, 1f, 3f, 1f, engineerSpawnRate);
             engineerHighlightForImpostors = CustomOption.Create(92, Types.Crewmate, "Impostors See Vents Highlighted", true, engineerSpawnRate);
             engineerHighlightForTeamJackal = CustomOption.Create(93, Types.Crewmate, "Jackal and Sidekick See Vents Highlighted ", true, engineerSpawnRate);
+            engineerOpenDoorCooldown = CustomOption.Create(94, Types.Crewmate, "Open door Cooldown", 0f, 0f, 30f, 1f, engineerSpawnRate);
 
             loggerSpawnRate = CustomOption.Create(470, Types.Crewmate, cs(Logger.color, "Logger"), rates, null, true);
             loggerCooldown = CustomOption.Create(471, Types.Crewmate, "Logger Cooldown", 30f, 2.5f, 60f, 2.5f, loggerSpawnRate);
