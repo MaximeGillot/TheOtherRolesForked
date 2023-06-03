@@ -19,6 +19,7 @@ namespace TheOtherRoles
         private static bool initialized = false;
 
         private static CustomButton engineerRepairButton;
+        private static CustomButton engineerOpenDoorButton;
         private static CustomButton janitorCleanButton;
         public static CustomButton sheriffKillButton;
         private static CustomButton deputyHandcuffButton;
@@ -96,6 +97,7 @@ namespace TheOtherRoles
                 }
             }
             engineerRepairButton.MaxTimer = 0f;
+            engineerOpenDoorButton.MaxTimer = Engineer.openDoorCooldown;
             janitorCleanButton.MaxTimer = Janitor.cooldown;
             sheriffKillButton.MaxTimer = Sheriff.cooldown;
             deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
@@ -346,6 +348,52 @@ namespace TheOtherRoles
                 CustomButton.ButtonPositions.upperRowRight,
                 __instance,
                 KeyCode.F
+            );
+
+            // Engineer Open door
+            engineerOpenDoorButton = new CustomButton(
+                () => {
+                    PlainDoor targetDoor = null;
+                    float targetDoorDistance = float.MaxValue;
+                    float range = 2;
+
+                    foreach (PlainDoor door in MapUtilities.CachedShipStatus.AllDoors)
+                    {
+                        if (!door.Open)
+                        {
+                            DeconControl decon = door.GetComponentInChildren<DeconControl>();
+                            if (decon != null) { continue; }
+
+                            float currentTargetDoorDistance = Vector3.Distance(
+                                    CachedPlayer.LocalPlayer.PlayerControl.transform.position,
+                                    door.transform.position);
+
+                            if (currentTargetDoorDistance < range && currentTargetDoorDistance < targetDoorDistance)
+                            {
+                                targetDoor = door;
+                                targetDoorDistance = currentTargetDoorDistance;
+                                break;
+                            }
+                        }
+                    }
+                    if (targetDoor == null) return;
+
+                    if(!targetDoor.Open)
+                    {
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Doors, targetDoor.Id | 64);
+                        targetDoor.SetDoorway(true);                        
+                    }
+                    SoundEffectsManager.play("engineerRepair");
+                    engineerOpenDoorButton.Timer = engineerOpenDoorButton.MaxTimer;
+
+                },
+                () => { return Engineer.engineer != null && Engineer.engineer == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+               () => { return true; },
+                () => { engineerOpenDoorButton.Timer = engineerOpenDoorButton.MaxTimer; },
+                Engineer.getOpenDoorButtonSprite(),
+                CustomButton.ButtonPositions.upperRowCenter,
+                __instance,
+                KeyCode.R
             );
 
             // Janitor Clean

@@ -200,6 +200,8 @@ namespace TheOtherRoles
             public static PlayerControl engineer;
             public static Color color = new Color32(0, 40, 245, byte.MaxValue);
             private static Sprite buttonSprite;
+            private static Sprite openDoorButtonSprite;
+            public static float openDoorCooldown = 5f;
 
             public static int remainingFixes = 1;           
             public static bool highlightForImpostors = true;
@@ -211,11 +213,19 @@ namespace TheOtherRoles
                 return buttonSprite;
             }
 
+            public static Sprite getOpenDoorButtonSprite()
+            {
+                if (openDoorButtonSprite) return openDoorButtonSprite;
+                openDoorButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.EngineerOpenDoorButton.png", 115f);
+                return openDoorButtonSprite;
+            }
+
             public static void clearAndReload() {
                 engineer = null;
                 remainingFixes = Mathf.RoundToInt(CustomOptionHolder.engineerNumberOfFixes.getFloat());
                 highlightForImpostors = CustomOptionHolder.engineerHighlightForImpostors.getBool();
                 highlightForTeamJackal = CustomOptionHolder.engineerHighlightForTeamJackal.getBool();
+                openDoorCooldown = CustomOptionHolder.engineerOpenDoorCooldown.getFloat();
             }
         }
 
