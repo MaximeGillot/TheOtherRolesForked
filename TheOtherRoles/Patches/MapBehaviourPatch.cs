@@ -77,9 +77,6 @@ namespace TheOtherRoles.Patches {
                     {
                         foreach (PlayerControl player in CachedPlayer.AllPlayers)
                         {
-                         //   if (Snitch.targets == Snitch.Targets.EvilPlayers && !Helpers.isEvil(player)) continue;
-                         //   else if (Snitch.targets == Snitch.Targets.Killers && !Helpers.isKiller(player)) continue;
-                         //   if (player.Data.IsDead) continue;
                             Vector3 v = player.transform.position;
                             v /= MapUtilities.CachedShipStatus.MapScale;
                             v.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
