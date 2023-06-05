@@ -48,7 +48,7 @@ namespace TheOtherRoles.Modules {
             PassiveButton passiveButtonDiscord = buttonDiscord.GetComponent<PassiveButton>();
             
             passiveButtonDiscord.OnClick = new Button.ButtonClickedEvent();
-            passiveButtonDiscord.OnClick.AddListener((System.Action)(() => Application.OpenURL("https://discord.gg/77RkMJHWsM")));
+            passiveButtonDiscord.OnClick.AddListener((System.Action)(() => Application.OpenURL("https://discord.gg/Frqw4Xz5Pp")));
 
 
             

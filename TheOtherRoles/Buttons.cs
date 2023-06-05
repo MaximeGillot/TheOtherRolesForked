@@ -2032,7 +2032,7 @@ namespace TheOtherRoles
                     if (Transporter.localArrow.arrow != null) Transporter.localArrow.arrow.SetActive(false);
                 },
                 Transporter.getTransporterSampleSprite(),
-                new Vector3(-1.8f, -0.06f, 0),
+                CustomButton.ButtonPositions.upperRowLeft,
                 __instance,
                 KeyCode.F
             );
@@ -2060,7 +2060,7 @@ namespace TheOtherRoles
                     invisibleButton.Timer = invisibleButton.MaxTimer;                    
                 },
                 Invisible.getButtonSprite(),
-                new Vector3(-1.8f, -0.06f, 0),
+                CustomButton.ButtonPositions.upperRowLeft,
                 __instance,
                 KeyCode.F               
             );
