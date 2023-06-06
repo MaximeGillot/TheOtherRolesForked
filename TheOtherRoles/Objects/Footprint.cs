@@ -67,7 +67,7 @@ namespace TheOtherRoles.Objects
             print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, UnityEngine.Random.Range(0.0f, 360.0f)));
             print.GameObject.SetActive(true);
             print.Owner = player;
-            print.Data = player.Data;
+            print.Data = player.Data;                                  
             _activeFootprints.Add(print);
         }
 
@@ -93,6 +93,10 @@ namespace TheOtherRoles.Objects
                 else if (activeFootprint.Owner == Morphling.morphling && Morphling.morphTimer > 0 && Morphling.morphTarget && Morphling.morphTarget.Data != null)
                 {
                     color = Palette.PlayerColors[Morphling.morphTarget.Data.DefaultOutfit.ColorId];
+                }
+                else if (activeFootprint.Owner == Invisible.invisible && Invisible.invisibleTimer > 0 )
+                {
+                    color = Palette.PlayerColors[6];
                 }
                 else
                 {
