@@ -1595,26 +1595,7 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.IsFlashlightEnabled))]
     public static class IsFlashlightEnabledPatch {
         public static bool Prefix(ref bool __result) {
-            if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek)
-                return true;
-            __result = false;
-            if (!CachedPlayer.LocalPlayer.Data.IsDead && Lighter.lighter != null && Lighter.lighter.PlayerId == CachedPlayer.LocalPlayer.PlayerId) {
-                __result = true;
-            }
-
-            return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.AdjustLighting))]
-    public static class AdjustLight {
-        public static bool Prefix(PlayerControl __instance) {
-            if (__instance == null || CachedPlayer.LocalPlayer == null || Lighter.lighter == null) return true;
-
-            bool hasFlashlight = !CachedPlayer.LocalPlayer.Data.IsDead && Lighter.lighter.PlayerId == CachedPlayer.LocalPlayer.PlayerId;
-            __instance.SetFlashlightInputMethod();
-            __instance.lightSource.SetupLightingForGameplay(hasFlashlight, Lighter.flashlightWidth, __instance.TargetFlashlight.transform);
-
+            if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
             return false;
         }
     }

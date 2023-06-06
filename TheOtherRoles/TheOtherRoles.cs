@@ -378,11 +378,25 @@ namespace TheOtherRoles
             
             public static float lighterModeLightsOnVision = 2f;
             public static float lighterModeLightsOffVision = 0.75f;
-            public static float flashlightWidth = 0.75f;
+
+            public static float cooldown = 30f;
+            public static float duration = 5f;
+
+            public static float lighterTimer = 0f;
+
+            private static Sprite buttonSprite;
+            public static Sprite getButtonSprite()
+            {
+                if (buttonSprite) return buttonSprite;
+                buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LighterButton.png", 115f);
+                return buttonSprite;
+            }
 
             public static void clearAndReload() {
                 lighter = null;
-                flashlightWidth = CustomOptionHolder.lighterFlashlightWidth.getFloat();
+                lighterTimer = 0f;
+                cooldown = CustomOptionHolder.lighterCooldown.getFloat();
+                duration = CustomOptionHolder.lighterDuration.getFloat();
                 lighterModeLightsOnVision = CustomOptionHolder.lighterModeLightsOnVision.getFloat();
                 lighterModeLightsOffVision = CustomOptionHolder.lighterModeLightsOffVision.getFloat();
             }

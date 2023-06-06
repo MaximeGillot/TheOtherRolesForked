@@ -159,7 +159,8 @@ namespace TheOtherRoles {
         public static CustomOption lighterSpawnRate;
         public static CustomOption lighterModeLightsOnVision;
         public static CustomOption lighterModeLightsOffVision;
-        public static CustomOption lighterFlashlightWidth;
+        public static CustomOption lighterCooldown;
+        public static CustomOption lighterDuration;
 
         public static CustomOption detectiveSpawnRate;
         public static CustomOption detectiveAnonymousFootprints;
@@ -596,9 +597,10 @@ namespace TheOtherRoles {
             deputyKeepsHandcuffs = CustomOption.Create(109, Types.Crewmate, "Deputy Keeps Handcuffs When Promoted", true, deputyGetsPromoted);
 
             lighterSpawnRate = CustomOption.Create(110, Types.Crewmate, cs(Lighter.color, "Lighter"), rates, null, true);
-            lighterModeLightsOnVision = CustomOption.Create(111, Types.Crewmate, "Vision On Lights On", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
-            lighterModeLightsOffVision = CustomOption.Create(112, Types.Crewmate, "Vision On Lights Off", 0.5f, 0.25f, 5f, 0.25f, lighterSpawnRate);
-            lighterFlashlightWidth = CustomOption.Create(113, Types.Crewmate, "Flashlight Width", 0.3f, 0.1f, 1f, 0.1f, lighterSpawnRate);
+            lighterModeLightsOnVision = CustomOption.Create(111, Types.Crewmate, "Lighter Mode Vision On Lights On", 2f, 0.25f, 5f, 0.25f, lighterSpawnRate);
+            lighterModeLightsOffVision = CustomOption.Create(112, Types.Crewmate, "Lighter Mode Vision On Lights Off", 0.75f, 0.25f, 5f, 0.25f, lighterSpawnRate);
+            lighterCooldown = CustomOption.Create(113, Types.Crewmate, "Lighter Cooldown", 30f, 5f, 120f, 5f, lighterSpawnRate);
+            lighterDuration = CustomOption.Create(114, Types.Crewmate, "Lighter Duration", 5f, 2.5f, 60f, 2.5f, lighterSpawnRate);
 
             detectiveSpawnRate = CustomOption.Create(120, Types.Crewmate, cs(Detective.color, "Detective"), rates, null, true);
             detectiveAnonymousFootprints = CustomOption.Create(121, Types.Crewmate, "Anonymous Footprints", false, detectiveSpawnRate); 
