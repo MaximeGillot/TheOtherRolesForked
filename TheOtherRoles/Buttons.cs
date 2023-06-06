@@ -71,6 +71,7 @@ namespace TheOtherRoles
         public static CustomButton transporterButton;
         public static CustomButton undertakerDragButton;
         public static CustomButton loggerButton;
+        private static CustomButton lighterButton;
 
         public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons = null;
         public static PoolablePlayer targetDisplay;
@@ -148,6 +149,7 @@ namespace TheOtherRoles
             ghostLordButton.MaxTimer = GhostLord.cooldown;
             defuseButton.MaxTimer = 0f;
             defuseButton.Timer = 0f;
+            lighterButton.MaxTimer = Lighter.cooldown;
 
             timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
             hackerButton.EffectDuration = Hacker.duration;
@@ -168,6 +170,7 @@ namespace TheOtherRoles
             huntedShieldButton.EffectDuration = Hunted.shieldDuration;
             invisibleButton.EffectDuration = Invisible.duration;
             ghostLordButton.EffectDuration = GhostLord.duration;
+            lighterButton.EffectDuration = Lighter.duration;
             mrFreezeButton.EffectDuration = MrFreeze.duration;
             defuseButton.EffectDuration = Bomber.defuseDuration;
             bomberButton.EffectDuration = Bomber.destructionTime + Bomber.bombActiveAfter;
@@ -558,7 +561,30 @@ namespace TheOtherRoles
                 KeyCode.F
             );
 
-            
+            lighterButton = new CustomButton(
+            () => {
+                Lighter.lighterTimer = Lighter.duration;
+                SoundEffectsManager.play("lighterLight");
+            },
+            () => { return Lighter.lighter != null && Lighter.lighter == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => {
+                lighterButton.Timer = lighterButton.MaxTimer;
+                lighterButton.isEffectActive = false;
+                lighterButton.actionButton.graphic.color = Palette.EnabledColor;
+            },
+            Lighter.getButtonSprite(),
+            CustomButton.ButtonPositions.lowerRowRight,
+            __instance,
+            KeyCode.F,
+            true,
+            Lighter.duration,
+            () => {
+                lighterButton.Timer = lighterButton.MaxTimer;
+                SoundEffectsManager.play("lighterLight");
+            }
+        );
+
             // Shifter shift
             shifterShiftButton = new CustomButton(
                 () => {

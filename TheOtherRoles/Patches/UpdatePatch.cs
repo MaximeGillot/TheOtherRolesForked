@@ -246,7 +246,8 @@ namespace TheOtherRoles.Patches {
             Hacker.hackerTimer -= dt;
             Trickster.lightsOutTimer -= dt;
             Tracker.corpsesTrackingTimer -= dt;
-            Ninja.invisibleTimer -= dt;  
+            Ninja.invisibleTimer -= dt;
+            Lighter.lighterTimer -= dt;
             Invisible.invisibleTimer -= dt;
             GhostLord.ghostTimer -= dt;
             HideNSeek.timer -= dt;            
