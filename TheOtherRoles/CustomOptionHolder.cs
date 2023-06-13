@@ -318,6 +318,12 @@ namespace TheOtherRoles {
         public static CustomOption modifierAntiTeleport;
         public static CustomOption modifierAntiTeleportQuantity;
 
+        public static CustomOption modifierCursedTasker;
+        public static CustomOption modifierCursedTaskerQuantity;
+
+        public static CustomOption modifierEasyTasker;
+        public static CustomOption modifierEasyTaskerQuantity;
+
         public static CustomOption modifierTieBreaker;
 
         public static CustomOption modifierSunglasses;
@@ -715,6 +721,13 @@ namespace TheOtherRoles {
 
             modifierAntiTeleport = CustomOption.Create(1010, Types.Modifier, cs(Color.yellow, "Anti Teleport"), rates, null, true);
             modifierAntiTeleportQuantity = CustomOption.Create(1011, Types.Modifier, cs(Color.yellow, "Anti Teleport Quantity"), ratesModifier, modifierAntiTeleport);
+
+            modifierCursedTasker = CustomOption.Create(1130, Types.Modifier, cs(Color.yellow, "Cursed tasker"), rates, null, true);
+            modifierCursedTaskerQuantity = CustomOption.Create(1131, Types.Modifier, cs(Color.yellow, "Cursed Tasker Quantity"), ratesModifier, modifierCursedTasker);
+
+            modifierEasyTasker = CustomOption.Create(1140, Types.Modifier, cs(Color.yellow, "Easy tasker"), rates, null, true);
+            modifierEasyTaskerQuantity = CustomOption.Create(1141, Types.Modifier, cs(Color.yellow, "Easy Tasker Quantity"), ratesModifier, modifierEasyTasker);
+
 
             modifierTieBreaker = CustomOption.Create(1020, Types.Modifier, cs(Color.yellow, "Tie Breaker"), rates, null, true);
 

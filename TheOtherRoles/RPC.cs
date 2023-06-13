@@ -88,7 +88,9 @@ namespace TheOtherRoles
         Invert,
         Chameleon,
         Shifter,
-        AntiReport
+        AntiReport,
+        CursedTasker,
+        EasyTasker
     }
 
     enum CustomRPC
@@ -457,6 +459,12 @@ namespace TheOtherRoles
                     break;
                 case RoleId.AntiReport:
                     AntiReport.antiReport.Add(player);
+                    break;
+                case RoleId.CursedTasker:
+                    CursedTasker.cursedTasker.Add(player);
+                    break;
+                case RoleId.EasyTasker:
+                    EasyTasker.easyTasker.Add(player);
                     break;
             }
         }
