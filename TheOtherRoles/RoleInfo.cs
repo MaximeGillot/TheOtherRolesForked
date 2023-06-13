@@ -103,6 +103,9 @@ namespace TheOtherRoles
         public static RoleInfo chameleon = new RoleInfo("Chameleon", Color.yellow, "You're hard to see when not moving", "You're hard to see when not moving", RoleId.Chameleon, false, true);
         public static RoleInfo shifter = new RoleInfo("Shifter", Color.yellow, "Shift your role", "Shift your role", RoleId.Shifter, false, true);
         public static RoleInfo antiReport = new RoleInfo("AntiReport", Color.yellow, "You are fake jester", "You can't report corpse", RoleId.AntiReport, false, true);
+        public static RoleInfo cursedTasker = new RoleInfo("cursedTasker", Color.yellow, "gl tasking", "GL tasking golem :)", RoleId.CursedTasker, false, true);
+        public static RoleInfo easyTasker = new RoleInfo("easyTasker", Color.yellow, "easy tasking", "easy tasking", RoleId.EasyTasker, false, true);
+
 
 
         public static List<RoleInfo> allRoleInfos = new List<RoleInfo>() {
@@ -169,7 +172,9 @@ namespace TheOtherRoles
             vip,
             invert,
             chameleon,
-            shifter
+            shifter,
+            easyTasker,
+            cursedTasker
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true) {
@@ -185,6 +190,8 @@ namespace TheOtherRoles
                     if (Bloody.bloody.Any(x => x.PlayerId == p.PlayerId)) infos.Add(bloody);
                     if (Vip.vip.Any(x => x.PlayerId == p.PlayerId)) infos.Add(vip);
                     if (Diseased.diseased.Any(x => x.PlayerId == p.PlayerId)) infos.Add(diseased);
+                    if (CursedTasker.cursedTasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(cursedTasker);
+                    if (EasyTasker.easyTasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(easyTasker);
                 }
                 if (p == Lovers.lover1 || p == Lovers.lover2) infos.Add(lover);
                 if (p == Tiebreaker.tiebreaker) infos.Add(tiebreaker);
@@ -195,6 +202,8 @@ namespace TheOtherRoles
                 if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
                 if (p == Shifter.shifter) infos.Add(shifter);
                 if (AntiReport.antiReport.Any(x => x.PlayerId == p.PlayerId)) infos.Add(antiReport);
+
+                
             }
 
             int count = infos.Count;  // Save count after modifiers are added so that the role count can be checked

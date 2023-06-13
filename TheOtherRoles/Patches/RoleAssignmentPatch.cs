@@ -443,7 +443,9 @@ namespace TheOtherRoles.Patches {
                 RoleId.Chameleon,
                 RoleId.Shifter,
                 RoleId.Diseased,
-                RoleId.AntiReport
+                RoleId.AntiReport,
+                RoleId.CursedTasker,
+                RoleId.EasyTasker
             });
 
             if (rnd.Next(1, 101) <= CustomOptionHolder.modifierLover.getSelection() * 10) { // Assign lover
@@ -620,6 +622,14 @@ namespace TheOtherRoles.Patches {
                 case RoleId.AntiTeleport:
                     selection = CustomOptionHolder.modifierAntiTeleport.getSelection();
                     if (multiplyQuantity) selection *= CustomOptionHolder.modifierAntiTeleportQuantity.getQuantity();
+                    break;
+                case RoleId.CursedTasker:
+                    selection = CustomOptionHolder.modifierCursedTasker.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierCursedTaskerQuantity.getQuantity();
+                    break;
+                case RoleId.EasyTasker:
+                    selection = CustomOptionHolder.modifierEasyTasker.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierEasyTaskerQuantity.getQuantity();
                     break;
                 case RoleId.Sunglasses:
                     selection = CustomOptionHolder.modifierSunglasses.getSelection();

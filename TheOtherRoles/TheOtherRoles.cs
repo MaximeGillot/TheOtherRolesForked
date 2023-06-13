@@ -83,6 +83,8 @@ namespace TheOtherRoles
             Chameleon.clearAndReload();
             Diseased.clearAndReload();
             AntiReport.clearAndReload();
+            CursedTasker.clearAndReload();
+            EasyTasker.clearAndReload();
 
             // Gamemodes
             HandleGuesser.clearAndReload();
@@ -2202,6 +2204,28 @@ namespace TheOtherRoles
             antiReport = new List<PlayerControl>();
         }
     }
+
+    public static class CursedTasker
+    {
+        public static List<PlayerControl> cursedTasker = new List<PlayerControl>();
+
+        public static void clearAndReload()
+        {
+            cursedTasker = new List<PlayerControl>();
+        }
+    }
+
+    public static class EasyTasker
+    {
+        public static List<PlayerControl> easyTasker = new List<PlayerControl>();
+
+        public static void clearAndReload()
+        {
+            easyTasker = new List<PlayerControl>();
+        }
+    }
+
+
 
     public static class AntiTeleport {
         public static List<PlayerControl> antiTeleport = new List<PlayerControl>();
