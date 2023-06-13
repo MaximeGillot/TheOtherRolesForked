@@ -1422,13 +1422,114 @@ namespace TheOtherRoles.Patches {
             // Ninja Button Sync
             if (Ninja.ninja != null && CachedPlayer.LocalPlayer.PlayerControl == Ninja.ninja && __instance == Ninja.ninja && HudManagerStartPatch.ninjaButton != null)
                 HudManagerStartPatch.ninjaButton.Timer = HudManagerStartPatch.ninjaButton.MaxTimer;
-
+            
             // Bait
             if (Bait.bait.FindAll(x => x.PlayerId == target.PlayerId).Count > 0) {
                 float reportDelay = (float) rnd.Next((int)Bait.reportDelayMin, (int)Bait.reportDelayMax + 1);
                 Bait.active.Add(deadPlayer, reportDelay);
 
                 if (Bait.showKillFlash && __instance == CachedPlayer.LocalPlayer.PlayerControl) Helpers.showFlash(new Color(204f / 255f, 102f / 255f, 0f / 255f));
+            }
+
+            TheOtherRolesPlugin.Logger.LogMessage("Diseased.diseased.Postfix");
+            if (Diseased.diseased.FindAll(x => x.PlayerId == target.PlayerId).Count > 0)
+            {
+                TheOtherRolesPlugin.Logger.LogMessage("Diseased.diseased.Postfix.FindAll");
+                PlayerControl localPlayer = CachedPlayer.LocalPlayer.PlayerControl;
+                if(__instance == localPlayer)
+                {
+                    TheOtherRolesPlugin.Logger.LogMessage("Diseased.diseased.Postfix.__instance == CachedPlayer.LocalPlayer.PlayerControl");                   
+
+                    if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter && __instance == BountyHunter.bountyHunter)
+                    {
+                        BountyHunter.bountyHunter.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (MrFreeze.mrFreeze != null && MrFreeze.mrFreeze == localPlayer)
+                    {
+                        // Set bountyHunter cooldown
+                        if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter && __instance == BountyHunter.bountyHunter)
+                        {
+                            if (target == BountyHunter.bounty)
+                            {
+                                BountyHunter.bountyHunter.SetKillTimer(BountyHunter.bountyKillCooldown);
+                                BountyHunter.bountyUpdateTimer = 0f; // Force bounty update
+                            }
+                            else
+                                BountyHunter.bountyHunter.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + BountyHunter.punishmentTime);
+                        }
+
+
+                        TheOtherRolesPlugin.Logger.LogMessage("mr freeze Diseased.diseased.Postfix.__instance == CachedPlayer.LocalPlayer.PlayerControl");
+                        MrFreeze.mrFreeze.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Morphling.morphling != null && Morphling.morphling == localPlayer)
+                    {
+                        Morphling.morphling.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Camouflager.camouflager != null && Camouflager.camouflager == localPlayer)
+                    {
+                        Camouflager.camouflager.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Vampire.vampire != null && Vampire.vampire == localPlayer)
+                    {
+                        Vampire.vampire.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Eraser.eraser != null && Eraser.eraser == localPlayer)
+                    {
+                        Eraser.eraser.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Trickster.trickster != null && Trickster.trickster == localPlayer)
+                    {
+                        Trickster.trickster.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Cleaner.cleaner != null && Cleaner.cleaner == localPlayer)
+                    {
+                        Cleaner.cleaner.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == localPlayer)
+                    {
+                        BountyHunter.bountyHunter.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Witch.witch != null && Witch.witch == localPlayer)
+                    {
+                        Witch.witch.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Ninja.ninja != null && Ninja.ninja == localPlayer)
+                    {
+                        Ninja.ninja.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Bomber.bomber != null && Bomber.bomber == localPlayer)
+                    {
+                        Bomber.bomber.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (EvilMimic.evilMimic != null && EvilMimic.evilMimic == localPlayer)
+                    {
+                        EvilMimic.evilMimic.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (EvilHacker.evilHacker != null && EvilHacker.evilHacker == localPlayer)
+                    {
+                        EvilHacker.evilHacker.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Undertaker.undertaker != null && Undertaker.undertaker == localPlayer)
+                    {
+                        Undertaker.undertaker.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Transporter.transporter != null && Transporter.transporter == localPlayer)
+                    {
+                        Transporter.transporter.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (GhostLord.ghostLord != null && GhostLord.ghostLord == localPlayer)
+                    {
+                        GhostLord.ghostLord.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+                    else if (Sheriff.sheriff != null && Sheriff.sheriff == localPlayer)
+                    {
+                        Sheriff.sheriff.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown + Diseased.duration);
+                    }
+
+                }
+
+              
             }
 
             // Add Bloody Modifier

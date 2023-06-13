@@ -308,6 +308,13 @@ namespace TheOtherRoles {
         public static CustomOption modifierBloodyQuantity;
         public static CustomOption modifierBloodyDuration;
 
+        public static CustomOption modifierDiseased;
+        public static CustomOption modifierDiseasedQuantity;
+        public static CustomOption modifierDiseasedDuration;
+
+        public static CustomOption modifierAntiReport;
+        public static CustomOption modifierAntiReportQuantity;
+
         public static CustomOption modifierAntiTeleport;
         public static CustomOption modifierAntiTeleportQuantity;
 
@@ -745,6 +752,13 @@ namespace TheOtherRoles {
             modifierChameleonMinVisibility = CustomOption.Create(1094, Types.Modifier, "Minimum Visibility", new string[] { "0%", "10%", "20%", "30%", "40%", "50%" }, modifierChameleon);
 
             modifierShifter = CustomOption.Create(1100, Types.Modifier, cs(Color.yellow, "Shifter"), rates, null, true);
+
+            modifierDiseased = CustomOption.Create(1110, Types.Modifier, cs(Color.yellow, "Diseased"), rates, null, true);
+            modifierDiseasedQuantity = CustomOption.Create(1111, Types.Modifier, cs(Color.yellow, "Diseased Quantity"), ratesModifier, modifierDiseased);
+            modifierDiseasedDuration = CustomOption.Create(1112, Types.Modifier, "Diseased Duration", 10f, 1f, 60f, 1f, modifierDiseased);
+
+            modifierAntiReport = CustomOption.Create(1120, Types.Modifier, cs(Color.yellow, "AntiReport"), rates, null, true);
+            modifierAntiReportQuantity = CustomOption.Create(1121, Types.Modifier, cs(Color.yellow, "AntiReport Quantity"), ratesModifier, modifierAntiReport);
 
             // Guesser Gamemode (2000 - 2999)
             guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "Number of Crew Guessers"), 15f, 1f, 15f, 1f, null, true);
