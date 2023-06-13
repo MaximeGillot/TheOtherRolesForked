@@ -81,6 +81,8 @@ namespace TheOtherRoles
             Vip.clearAndReload();
             Invert.clearAndReload();
             Chameleon.clearAndReload();
+            Diseased.clearAndReload();
+            AntiReport.clearAndReload();
 
             // Gamemodes
             HandleGuesser.clearAndReload();
@@ -2169,6 +2171,29 @@ namespace TheOtherRoles
             active = new Dictionary<byte, float>();
             bloodyKillerMap = new Dictionary<byte, byte>();
             duration = CustomOptionHolder.modifierBloodyDuration.getFloat();
+        }
+    }
+
+    public static class Diseased
+    {
+        public static List<PlayerControl> diseased = new List<PlayerControl>();
+
+        public static float duration = 5f;
+
+        public static void clearAndReload()
+        {
+            diseased = new List<PlayerControl>();
+            duration = CustomOptionHolder.modifierDiseasedDuration.getFloat();
+        }
+    }
+
+    public static class AntiReport
+    {
+        public static List<PlayerControl> antiReport = new List<PlayerControl>();
+
+        public static void clearAndReload()
+        {
+            antiReport = new List<PlayerControl>();
         }
     }
 

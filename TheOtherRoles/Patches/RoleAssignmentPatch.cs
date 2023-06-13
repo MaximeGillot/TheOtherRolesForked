@@ -441,7 +441,9 @@ namespace TheOtherRoles.Patches {
                 RoleId.Vip,
                 RoleId.Invert,
                 RoleId.Chameleon,
-                RoleId.Shifter
+                RoleId.Shifter,
+                RoleId.Diseased,
+                RoleId.AntiReport
             });
 
             if (rnd.Next(1, 101) <= CustomOptionHolder.modifierLover.getSelection() * 10) { // Assign lover
@@ -606,6 +608,14 @@ namespace TheOtherRoles.Patches {
                 case RoleId.Bloody:
                     selection = CustomOptionHolder.modifierBloody.getSelection();
                     if (multiplyQuantity) selection *= CustomOptionHolder.modifierBloodyQuantity.getQuantity();
+                    break;
+                case RoleId.Diseased:
+                    selection = CustomOptionHolder.modifierDiseased.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierDiseasedQuantity.getQuantity();
+                    break;
+                case RoleId.AntiReport:
+                    selection = CustomOptionHolder.modifierAntiReport.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierAntiReportQuantity.getQuantity();
                     break;
                 case RoleId.AntiTeleport:
                     selection = CustomOptionHolder.modifierAntiTeleport.getSelection();

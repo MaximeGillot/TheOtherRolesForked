@@ -84,9 +84,11 @@ namespace TheOtherRoles
         Sunglasses,
         Mini,
         Vip,
+        Diseased,
         Invert,
         Chameleon,
-        Shifter
+        Shifter,
+        AntiReport
     }
 
     enum CustomRPC
@@ -450,6 +452,12 @@ namespace TheOtherRoles
                 case RoleId.Shifter:
                     Shifter.shifter = player;
                     break;
+                case RoleId.Diseased:
+                    Diseased.diseased.Add(player);
+                    break;
+                case RoleId.AntiReport:
+                    AntiReport.antiReport.Add(player);
+                    break;
             }
         }
 
@@ -801,6 +809,7 @@ namespace TheOtherRoles
                 if (player == Lovers.lover1 || player == Lovers.lover2) Lovers.clearAndReload(); // The whole Lover couple is being erased
                 if (Bait.bait.Any(x => x.PlayerId == player.PlayerId)) Bait.bait.RemoveAll(x => x.PlayerId == player.PlayerId);
                 if (Bloody.bloody.Any(x => x.PlayerId == player.PlayerId)) Bloody.bloody.RemoveAll(x => x.PlayerId == player.PlayerId);
+                if (Diseased.diseased.Any(x => x.PlayerId == player.PlayerId)) Diseased.diseased.RemoveAll(x => x.PlayerId == player.PlayerId);
                 if (AntiTeleport.antiTeleport.Any(x => x.PlayerId == player.PlayerId)) AntiTeleport.antiTeleport.RemoveAll(x => x.PlayerId == player.PlayerId);
                 if (Sunglasses.sunglasses.Any(x => x.PlayerId == player.PlayerId)) Sunglasses.sunglasses.RemoveAll(x => x.PlayerId == player.PlayerId);
                 if (player == Tiebreaker.tiebreaker) Tiebreaker.clearAndReload();
@@ -808,6 +817,7 @@ namespace TheOtherRoles
                 if (Vip.vip.Any(x => x.PlayerId == player.PlayerId)) Vip.vip.RemoveAll(x => x.PlayerId == player.PlayerId);
                 if (Invert.invert.Any(x => x.PlayerId == player.PlayerId)) Invert.invert.RemoveAll(x => x.PlayerId == player.PlayerId);
                 if (Chameleon.chameleon.Any(x => x.PlayerId == player.PlayerId)) Chameleon.chameleon.RemoveAll(x => x.PlayerId == player.PlayerId);
+                if (AntiReport.antiReport.Any(x => x.PlayerId == player.PlayerId)) AntiReport.antiReport.RemoveAll(x => x.PlayerId == player.PlayerId);
             }
         }
 
