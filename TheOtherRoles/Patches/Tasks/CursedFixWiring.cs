@@ -12,11 +12,11 @@ namespace TheOtherRoles.Patches.Tasks
 
     internal class CursedFixWiring
     {
-        public static Int32 WiresNum;
+        public static int WiresNum;
 
-        public static Int32 NumWires = 4;
+        public static int NumWires = 4;
 
-        public static Single ScalarY = 1f;
+        public static float ScalarY = 1f;
 
         [HarmonyPatch(typeof(ShipStatus))]
         private class ShipStatusPatch
@@ -36,134 +36,76 @@ namespace TheOtherRoles.Patches.Tasks
             [HarmonyPrefix]
             private static void BeginPrefix(WireMinigame __instance)
             {
+                int[] WiresOrder = new int[3] { 4, 4, 4 };
                 if (CursedTasker.cursedTasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count() > 0)
                 {
-                    Int32[] WiresOrder = new Int32[3] { 6, 8, 10 };
-                    NumWires = WiresOrder[WiresNum];
-                    ScalarY = NumWires < 12 ? 1f : (8f / NumWires) + 0.3f;
-                    Transform ParentAll = GameObject.Find("Main Camera/WireMinigame(Clone)").transform;
-                    __instance.ExpectedWires = new SByte[NumWires];
-                    WireMinigame.colors = new Color[NumWires];
-                    __instance.Symbols = new Sprite[NumWires];
-                    __instance.ActualWires = new SByte[NumWires];
-                    __instance.LeftLights = new SpriteRenderer[NumWires];
-                    __instance.RightLights = new SpriteRenderer[NumWires];
-                    __instance.LeftNodes = new Wire[NumWires];
-                    __instance.RightNodes = new WireNode[NumWires];
-                    Transform ParentLeftNode = ParentAll.FindChild("LeftWires").transform;
-                    Helpers.DestroyObjects(ParentLeftNode);
-                    Single positionY = 2.25f;
-                    for (Int32 i = 0; i < NumWires; i++)
-                    {
-                        GameObject newGameObject = Helpers.BuildWire(ParentLeftNode.FindChild("LeftWireNode").gameObject,
-                            ref positionY);
-                        for (Int32 j = 0; j < newGameObject.transform.childCount; j++)
-                            newGameObject.transform.GetChild(j).localScale = new Vector3(1f, ScalarY, 1f);
-                        Transform headTransform = newGameObject.transform.FindChild("Head");
-                        headTransform.localPosition = new Vector3(0.235f, headTransform.localPosition.y,
-                            headTransform.localPosition.z);
-                        headTransform.GetComponent<CircleCollider2D>().enabled = true;
-                        headTransform.GetComponent<CircleCollider2D>().radius = (1.5f / NumWires) + 0.1f;
-                        Wire wireComponent = newGameObject.GetComponent<Wire>();
-                        wireComponent.enabled = true;
-                        __instance.LeftNodes[i] = wireComponent;
-                    }
-
-                    Transform ParentRightNode = ParentAll.FindChild("RightWires").transform;
-                    Helpers.DestroyObjects(ParentRightNode);
-                    positionY = 2.25f;
-                    for (Int32 i = 0; i < NumWires; i++)
-                    {
-                        GameObject newGameObject = Helpers.BuildWire(ParentRightNode.FindChild("RightWireNode").gameObject,
-                            ref positionY);
-                        Transform headTransform = newGameObject.transform.FindChild("electricity_wiresBase1");
-                        newGameObject.transform.localScale = new Vector3(1f, ScalarY, 1f);
-                        headTransform.localPosition = new Vector3(0.145f, 0f, headTransform.localPosition.z);
-                        newGameObject.transform.GetComponent<CircleCollider2D>().enabled = true;
-                        newGameObject.GetComponent<CircleCollider2D>().radius = 0.45f;
-                        WireNode wireComponent = newGameObject.GetComponent<WireNode>();
-                        wireComponent.enabled = true;
-                        __instance.RightNodes[i] = wireComponent;
-                    }
-
-                    ParentAll.FindChild("LeftLights").gameObject.active = false;
-                    ParentAll.FindChild("RightLights").gameObject.active = false;
-                    for (Int32 i = 0; i < NumWires; i++)
-                    {
-                        __instance.ExpectedWires[i] = (SByte)i;
-                        WireMinigame.colors[i] = Color.HSVToRGB((Single)i / NumWires, 1f, 1f);
-                        __instance.ActualWires[i] = -1;
-                        __instance.Symbols[i] = new Sprite();
-                    }
+                     WiresOrder = new int[3] { 5, 6, 7 };
                 }
-
                 if (EasyTasker.easyTasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count() > 0)
                 {
-                    Int32[] WiresOrder = new Int32[3] { 4, 3, 2 };
+                     WiresOrder = new int[3] { 4, 3, 2 };
+                }
                     NumWires = WiresOrder[WiresNum];
-                    ScalarY = NumWires < 12 ? 1f : (8f / NumWires) + 0.3f;
-                    Transform ParentAll = GameObject.Find("Main Camera/WireMinigame(Clone)").transform;
-                    __instance.ExpectedWires = new SByte[NumWires];
-                    WireMinigame.colors = new Color[NumWires];
-                    __instance.Symbols = new Sprite[NumWires];
-                    __instance.ActualWires = new SByte[NumWires];
-                    __instance.LeftLights = new SpriteRenderer[NumWires];
-                    __instance.RightLights = new SpriteRenderer[NumWires];
-                    __instance.LeftNodes = new Wire[NumWires];
-                    __instance.RightNodes = new WireNode[NumWires];
-                    Transform ParentLeftNode = ParentAll.FindChild("LeftWires").transform;
-                    Helpers.DestroyObjects(ParentLeftNode);
-                    Single positionY = 2.25f;
-                    for (Int32 i = 0; i < NumWires; i++)
-                    {
-                        GameObject newGameObject = Helpers.BuildWire(ParentLeftNode.FindChild("LeftWireNode").gameObject,
-                            ref positionY);
-                        for (Int32 j = 0; j < newGameObject.transform.childCount; j++)
-                            newGameObject.transform.GetChild(j).localScale = new Vector3(1f, ScalarY, 1f);
-                        Transform headTransform = newGameObject.transform.FindChild("Head");
-                        headTransform.localPosition = new Vector3(0.235f, headTransform.localPosition.y,
-                            headTransform.localPosition.z);
-                        headTransform.GetComponent<CircleCollider2D>().enabled = true;
-                        headTransform.GetComponent<CircleCollider2D>().radius = (1.5f / NumWires) + 0.1f;
-                        Wire wireComponent = newGameObject.GetComponent<Wire>();
-                        wireComponent.enabled = true;
-                        __instance.LeftNodes[i] = wireComponent;
-                    }
-
-                    Transform ParentRightNode = ParentAll.FindChild("RightWires").transform;
-                    Helpers.DestroyObjects(ParentRightNode);
-                    positionY = 2.25f;
-                    for (Int32 i = 0; i < NumWires; i++)
-                    {
-                        GameObject newGameObject = Helpers.BuildWire(ParentRightNode.FindChild("RightWireNode").gameObject,
-                            ref positionY);
-                        Transform headTransform = newGameObject.transform.FindChild("electricity_wiresBase1");
-                        newGameObject.transform.localScale = new Vector3(1f, ScalarY, 1f);
-                        headTransform.localPosition = new Vector3(0.145f, 0f, headTransform.localPosition.z);
-                        newGameObject.transform.GetComponent<CircleCollider2D>().enabled = true;
-                        newGameObject.GetComponent<CircleCollider2D>().radius = 0.45f;
-                        WireNode wireComponent = newGameObject.GetComponent<WireNode>();
-                        wireComponent.enabled = true;
-                        __instance.RightNodes[i] = wireComponent;
-                    }
-
-                    ParentAll.FindChild("LeftLights").gameObject.active = false;
-                    ParentAll.FindChild("RightLights").gameObject.active = false;
-                    for (Int32 i = 0; i < NumWires; i++)
-                    {
-                        __instance.ExpectedWires[i] = (SByte)i;
-                        WireMinigame.colors[i] = Color.HSVToRGB((Single)i / NumWires, 1f, 1f);
-                        __instance.ActualWires[i] = -1;
-                        __instance.Symbols[i] = new Sprite();
-                    }
+                ScalarY = NumWires < 12 ? 1f : 8f / NumWires + 0.3f;
+                Transform ParentAll = GameObject.Find("Main Camera/WireMinigame(Clone)").transform;
+                __instance.ExpectedWires = new sbyte[NumWires];
+                WireMinigame.colors = new Color[NumWires];
+                __instance.Symbols = new Sprite[NumWires];
+                __instance.ActualWires = new sbyte[NumWires];
+                __instance.LeftLights = new SpriteRenderer[NumWires];
+                __instance.RightLights = new SpriteRenderer[NumWires];
+                __instance.LeftNodes = new Wire[NumWires];
+                __instance.RightNodes = new WireNode[NumWires];
+                Transform ParentLeftNode = ParentAll.FindChild("LeftWires").transform;
+                Helpers.DestroyObjects(ParentLeftNode);
+                float positionY = 2.25f;
+                for (int i = 0; i < NumWires; i++)
+                {
+                    GameObject newGameObject = Helpers.BuildWire(ParentLeftNode.FindChild("LeftWireNode").gameObject,
+                        ref positionY);
+                    for (int j = 0; j < newGameObject.transform.childCount; j++)
+                        newGameObject.transform.GetChild(j).localScale = new Vector3(1f, ScalarY, 1f);
+                    Transform headTransform = newGameObject.transform.FindChild("Head");
+                    headTransform.localPosition = new Vector3(0.235f, headTransform.localPosition.y,
+                        headTransform.localPosition.z);
+                    headTransform.GetComponent<CircleCollider2D>().enabled = true;
+                    headTransform.GetComponent<CircleCollider2D>().radius = 1.5f / NumWires + 0.1f;
+                    Wire wireComponent = newGameObject.GetComponent<Wire>();
+                    wireComponent.enabled = true;
+                    __instance.LeftNodes[i] = wireComponent;
                 }
 
+                Transform ParentRightNode = ParentAll.FindChild("RightWires").transform;
+                Helpers.DestroyObjects(ParentRightNode);
+                positionY = 2.25f;
+                for (int i = 0; i < NumWires; i++)
+                {
+                    GameObject newGameObject = Helpers.BuildWire(ParentRightNode.FindChild("RightWireNode").gameObject,
+                        ref positionY);
+                    Transform headTransform = newGameObject.transform.FindChild("electricity_wiresBase1");
+                    newGameObject.transform.localScale = new Vector3(1f, ScalarY, 1f);
+                    headTransform.localPosition = new Vector3(0.145f, 0f, headTransform.localPosition.z);
+                    newGameObject.transform.GetComponent<CircleCollider2D>().enabled = true;
+                    newGameObject.GetComponent<CircleCollider2D>().radius = 0.45f;
+                    WireNode wireComponent = newGameObject.GetComponent<WireNode>();
+                    wireComponent.enabled = true;
+                    __instance.RightNodes[i] = wireComponent;
+                }
 
+                ParentAll.FindChild("LeftLights").gameObject.active = false;
+                ParentAll.FindChild("RightLights").gameObject.active = false;
+                for (int i = 0; i < NumWires; i++)
+                {
+                    __instance.ExpectedWires[i] = (sbyte)i;
+                    WireMinigame.colors[i] = Color.HSVToRGB((float)i / NumWires, 1f, 1f);
+                    __instance.ActualWires[i] = -1;
+                    __instance.Symbols[i] = new Sprite();
+                }
             }
 
             [HarmonyPatch(nameof(WireMinigame.UpdateLights))]
             [HarmonyPrefix]
-            private static Boolean SetColorPrefix()
+            private static bool SetColorPrefix()
             {
                 return false;
             }
@@ -172,8 +114,8 @@ namespace TheOtherRoles.Patches.Tasks
             [HarmonyPrefix]
             private static void CheckTaskPrefix(WireMinigame __instance)
             {
-                Boolean flag = true;
-                for (Int32 i = 0; i < __instance.ActualWires.Length; i++)
+                bool flag = true;
+                for (int i = 0; i < __instance.ActualWires.Length; i++)
                     if (__instance.ActualWires[i] != __instance.ExpectedWires[i])
                     {
                         flag = false;
@@ -185,11 +127,11 @@ namespace TheOtherRoles.Patches.Tasks
 
             [HarmonyPatch(nameof(WireMinigame.CheckRightSide))]
             [HarmonyPrefix]
-            private static Boolean CheckRightSidePrefix(WireMinigame __instance, ref WireNode __result, Vector2 pos)
+            private static bool CheckRightSidePrefix(WireMinigame __instance, ref WireNode __result, Vector2 pos)
             {
                 Collider2D leftNode = __instance.myController.amTouching;
-                Int32 leftId = leftNode.transform.parent.GetComponent<Wire>().WireId;
-                for (Int32 i = 0; i < __instance.RightNodes.Length; i++)
+                int leftId = leftNode.transform.parent.GetComponent<Wire>().WireId;
+                for (int i = 0; i < __instance.RightNodes.Length; i++)
                 {
                     WireNode wireNode = __instance.RightNodes[i];
                     if (wireNode.hitbox.OverlapPoint(pos) && __instance.ExpectedWires[leftId] == wireNode.WireId)
@@ -206,7 +148,7 @@ namespace TheOtherRoles.Patches.Tasks
         {
             [HarmonyPatch(nameof(Wire.ResetLine))]
             [HarmonyPostfix]
-            private static void ResetLinePostfix(Wire __instance, [HarmonyArgument(1)] Boolean reset)
+            private static void ResetLinePostfix(Wire __instance, [HarmonyArgument(1)] bool reset)
             {
                 if (reset)
                 {
@@ -224,7 +166,7 @@ namespace TheOtherRoles.Patches.Tasks
 
         internal class Helpers
         {
-            public static GameObject BuildWire(GameObject prefab, ref Single positionY)
+            public static GameObject BuildWire(GameObject prefab, ref float positionY)
             {
                 positionY -= 4.6f / (NumWires + 1);
                 GameObject newGameObject = UnityEngine.Object.Instantiate(prefab, prefab.transform.parent);
@@ -236,7 +178,7 @@ namespace TheOtherRoles.Patches.Tasks
 
             public static void DestroyObjects(Transform parent)
             {
-                for (Int32 i = 0; i < parent.childCount; i++)
+                for (int i = 0; i < parent.childCount; i++)
                 {
                     GameObject childNode = parent.GetChild(i).gameObject;
                     if (!parent.GetChild(i).gameObject.name.Contains("WireNode")) continue;

@@ -22,6 +22,7 @@
       <None Remove="Resources\LoggerBackgroundRed.png" />
       <None Remove="Resources\LoggerBackgroundYellow.png" />
       <None Remove="Resources\LoggerButton.png" />
+      <None Remove="Resources\UnlockManifold.png" />
     </ItemGroup>
    
 	<ItemGroup>
