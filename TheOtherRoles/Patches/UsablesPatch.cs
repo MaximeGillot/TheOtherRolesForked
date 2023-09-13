@@ -362,7 +362,7 @@ namespace TheOtherRoles.Patches {
     class AdminPanelPatch {
         static Dictionary<SystemTypes, List<Color>> players = new Dictionary<SystemTypes, System.Collections.Generic.List<Color>>();
         [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.Update))]
-        class MapCountOverlayUpdatePatch {
+        class MapCountOverlayUpdatePatch {/*
             static bool Prefix(MapCountOverlay __instance) {
                 // Save colors for the Hacker
                 __instance.timer += Time.deltaTime;
@@ -450,7 +450,7 @@ namespace TheOtherRoles.Patches {
                     }
                 }
                 return false;
-            }
+            }*/
         }
 
         [HarmonyPatch(typeof(CounterArea), nameof(CounterArea.UpdateCount))]

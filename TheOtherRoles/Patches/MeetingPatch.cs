@@ -685,7 +685,7 @@ namespace TheOtherRoles.Patches {
             }
 
             // Add meeting extra button, i.e. Swapper Confirm Button or Mayor Toggle Double Vote Button. Swapper Button uses ExtraButtonText on the Left of the Button. (Future meeting buttons can easily be added here)
-            if (addSwapperButtons || addMayorButton || addEvilMimicSwapperButtons) {
+            if (addSwapperButtons || addMayorButton ) {
                 Transform meetingUI = UnityEngine.Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
 
                 var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
@@ -797,7 +797,9 @@ namespace TheOtherRoles.Patches {
 
                 Transform meetingExtraButtonMask = UnityEngine.Object.Instantiate(maskTemplate, meetingExtraButtonParent);
                 meetingExtraButtonLabel = UnityEngine.Object.Instantiate(textTemplate, meetingExtraButton);
-                meetingExtraButton.GetComponent<SpriteRenderer>().sprite = FastDestroyableSingleton<HatManager>.Instance.GetNamePlateById("nameplate_NoPlate")?.viewData?.viewData?.Image;
+                //  meetingExtraButton.GetComponent<SpriteRenderer>().sprite = FastDestroyableSingleton<HatManager>.Instance.GetNamePlateById("nameplate_NoPlate").Image;
+                // TODO à modifier surement
+                meetingExtraButton.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
                 meetingExtraButtonParent.localPosition = new Vector3(0, -2.225f, -5);
                 meetingExtraButtonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
                 meetingExtraButtonLabel.alignment = TMPro.TextAlignmentOptions.Center;

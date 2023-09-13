@@ -1568,12 +1568,13 @@ namespace TheOtherRoles.Patches {
             }
 
             // Snitch
-            if (Snitch.snitch != null && CachedPlayer.LocalPlayer.PlayerId == Snitch.snitch.PlayerId && MapBehaviourPatch.herePoints.Keys.Any(x => x.PlayerId == target.PlayerId)) {
+            
+           /* if (Snitch.snitch != null && CachedPlayer.LocalPlayer.PlayerId == Snitch.snitch.PlayerId && MapBehaviourPatch.herePoints.Keys.Any(x => x.PlayerId == target.PlayerId)) {
                 foreach (var a in MapBehaviourPatch.herePoints.Where(x => x.Key.PlayerId == target.PlayerId)) {
                     UnityEngine.Object.Destroy(a.Value);
                     MapBehaviourPatch.herePoints.Remove(a.Key);
                 }
-            }
+            }*/
         }
     }
 

@@ -252,6 +252,42 @@ namespace TheOtherRoles
             
         }
 
+        public static void dragBody(byte playerId)
+        {
+            DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+                {
+                    Undertaker.deadBodyDraged = array[i];
+                }
+            }
+        }
+
+        public static void dropBody(byte playerId)
+        {
+            if (Undertaker.undertaker == null || Undertaker.deadBodyDraged == null) return;
+            var deadBody = Undertaker.deadBodyDraged;
+            Undertaker.deadBodyDraged = null;
+            deadBody.transform.position = new Vector3(Undertaker.undertaker.transform.position.x, Undertaker.undertaker.transform.position.y, Undertaker.undertaker.transform.position.z);
+        }
+
+        public static void TransporterSwap(byte playerId)
+        {
+            PlayerControl target = Helpers.playerById(playerId);
+            if (Transporter.transporter == null || target == null) return;
+            Transporter.sampledTarget = target;
+            Transporter.TransportPlayers(target);
+        }
+
+        public static void mrFreezeFreeze()
+        {
+            if (MrFreeze.mrFreeze == null) return;
+
+            MrFreeze.mrFreezeTimer = MrFreeze.duration;
+        }
+
+
         public static void setRole(byte roleId, byte playerId) {
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
                 if (player.PlayerId == playerId) {
@@ -907,10 +943,7 @@ namespace TheOtherRoles
             Ninja.invisibleTimer = Ninja.invisibleDuration;
             Ninja.isInvisble = true;
         }
-
-        }
-
-
+      
         public static void placePortal(byte[] buff) {
             Vector3 position = Vector2.zero;
             position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
@@ -1300,8 +1333,7 @@ namespace TheOtherRoles
             if (Snitch.playerRoomMap.ContainsKey(playerId)) Snitch.playerRoomMap[playerId] = roomId;
             else Snitch.playerRoomMap.Add(playerId, roomId);
         }
-    }
-
+    
         public static void ghostLordTurnIntoGhost(byte flag)
         {
             if (GhostLord.ghostLord == null) return;          
