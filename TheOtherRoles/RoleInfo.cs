@@ -87,6 +87,8 @@ namespace TheOtherRoles
         public static RoleInfo hunter = new RoleInfo("Hunter", Palette.ImpostorRed, Helpers.cs(Palette.ImpostorRed, "Seek and kill everyone"), "Seek and kill everyone", RoleId.Impostor);
         public static RoleInfo hunted = new RoleInfo("Hunted", Color.white, "Hide", "Hide", RoleId.Crewmate);
 
+        public static RoleInfo prop = new RoleInfo("Prop", Color.white, "Disguise As An Object and Survive", "Disguise As An Object", RoleId.Crewmate);
+
 
 
         // Modifier
@@ -262,12 +264,12 @@ namespace TheOtherRoles
             if (p == EvilMimic.evilMimic) infos.Add(evilMimic);
 
 
-            // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek
+            // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...
             if (infos.Count == count) {
                 if (p.Data.Role.IsImpostor)
-                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? RoleInfo.hunter : RoleInfo.impostor);
+                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.PropHunt ? RoleInfo.hunter : RoleInfo.impostor);
                 else
-                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? RoleInfo.hunted : RoleInfo.crewmate);
+                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? RoleInfo.hunted : TORMapOptions.gameMode == CustomGamemodes.PropHunt ? RoleInfo.prop : RoleInfo.crewmate);
             }
 
             return infos;

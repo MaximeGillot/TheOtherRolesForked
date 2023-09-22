@@ -389,8 +389,7 @@ namespace TheOtherRoles.Modules {
         [HarmonyPatch(typeof(HatParent), nameof(HatParent.LateUpdate))]
         public static class HatParentLateUpdatePatch {
             public static bool Prefix(HatParent __instance) {
-                return false;
-                if(__instance.Parent) {
+                if (__instance.Parent) {
                     HatViewData hatViewData;
                     try {
                         hatViewData = __instance.hatDataAsset.GetAsset();
