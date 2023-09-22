@@ -2068,6 +2068,7 @@ namespace TheOtherRoles
         public static float cooldown = 30f;
         public static float duration = 10f;
         public static float ghostTimer = 0f;
+        public static bool isInGhostForm = false;
 
         private static Sprite buttonSprite;
         public static Sprite getButtonSprite()
@@ -2088,6 +2089,7 @@ namespace TheOtherRoles
             ghostTimer = 0f;
             cooldown = CustomOptionHolder.ghostLordCooldown.getFloat();
             duration = CustomOptionHolder.ghostLordDuration.getFloat();
+            isInGhostForm = false;
         }
 
     }

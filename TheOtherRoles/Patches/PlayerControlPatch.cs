@@ -370,7 +370,7 @@ namespace TheOtherRoles.Patches {
 
         static void ghostLordUpdate()
         {
-            if (GhostLord.ghostLord && GhostLord.ghostTimer <= 0 && GhostLord.ghostLord == CachedPlayer.LocalPlayer.PlayerControl)
+            if (GhostLord.isInGhostForm && GhostLord.ghostTimer <= 0 && GhostLord.ghostLord == CachedPlayer.LocalPlayer.PlayerControl)
             {
                 MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetInvisible, Hazel.SendOption.Reliable, -1);
                 invisibleWriter.Write(GhostLord.ghostLord.PlayerId);
@@ -517,7 +517,7 @@ namespace TheOtherRoles.Patches {
 
                 p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);  // This moves both the name AND the colorblindtext behind objects (if the player is behind the object), like the rock on polus
 
-                if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) || (EvilMimic.evilMimic != null && EvilMimic.evilMimic == CachedPlayer.LocalPlayer.PlayerControl && EvilMimic.haveKilledSnitch) || p == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead)
+                if ((Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target) || p == CachedPlayer.LocalPlayer.PlayerControl || CachedPlayer.LocalPlayer.Data.IsDead)
                 {
                     Transform playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                     TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;

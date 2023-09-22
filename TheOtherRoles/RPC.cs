@@ -1344,6 +1344,8 @@ namespace TheOtherRoles
                 GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color = bodySprite;
                 GhostLord.ghostLord.setDefaultLook();
                 return;
+                GhostLord.isInGhostForm = false;
+                GhostLord.ghostTimer = -1;
             }
 
             GhostLord.ghostTimer = GhostLord.duration;
@@ -1351,7 +1353,7 @@ namespace TheOtherRoles
             Color color = GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color;
             color.a = 0.60f;
             GhostLord.ghostLord.cosmetics.currentBodySprite.BodySprite.color = color;
-
+            GhostLord.isInGhostForm = true;
         }
 
         public static void EvilMimicKillMedic()

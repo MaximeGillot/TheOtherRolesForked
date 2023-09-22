@@ -2078,6 +2078,17 @@ namespace TheOtherRoles
 
                         invisibleButton.Timer = invisibleButton.MaxTimer;
                         invisibleButton.EffectDuration = Invisible.duration;
+                    } else
+                    {
+
+                        MessageWriter invisibleWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetInvisible, Hazel.SendOption.Reliable, -1);
+                        invisibleWriter.Write(Invisible.invisible.PlayerId);
+                        invisibleWriter.Write(byte.MaxValue);
+                        AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
+                        RPCProcedure.setInvisible(Invisible.invisible.PlayerId, byte.MaxValue);
+
+                        invisibleButton.Timer = invisibleButton.MaxTimer;
+                        invisibleButton.EffectDuration = Invisible.duration;
                     }
                 },
                 () => { return Invisible.invisible != null && Invisible.invisible == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
@@ -2191,18 +2202,36 @@ namespace TheOtherRoles
             // Ghost lord ghosting
             ghostLordButton = new CustomButton(
                 () => {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GhostLordTurnIntoGhost, Hazel.SendOption.Reliable, -1);
-                    writer.Write(byte.MinValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.ghostLordTurnIntoGhost(byte.MinValue);
+                    if(!GhostLord.isInGhostForm)
+                    {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GhostLordTurnIntoGhost, Hazel.SendOption.Reliable, -1);
+                        writer.Write(byte.MinValue);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.ghostLordTurnIntoGhost(byte.MinValue);
 
-                    ghostLordButton.Timer = ghostLordButton.MaxTimer;
-                    ghostLordButton.EffectDuration = GhostLord.duration;
+                        ghostLordButton.Timer = ghostLordButton.MaxTimer;
+                        ghostLordButton.EffectDuration = GhostLord.duration;
+                        GhostLord.isInGhostForm = true;
+                    }
+                    else
+                    {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GhostLordTurnIntoGhost, Hazel.SendOption.Reliable, -1);
+                        writer.Write(byte.MaxValue);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.ghostLordTurnIntoGhost(byte.MaxValue);
+
+                        ghostLordButton.Timer = ghostLordButton.MaxTimer;
+                        ghostLordButton.EffectDuration = GhostLord.duration;
+                        GhostLord.ghostTimer = -1;
+                        GhostLord.isInGhostForm = false;
+                    }
+                   
                 },
                 () => { return GhostLord.ghostLord != null && GhostLord.ghostLord == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => { return PlayerControl.LocalPlayer.CanMove; },
                 () => {
                     ghostLordButton.Timer = ghostLordButton.MaxTimer;
+                    GhostLord.isInGhostForm = false;
                 },
                 GhostLord.getButtonSprite(),
                 CustomButton.ButtonPositions.upperRowLeft,
