@@ -32,7 +32,7 @@ Even more roles are coming soon. :)
 | [Ninja](#ninja) | [Snitch](#snitch) |  |  |
 | [Bomber](#bomber) | [Spy](#spy) |  |  |
 | [Evil Guesser](#guesser) | [Portalmaker](#portalmaker) |  |  |
-| Evil mimic | [Security Guard](#security-guard) |  |  |
+| [Evil mimic](#evil-mimic) | [Security Guard](#security-guard) |  |  |
 | Evil Hacket  | [Medium](#medium) |  |  |
 | Undertaker | [Trapper](#trapper) |  |  |
 | Freezer | [Nice Guesser](#guesser) |  |  |
@@ -1199,6 +1199,28 @@ Depending on the options, the Guesser can't guess the shielded player and depend
 | Both Guesser Spawn Rate | -
 | Guesser Can't Guess Snitch When Tasks Completed | -
 
+## evil-mimic
+### **Team: Impostors**
+The evil-mimic is an Impostor who gain ability when killing crewmate depending of their roles.
+
+
+| role | bonus |
+|----------|:-------------:|
+| lighter | increased vision
+| hacker | open admin table on kill
+| securityGuard | can use sealed vent
+| spy | nothing
+| snitch | arrow targeting your mates -
+| tracker | Add arrow targeting all crewmates -
+| seer | get flash when other impo kill crewmate
+| swapper | can swap crewamte only 
+| medic | can't be killed by sherrif andd see kill timing on vitals
+| timeMaster | rewind everyone
+| detective | get footprint like detective
+| sheriff | Reduce kill CD
+| engineer | nothing
+| mayor | have tie breaker modifier and can see color vote during meeting
+| medium | nothing
 -----------------------
 
 ## Jester

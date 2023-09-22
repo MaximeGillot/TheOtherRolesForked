@@ -1375,8 +1375,7 @@ namespace TheOtherRoles.Patches {
                     Helpers.showFlash(new Color(255f / 255f, 20f / 255f, 60f / 255f));
                 }
                 if(EvilMimic.haveKilledSheriff)
-                {
-                    // TODO à vérifier
+                {                    
                     EvilMimic.evilMimic.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown - EvilMimic.sheriffKillingBonus);
                 }
                 
