@@ -333,7 +333,7 @@ namespace TheOtherRoles
                     AmongUsClient.Instance.FinishRpcImmediately(usedRepairWriter);
                     RPCProcedure.engineerUsedRepair();
                     SoundEffectsManager.play("engineerRepair");
-                    foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator()) {
+                    foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator()) {                        
                         if (task.TaskType == TaskTypes.FixLights) {
                             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.EngineerFixLights, Hazel.SendOption.Reliable, -1);
                             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -1369,6 +1369,7 @@ namespace TheOtherRoles
             securityGuardButton = new CustomButton(
                 () => {
                     if (SecurityGuard.ventTarget != null) { // Seal vent
+                        System.Console.WriteLine(SecurityGuard.ventTarget.name);
                         MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SealVent, Hazel.SendOption.Reliable);
                         writer.WritePacked(SecurityGuard.ventTarget.Id);
                         writer.EndMessage();

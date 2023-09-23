@@ -26,10 +26,12 @@ namespace TheOtherRoles.Patches {
 
             bool roleCouldUse = @object.roleCanUseVents();
 
-            if (__instance.name.StartsWith("SealedVent_") && ( !CachedPlayer.LocalPlayer.PlayerControl == EvilMimic.evilMimic && !EvilMimic.haveKilledSecurityGuard )) {
-                canUse = couldUse = false;
-                __result = num;
-                return false;
+            if (__instance.name.StartsWith("SealedVent_")) {
+                if (CachedPlayer.LocalPlayer.PlayerControl != EvilMimic.evilMimic && !EvilMimic.haveKilledSecurityGuard) {
+                    canUse = couldUse = false;
+                    __result = num;
+                    return false;
+                }
             }
 
             // Submerged Compatability if needed:

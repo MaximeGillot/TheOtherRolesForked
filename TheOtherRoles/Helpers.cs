@@ -19,6 +19,7 @@ using Innersloth.Assets;
 using System.Diagnostics.Metrics;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
+using Object = UnityEngine.Object;
 
 namespace TheOtherRoles {
 
@@ -509,7 +510,7 @@ namespace TheOtherRoles {
                 }
                 else if (targetRole == RoleInfo.seer)
                 {
-                    // get flash when other impo kill crewmate (à tester)
+                    // get flash when other impo kill crewmate
                     EvilMimic.haveKilledSeer = true;
                     new CustomMessage("You have killed the seer, you earn his flash skill", 5f);
                 }
@@ -556,8 +557,29 @@ namespace TheOtherRoles {
                 {
                     // activer camo pendant sabotage ?
                     // activer light pendant sabotage comm et activer comm pendant sabotage ligt ?
+                    // créer une vent à l'endroit ou il est mort ?
                     EvilMimic.haveKilledEngineer = true;
                     new CustomMessage("You have killed the engineer", 5f);
+                      Vent ElectricBuildingVent;
+                      Vent ScienceBuildingVent;
+                      Vent SubBathroomVent;
+                      Vent BathroomVent;
+                    
+
+                    var ventsList = Object.FindObjectsOfType<Vent>().ToList();                    
+                    ElectricBuildingVent = ventsList.Find(vent => vent.gameObject.name == "ElectricBuildingVent" || vent.gameObject.name == "SealedVent_ElectricBuildingVent");                                    
+                    ScienceBuildingVent = ventsList.Find(vent => vent.gameObject.name == "ScienceBuildingVent" || vent.gameObject.name == "SealedVent_ScienceBuildingVent");
+                    SubBathroomVent = ventsList.Find(vent => vent.gameObject.name == "SubBathroomVent" || vent.gameObject.name == "SealedVent_SubBathroomVent");
+                    BathroomVent = ventsList.Find(vent => vent.gameObject.name == "BathroomVent" || vent.gameObject.name == "SealedVent_BathroomVent");                    
+                    ScienceBuildingVent.Center = ElectricBuildingVent;
+                    ElectricBuildingVent.Right = ScienceBuildingVent;
+
+                    SubBathroomVent.Left = ScienceBuildingVent;
+                    ScienceBuildingVent.Right = SubBathroomVent;
+
+                    SubBathroomVent.Right = BathroomVent;
+                    BathroomVent.Center = SubBathroomVent;
+
                 }
                 else if (targetRole == RoleInfo.mayor)
                 {   // have tie breaker modifier and can see color vote during meeting

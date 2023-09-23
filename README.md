@@ -1218,7 +1218,7 @@ The evil-mimic is an Impostor who gain ability when killing crewmate depending o
 | timeMaster | rewind everyone
 | detective | get footprint like detective
 | sheriff | Reduce kill CD
-| engineer | nothing
+| engineer | all vents are connected
 | mayor | have tie breaker modifier and can see color vote during meeting
 | medium | nothing
 -----------------------
