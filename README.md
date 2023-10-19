@@ -37,7 +37,7 @@ Even more roles are coming soon. :)
 | Undertaker | [Trapper](#trapper) |  |  |
 | Freezer | [Nice Guesser](#guesser) |  |  |
 | Transporteur | [Logger](#logger) |  |  |
-| Ghost Lord | |  |  |
+| Ghost Lord | [CrazyTasker](#CrazyTasker) |  |  |
 
 The [Role Assignment](#role-assignment) sections explains how the roles are being distributed among the players.
 
@@ -1842,6 +1842,24 @@ The traps have a maximum of charges (uses) and a configurable amount of tasks ar
 | Trap Information Type | "Name", "Role", "Good/Evil Role"
 | Trap Duration | -
 -----------------------
+
+## CrazyTasker
+### **Team: Crewmates**
+The Crazy tasker is a crewmate that earn abilities when he finish X tasks.
+After all tasks is completed, he can claim new task to earn more abilities. 
+Earnable ability is :
+- able to see kill timing on vitals.
+- earn tie breaker modifier.
+- earn bloddy modifier.
+- earn bait modifier.
+- increased vision for X seconds.
+- detective footstep for 1 round.
+- self shield for 1 round.
+- track everyone for Y seconds.
+- earn nothing.
+- get color vote at meeting
+- earn easy tasker modifier
+
 
 # Modifier
 A Modifier is an addition to your Impostor/Neutral/Crewmate role.
