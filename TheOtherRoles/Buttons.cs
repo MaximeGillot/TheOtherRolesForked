@@ -52,6 +52,7 @@ namespace TheOtherRoles
         public static CustomButton arsonistButton;
         public static CustomButton vultureEatButton;
         public static CustomButton mediumButton;
+        public static CustomButton crazyTaskerButton;
         public static CustomButton pursuerButton;
         public static CustomButton witchSpellButton;
         public static CustomButton ninjaButton;
@@ -166,6 +167,7 @@ namespace TheOtherRoles
             propHuntAdminButton.MaxTimer = PropHunt.adminCooldown;
             propHuntFindButton.MaxTimer = PropHunt.findCooldown;
             lighterButton.MaxTimer = Lighter.cooldown;
+            crazyTaskerButton.MaxTimer = 1;
 
             timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
             hackerButton.EffectDuration = Hacker.duration;
@@ -179,6 +181,7 @@ namespace TheOtherRoles
             arsonistButton.EffectDuration = Arsonist.duration;
             mediumButton.EffectDuration = Medium.duration;
             trackerTrackCorpsesButton.EffectDuration = Tracker.corpsesTrackingDuration;
+            crazyTaskerButton.EffectDuration = 1;
             witchSpellButton.EffectDuration = Witch.spellCastingDuration;
             securityGuardCamButton.EffectDuration = SecurityGuard.duration;
             hunterLighterButton.EffectDuration = Hunter.lightDuration;
@@ -766,41 +769,7 @@ namespace TheOtherRoles
             hackerAdminTableChargesText.text = "";
             hackerAdminTableChargesText.enableWordWrapping = false;
             hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
-            hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
-
-        /*    evilHackerAdminTableButton = new CustomButton(
-               () => {                    
-                       if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
-                       {
-                           HudManager __instance = FastDestroyableSingleton<HudManager>.Instance;
-                           __instance.InitMap();
-                           MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
-                       }
-
-                   if (EvilHacker.cantMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
-                   CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
-               },
-               () => { return EvilHacker.evilHacker != null && EvilHacker.evilHacker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-               () => { return PlayerControl.LocalPlayer.CanMove; },
-               () => {
-                   evilHackerAdminTableButton.Timer = evilHackerAdminTableButton.MaxTimer;
-                   evilHackerAdminTableButton.isEffectActive = false;
-                   evilHackerAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-               },
-               Hacker.getAdminSprite(),
-               CustomButton.ButtonPositions.upperRowLeft,
-               __instance,
-               KeyCode.Q,
-               true,
-               0f,
-               () => {
-                   evilHackerAdminTableButton.Timer = evilHackerAdminTableButton.MaxTimer;                   
-                   if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
-                   CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
-               },
-                GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
-               "EVIL ADMIN"
-           );*/
+            hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);       
 
             hackerVitalsButton = new CustomButton(
                () => {
@@ -1651,6 +1620,41 @@ namespace TheOtherRoles
                     }
                     SoundEffectsManager.stop("mediumAsk");
                 }
+            );
+
+            // CrazyTasker button
+            crazyTaskerButton = new CustomButton(
+                () => { // on click
+                                
+                    TheOtherRolesPlugin.Logger.LogInfo("nb task avant attribution: " + CrazyTasker.crazyTasker.myTasks.GetFastEnumerator().Count());
+                    TheOtherRolesPlugin.Logger.LogInfo("requesting task, assigning new task");
+                    CrazyTasker.claimNewRandonTask();
+
+                    TheOtherRolesPlugin.Logger.LogInfo("nb task après: " + CrazyTasker.crazyTasker.myTasks.GetFastEnumerator().Count() );
+
+                },
+                () => { // has button
+                    return CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead;
+                },
+                () => { // could use
+                      return NormalPlayerTask.AllTasksCompleted(CrazyTasker.crazyTasker); ;                    
+                },
+                () => {
+                    // remove footstep
+                    CrazyTasker.rewardsEarned[CrazyTasker.reward.haveDetectiveFootstep] = false;
+                    // remove medic shield
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CrazyTaskerEarnShield, Hazel.SendOption.Reliable, -1);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.CrazyTaskerEarnShield(byte.MinValue);
+                    CrazyTasker.rewardsEarned[CrazyTasker.reward.haveMedicShield] = false;
+                    // init increasedVision
+                    CrazyTasker.rewardsEarned[CrazyTasker.reward.increasedVision] = false;
+
+                }, // on meeting end
+                CrazyTasker.getClaimEasyTaskButtonSpirit(),
+                CustomButton.ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F
             );
 
             // Pursuer button

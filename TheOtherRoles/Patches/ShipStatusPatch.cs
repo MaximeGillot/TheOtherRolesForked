@@ -6,6 +6,8 @@ using static TheOtherRoles.TheOtherRoles;
 using UnityEngine;
 using TheOtherRoles.CustomGameModes;
 using AmongUs.GameOptions;
+using TheOtherRoles.Players;
+using System.Collections.Generic;
 
 namespace TheOtherRoles.Patches {
 
@@ -16,7 +18,7 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
         public static bool Prefix(ref float __result, ShipStatus __instance, [HarmonyArgument(0)] GameData.PlayerInfo player) {
             if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return true;
-
+            
             // If Game Mode is PropHunt:
             if (PropHunt.isPropHuntGM) {
                 if (!PropHunt.timerRunning) {
@@ -44,6 +46,13 @@ namespace TheOtherRoles.Patches {
 
             // If player is Lighter with ability active
             if (Lighter.lighter != null && Lighter.lighter.PlayerId == player.PlayerId && Lighter.lighterTimer > 0f) {
+                float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
+                __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
+            }
+
+            // If player is Crazy Tasker with increased vision
+            if (CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker.PlayerId == player.PlayerId && CrazyTasker.increasedVisionTimer > 0f)
+            {
                 float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
                 __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
             }
@@ -137,7 +146,6 @@ namespace TheOtherRoles.Patches {
                 GameOptionsManager.Instance.currentNormalGameOptions.NumShortTasks = Mathf.RoundToInt(CustomOptionHolder.hideNSeekShortTasks.getFloat());
                 GameOptionsManager.Instance.currentNormalGameOptions.NumLongTasks = Mathf.RoundToInt(CustomOptionHolder.hideNSeekLongTasks.getFloat());
             }
-
             return true;
         }
 

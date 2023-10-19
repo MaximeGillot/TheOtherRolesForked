@@ -428,6 +428,13 @@ namespace TheOtherRoles {
                 return MurderAttemptResult.SuppressKill;
             }
 
+            // Block imposter kill if crazy tasker is rewarded
+            else if (CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker == target && CrazyTasker.rewardsEarned.ElementAt((int)CrazyTasker.reward.haveMedicShield).Value == true)
+            {
+                SoundEffectsManager.play("fail");
+                return MurderAttemptResult.SuppressKill;
+            }
+
             // Block impostor not fully grown mini kill
             else if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp()) {
                 return MurderAttemptResult.SuppressKill;
