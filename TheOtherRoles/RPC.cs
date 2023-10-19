@@ -71,10 +71,12 @@ namespace TheOtherRoles
         MrFreeze,
         Transporter,
         Invisible,
+        CrazyTasker,
         EvilHacker,
         EvilMimic,
         Crewmate,
         Impostor,
+
         // Modifier ---
         Lover,
         Bait,
@@ -170,6 +172,7 @@ namespace TheOtherRoles
         GhostLordTurnIntoGhost,
         TransporterSwap,
         EvilMimicKillMedic,
+        CrazyTaskerEarnShield,
 
         // Gamemode
         SetGuesserGm,
@@ -453,6 +456,9 @@ namespace TheOtherRoles
                         break;
                     case RoleId.EvilMimic:
                         EvilMimic.evilMimic = player;
+                        break;
+                    case RoleId.CrazyTasker:
+                        CrazyTasker.crazyTasker = player;
                         break;
                     }
         }
@@ -815,7 +821,8 @@ namespace TheOtherRoles
             if (player == Spy.spy) Spy.clearAndReload();
             if (player == SecurityGuard.securityGuard) SecurityGuard.clearAndReload();
             if (player == Medium.medium) Medium.clearAndReload();
-            if (player == Trapper.trapper) Trapper.clearAndReload();            
+            if (player == Trapper.trapper) Trapper.clearAndReload();
+            if (player == CrazyTasker.crazyTasker) CrazyTasker.clearAndReload();
 
             // Impostor roles
             if (player == Morphling.morphling) Morphling.clearAndReload();
@@ -1402,6 +1409,18 @@ namespace TheOtherRoles
             EvilMimic.haveKilledMedic = true;            
         }
 
+        public static void CrazyTaskerEarnShield(byte flag)
+        {
+            if(flag == byte.MaxValue)
+            {
+                CrazyTasker.rewardsEarned[CrazyTasker.reward.haveMedicShield] = true;
+            } else
+            {
+                CrazyTasker.rewardsEarned[CrazyTasker.reward.haveMedicShield] = false;
+            }
+            
+        }
+
 
     }   
 
@@ -1603,6 +1622,11 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.EvilMimicKillMedic:
                     RPCProcedure.EvilMimicKillMedic();
                     break;
+                case (byte)CustomRPC.CrazyTaskerEarnShield:
+                    var shieldFlag = reader.ReadByte();
+                    RPCProcedure.CrazyTaskerEarnShield(shieldFlag);
+                    break;
+                    
                 case (byte)CustomRPC.LawyerSetTarget:
                     RPCProcedure.lawyerSetTarget(reader.ReadByte()); 
                     break;

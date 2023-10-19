@@ -248,6 +248,8 @@ namespace TheOtherRoles.Patches {
             Tracker.corpsesTrackingTimer -= dt;
             Ninja.invisibleTimer -= dt;
             Lighter.lighterTimer -= dt;
+            CrazyTasker.increasedVisionTimer -= dt;
+            CrazyTasker.trackingEveryoneTimer -= dt;
             Invisible.invisibleTimer -= dt;
             GhostLord.ghostTimer -= dt;
             HideNSeek.timer -= dt;            

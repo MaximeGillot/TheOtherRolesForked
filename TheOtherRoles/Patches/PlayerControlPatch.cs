@@ -186,7 +186,7 @@ namespace TheOtherRoles.Patches {
         }
 
         static void detectiveUpdateFootPrints() {
-            if ((Detective.detective == null || Detective.detective != CachedPlayer.LocalPlayer.PlayerControl) && (EvilMimic.evilMimic == null || EvilMimic.evilMimic != CachedPlayer.LocalPlayer.PlayerControl || EvilMimic.haveKilledDetective == false )) return;
+            if ((Detective.detective == null || Detective.detective != CachedPlayer.LocalPlayer.PlayerControl) && (EvilMimic.evilMimic == null || EvilMimic.evilMimic != CachedPlayer.LocalPlayer.PlayerControl || EvilMimic.haveKilledDetective == false) && (CrazyTasker.crazyTasker == null || CrazyTasker.crazyTasker != CachedPlayer.LocalPlayer.PlayerControl || CrazyTasker.rewardsEarned[CrazyTasker.reward.haveDetectiveFootstep] == false)) return;
 
             Detective.timer -= Time.fixedDeltaTime;
             if (Detective.timer <= 0f) {
@@ -774,6 +774,24 @@ namespace TheOtherRoles.Patches {
 
         }
 
+        static void crazyTaskerUpdate()
+        {
+            if (CrazyTasker.crazyTasker != null && PlayerControl.LocalPlayer == CrazyTasker.crazyTasker && !CrazyTasker.crazyTasker.Data.IsDead )
+            {
+                if(CrazyTasker.nbTaskCompleted() > 0 && CrazyTasker.nbTaskCompleted() % CrazyTasker.rewardEveryXTask == 0 && CrazyTasker.alreadyEarnedReward == false )
+                {
+                    CrazyTasker.alreadyEarnedReward = true;
+                    CrazyTasker.getRandomEasyTaskReward();
+                } 
+
+                if(CrazyTasker.nbTaskCompleted() > 0 && CrazyTasker.nbTaskCompleted() % CrazyTasker.rewardEveryXTask != 0)
+                {
+                    CrazyTasker.alreadyEarnedReward = false;
+                }
+            }
+
+        }
+
         static void bountyHunterUpdate() {
             if (BountyHunter.bountyHunter == null || CachedPlayer.LocalPlayer.PlayerControl != BountyHunter.bountyHunter) return;
 
@@ -1214,6 +1232,9 @@ namespace TheOtherRoles.Patches {
 
                 // undertaker
                 undertakerDragBodyUpdate();
+
+                // crazy tasker
+                crazyTaskerUpdate();
 
                 // -- MODIFIER--
                 // Bait
