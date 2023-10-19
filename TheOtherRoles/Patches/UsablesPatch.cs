@@ -311,7 +311,7 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(VitalsMinigame), nameof(VitalsMinigame.Begin))]
         class VitalsMinigameStartPatch {
             static void Postfix(VitalsMinigame __instance) {
-                if ((Hacker.hacker != null && CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker) || (EvilMimic.evilMimic != null && CachedPlayer.LocalPlayer.PlayerControl == EvilMimic.evilMimic && EvilMimic.haveKilledMedic) || (Medic.medic != null && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic) ) {
+                if ((Hacker.hacker != null && CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker) || (EvilMimic.evilMimic != null && CachedPlayer.LocalPlayer.PlayerControl == EvilMimic.evilMimic && EvilMimic.haveKilledMedic) || (Medic.medic != null && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic) || (CrazyTasker.crazyTasker != null && CachedPlayer.LocalPlayer.PlayerControl == CrazyTasker.crazyTasker && CrazyTasker.rewardsEarned.ElementAt((int)CrazyTasker.reward.canSeeVitalsTiming).Value == true)) {
                     hackerTexts = new List<TMPro.TextMeshPro>();
                     foreach (VitalsPanel panel in __instance.vitals) {
                         TMPro.TextMeshPro text = UnityEngine.Object.Instantiate(__instance.SabText, panel.transform);
@@ -339,7 +339,7 @@ namespace TheOtherRoles.Patches {
             static void Postfix(VitalsMinigame __instance) {
                 // Hacker show time since death
                 
-                if ((Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && Hacker.hackerTimer > 0) || (EvilMimic.evilMimic != null && CachedPlayer.LocalPlayer.PlayerControl == EvilMimic.evilMimic && EvilMimic.haveKilledMedic) || (Medic.medic != null && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic))
+                if ((Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && Hacker.hackerTimer > 0) || (EvilMimic.evilMimic != null && CachedPlayer.LocalPlayer.PlayerControl == EvilMimic.evilMimic && EvilMimic.haveKilledMedic) || (Medic.medic != null && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic) || (CrazyTasker.crazyTasker != null && CachedPlayer.LocalPlayer.PlayerControl == CrazyTasker.crazyTasker && CrazyTasker.rewardsEarned.ElementAt((int)CrazyTasker.reward.canSeeVitalsTiming).Value == true))
                 {
                     for (int k = 0; k < __instance.vitals.Length; k++) {
                         VitalsPanel vitalsPanel = __instance.vitals[k];

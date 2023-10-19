@@ -73,6 +73,8 @@ namespace TheOtherRoles
         public static RoleInfo badGuesser = new RoleInfo("Evil Guesser", Palette.ImpostorRed, "Guess and shoot", "Guess and shoot", RoleId.EvilGuesser);
         public static RoleInfo vulture = new RoleInfo("Vulture", Vulture.color, "Eat corpses to win", "Eat dead bodies", RoleId.Vulture, true);
         public static RoleInfo medium = new RoleInfo("Medium", Medium.color, "Question the souls of the dead to gain information", "Question the souls", RoleId.Medium);
+        public static RoleInfo crazyTasker = new RoleInfo("Crazy tasker", CrazyTasker.color, "do quest to earn abilitie", "quest faster", RoleId.CrazyTasker);
+        
         public static RoleInfo trapper = new RoleInfo("Trapper", Trapper.color, "Place traps to find the Impostors", "Place traps", RoleId.Trapper);
         public static RoleInfo lawyer = new RoleInfo("Lawyer", Lawyer.color, "Defend your client", "Defend your client", RoleId.Lawyer, true);
         public static RoleInfo prosecutor = new RoleInfo("Prosecutor", Lawyer.color, "Vote out your target", "Vote out your target", RoleId.Prosecutor, true);
@@ -166,6 +168,7 @@ namespace TheOtherRoles
             bait,
             medium,
             trapper,
+            crazyTasker,
             bloody,
             antiTeleport,
             tiebreaker,
@@ -262,6 +265,7 @@ namespace TheOtherRoles
             if (p == Transporter.transporter) infos.Add(transporter);
             if (p == EvilHacker.evilHacker) infos.Add(evilHacker);
             if (p == EvilMimic.evilMimic) infos.Add(evilMimic);
+            if (p == CrazyTasker.crazyTasker) infos.Add(crazyTasker);
 
 
             // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...

@@ -192,6 +192,14 @@ namespace TheOtherRoles {
         public static CustomOption seerSoulDuration;
         public static CustomOption seerLimitSoulDuration;
 
+        public static CustomOption crazyTaskerSpawnRate;
+        public static CustomOption CrazyTaskerNbEasyTaskPerClaim;
+        public static CustomOption CrazyTaskerRewardEveryXTask;
+        public static CustomOption CrazyTaskerIncreasedVisionDuration;
+        public static CustomOption CrazyTaskerTrackingEveryoneDuration;
+
+
+
         public static CustomOption hackerSpawnRate;
         public static CustomOption hackerCooldown;
         public static CustomOption hackerHackeringDuration;
@@ -677,7 +685,14 @@ namespace TheOtherRoles {
             seerMode = CustomOption.Create(161, Types.Crewmate, "Seer Mode", new string[]{ "Show Death Flash + Souls", "Show Death Flash", "Show Souls"}, seerSpawnRate);
             seerLimitSoulDuration = CustomOption.Create(163, Types.Crewmate, "Seer Limit Soul Duration", false, seerSpawnRate);
             seerSoulDuration = CustomOption.Create(162, Types.Crewmate, "Seer Soul Duration", 15f, 0f, 120f, 5f, seerLimitSoulDuration);
-        
+
+            crazyTaskerSpawnRate = CustomOption.Create(480, Types.Crewmate, cs(CrazyTasker.color, "Crazy Tasker"), rates, null, true);
+            CrazyTaskerNbEasyTaskPerClaim = CustomOption.Create(481, Types.Crewmate, "Nb Easy Task assigned Per Claim", 2f, 1f, 5f, 1f, crazyTaskerSpawnRate);
+            CrazyTaskerRewardEveryXTask = CustomOption.Create(482, Types.Crewmate, "Reward Every X Task", 2f, 2f, 5f, 1f, crazyTaskerSpawnRate);
+            CrazyTaskerIncreasedVisionDuration = CustomOption.Create(483, Types.Crewmate, "Increased Vision Duration", 60f, 0f, 180f, 5f, crazyTaskerSpawnRate);
+            CrazyTaskerTrackingEveryoneDuration = CustomOption.Create(484, Types.Crewmate, "Tracking Duration", 10f, 0f, 180f, 2.5f, crazyTaskerSpawnRate);
+
+
             hackerSpawnRate = CustomOption.Create(170, Types.Crewmate, cs(Hacker.color, "Hacker"), rates, null, true);
             hackerCooldown = CustomOption.Create(171, Types.Crewmate, "Hacker Cooldown", 30f, 5f, 60f, 5f, hackerSpawnRate);
             hackerHackeringDuration = CustomOption.Create(172, Types.Crewmate, "Hacker Duration", 10f, 2.5f, 60f, 2.5f, hackerSpawnRate);
@@ -805,7 +820,7 @@ namespace TheOtherRoles {
             modifierAntiReportQuantity = CustomOption.Create(1121, Types.Modifier, cs(Color.yellow, "AntiReport Quantity"), ratesModifier, modifierAntiReport);
 
             // Guesser Gamemode (2000 - 2999)
-            guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "Number of Crew Guessers"), 15f, 1f, 15f, 1f, null, true);
+            guesserGamemodeCrewNumber = CustomOption.Create(2001, Types.Guesser, cs(Guesser.color, "Number of Crew Guessers"), 15f, 0f, 15f, 1f, null, true);
             guesserGamemodeNeutralNumber = CustomOption.Create(2002, Types.Guesser, cs(Guesser.color, "Number of Neutral Guessers"), 15f, 1f, 15f, 1f, null, true);
             guesserGamemodeImpNumber = CustomOption.Create(2003, Types.Guesser, cs(Guesser.color, "Number of Impostor Guessers"), 15f, 1f, 15f, 1f, null, true);
             guesserForceJackalGuesser = CustomOption.Create(2007, Types.Guesser, "Force Jackal Guesser", false, null, true);
