@@ -19,7 +19,7 @@ namespace TheOtherRoles.Patches.Tasks
         [HarmonyPrefix]
         private static void BeginPrefix(UnlockManifoldsMinigame __instance)
         {
-            if (CursedTasker.cursedTasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count() > 0)
+            if (CursedTasker.cursedTasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count() > 0 && EasyTasker.easyTasker.FindAll(x => x.PlayerId == CachedPlayer.LocalPlayer.PlayerId).Count() !=  0)
             {
                 int index = 0;
                 foreach (SpriteRenderer button in __instance.Buttons)

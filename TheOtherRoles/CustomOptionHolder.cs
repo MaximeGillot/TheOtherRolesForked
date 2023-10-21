@@ -109,7 +109,6 @@ namespace TheOtherRoles {
         public static CustomOption mrFreezeDuration;
 
         public static CustomOption undertakerSpawnRate;
-        public static CustomOption undertakerDragingDelaiAfterKill;
 
         public static CustomOption ghostLordSpawnRate;
         public static CustomOption ghostLordCooldown;
@@ -547,7 +546,6 @@ namespace TheOtherRoles {
             mrFreezeDuration = CustomOption.Create(522, Types.Impostor, "Freeze Duration", 5f, 1f, 20f, 0.5f, mrFreezeSpawnRate);
 
             undertakerSpawnRate = CustomOption.Create(530, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
-            undertakerDragingDelaiAfterKill = CustomOption.Create(531, Types.Impostor, "Draging delai after kill", 2f, 0f, 15, 1f, undertakerSpawnRate);
 
             ghostLordSpawnRate = CustomOption.Create(540, Types.Impostor, cs(GhostLord.color, "Ghost Lord"), rates, null, true);
             ghostLordCooldown = CustomOption.Create(541, Types.Impostor, "Ghost Lord Cooldown", 27.5f, 1f, 60f, 0.5f, ghostLordSpawnRate);

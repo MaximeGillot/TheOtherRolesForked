@@ -716,7 +716,7 @@ namespace TheOtherRoles
         public static Sprite getClaimEasyTaskButtonSpirit()
         {
             if (claimEasyTaskButton) return claimEasyTaskButton;
-            claimEasyTaskButton = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Soul.png", 500f);
+            claimEasyTaskButton = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CrazyTaskerButton.png", 115f);
             return claimEasyTaskButton;
         }
 
@@ -2240,9 +2240,6 @@ namespace TheOtherRoles
     {
         public static PlayerControl undertaker;
         public static Color color = Palette.ImpostorRed;
-
-        public static float dragingDelaiAfterKill = 0f;
-
         public static bool isDraging = false;
         public static DeadBody deadBodyDraged = null;
 
@@ -2260,7 +2257,6 @@ namespace TheOtherRoles
             undertaker = null;
             isDraging = false;
             deadBodyDraged = null;
-            dragingDelaiAfterKill = CustomOptionHolder.undertakerDragingDelaiAfterKill.getFloat();
         }
     }
 

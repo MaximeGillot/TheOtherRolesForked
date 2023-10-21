@@ -13,6 +13,7 @@ using TheOtherRoles.Objects;
 using TheOtherRoles.CustomGameModes;
 using Reactor.Utilities.Extensions;
 using AmongUs.GameOptions;
+using static Il2CppSystem.Net.Http.Headers.Parser;
 
 namespace TheOtherRoles.Patches {
 
@@ -349,7 +350,7 @@ namespace TheOtherRoles.Patches {
                         if (vitalsPanel.IsDead) {
                             DeadPlayer deadPlayer = deadPlayers?.Where(x => x.player?.PlayerId == player?.PlayerId)?.FirstOrDefault();
                             if (deadPlayer != null && k < hackerTexts.Count && hackerTexts[k] != null) {
-                                float timeSinceDeath = ((float)(DateTime.UtcNow - deadPlayer.timeOfDeath).TotalMilliseconds);
+                                float timeSinceDeath = ((float)(System.DateTime.UtcNow - deadPlayer.timeOfDeath).TotalMilliseconds);
                                 hackerTexts[k].gameObject.SetActive(true);
                                 hackerTexts[k].text = Math.Round(timeSinceDeath / 1000) + "s";
                             }
@@ -366,133 +367,158 @@ namespace TheOtherRoles.Patches {
 
     [HarmonyPatch]
     class AdminPanelPatch {
+
         static Dictionary<SystemTypes, List<Color>> players = new Dictionary<SystemTypes, System.Collections.Generic.List<Color>>();
+
         [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.Update))]
-        class MapCountOverlayUpdatePatch {/*
-            static bool Prefix(MapCountOverlay __instance) {
-                // Save colors for the Hacker
-                __instance.timer += Time.deltaTime;
-                if (__instance.timer < 0.1f)
-                {
-                    return false;
-                }
-                __instance.timer = 0f;
-                players = new Dictionary<SystemTypes, List<Color>>();
-                bool commsActive = false;
-                    foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
-                        if (task.TaskType == TaskTypes.FixComms) commsActive = true;       
-
-
-                if (!__instance.isSab && commsActive)
-                {
-                    __instance.isSab = true;
-                    __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
-                    __instance.SabotageText.gameObject.SetActive(true);
-                    return false;
-                }
-                if (__instance.isSab && !commsActive)
-                {
-                    __instance.isSab = false;
-                    __instance.BackgroundColor.SetColor(Color.green);
-                    __instance.SabotageText.gameObject.SetActive(false);
-                }
-
-                for (int i = 0; i < __instance.CountAreas.Length; i++)
-                {
-                    CounterArea counterArea = __instance.CountAreas[i];
-                    List<Color> roomColors = new List<Color>();
-                    players.Add(counterArea.RoomType, roomColors);
-
-                    if (!commsActive)
-                    {
-                        PlainShipRoom plainShipRoom = MapUtilities.CachedShipStatus.FastRooms[counterArea.RoomType];
-
-                        if (plainShipRoom != null && plainShipRoom.roomArea) {
-
-
-                            HashSet<int> hashSet = new HashSet<int>();
-                            int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
-                            int num2 = 0;
-                            for (int j = 0; j < num; j++) {
-                                Collider2D collider2D = __instance.buffer[j];
-                                if (collider2D.CompareTag("DeadBody") && __instance.includeDeadBodies) {
-                                    num2++;
-                                    DeadBody bodyComponent = collider2D.GetComponent<DeadBody>();
-                                    if (bodyComponent) {
-                                        GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(bodyComponent.ParentId);
-                                        if (playerInfo != null) {
-                                            var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
-                                            if (Hacker.onlyColorType)
-                                                color = Helpers.isD(playerInfo.PlayerId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
-                                            roomColors.Add(color);
-                                        }
-                                    }
-                                } else if (!collider2D.isTrigger) {
-                                    PlayerControl component = collider2D.GetComponent<PlayerControl>();
-                                    if (component && component.Data != null && !component.Data.Disconnected && !component.Data.IsDead && (__instance.showLivePlayerPosition || !component.AmOwner) && hashSet.Add((int)component.PlayerId)) {
-                                        num2++;
-                                        if (component?.cosmetics?.currentBodySprite?.BodySprite?.material != null) {
-                                            Color color = component.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
-                                            if (Hacker.onlyColorType) {
-                                                color = Helpers.isLighterColor(component) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
-                                            }
-                                            roomColors.Add(color);
-                                        }
-                                    }
-                                }
-                            }
-
-                            counterArea.UpdateCount(num2);
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType);
-                        }
-                    }
-                    else
-                    {
-                        counterArea.UpdateCount(0);
-                    }
-                }
-                return false;
-            }*/
+        class MapCountOverlayUpdatePatch
+        {
+            /*  static bool Prefix(MapCountOverlay __instance)
+              {
+                  __instance.timer += Time.deltaTime;
+                  if (__instance.timer < 0.1f)
+                  {
+                      return false;
+                  }
+                  __instance.timer = 0f;
+                  if (!__instance.isSab && PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                  {
+                      __instance.isSab = true;
+                      __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
+                      __instance.SabotageText.gameObject.SetActive(true);
+                      return false;
+                  }
+                  if (__instance.isSab && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                  {
+                      __instance.isSab = false;
+                      __instance.BackgroundColor.SetColor(Color.green);
+                      __instance.SabotageText.gameObject.SetActive(false);
+                  }
+                  HashSet<int> hashSet = new HashSet<int>();
+                  for (int i = 0; i < __instance.CountAreas.Length; i++)
+                  {
+                      CounterArea counterArea = __instance.CountAreas[i];
+                      List<Color> roomColors = new List<Color>();
+                      players.Add(counterArea.RoomType, roomColors);
+                      if (!PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                      {
+                          PlainShipRoom plainShipRoom;
+                          if (ShipStatus.Instance.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
+                          {
+                              int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
+                              int num2 = 0;
+                              for (int j = 0; j < num; j++)
+                              {
+                                  Collider2D collider2D = __instance.buffer[j];
+                                  if (collider2D.CompareTag("DeadBody") && __instance.includeDeadBodies)
+                                  {
+                                      DeadBody component = collider2D.GetComponent<DeadBody>();
+                                      if (component != null && hashSet.Add((int)component.ParentId))
+                                      {                                        
+                                          num2++;
+                                          GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                          if(playerInfo != null)
+                                          {
+                                              var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
+                                              if (Hacker.onlyColorType)
+                                                  color = Helpers.isD(playerInfo.PlayerId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                              roomColors.Add(color);
+                                          }
+                                      }
+                                  }
+                                  else if (!collider2D.isTrigger)
+                                  {
+                                      PlayerControl component2 = collider2D.GetComponent<PlayerControl>();
+                                      if (component2 && component2.Data != null && !component2.Data.Disconnected && !component2.Data.IsDead && (__instance.showLivePlayerPosition || !component2.AmOwner) && hashSet.Add((int)component2.PlayerId))
+                                      {
+                                          num2++;
+                                          if (component2?.cosmetics?.currentBodySprite?.BodySprite?.material != null)
+                                          {
+                                              Color color = component2.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
+                                              if (Hacker.onlyColorType)
+                                              {
+                                                  color = Helpers.isLighterColor(component2) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                              }
+                                              roomColors.Add(color);
+                                          }
+                                      }
+                                  }
+                              }
+                              counterArea.UpdateCount(num2);
+                          }
+                          else
+                          {                            
+                              Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType.ToString());
+                          }
+                      }
+                      else
+                      {
+                          counterArea.UpdateCount(0);
+                      }                    
+                  }
+                  return false;
+              }
+              }*/
         }
 
         [HarmonyPatch(typeof(CounterArea), nameof(CounterArea.UpdateCount))]
         class CounterAreaUpdateCountPatch {
             private static Material defaultMat;
             private static Material newMat;
-            static void Postfix(CounterArea __instance) {
-                // Hacker display saved colors on the admin panel
-                bool showHackerInfo = ((Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && Hacker.hackerTimer > 0) || (EvilMimic.evilMimic != null && EvilMimic.evilMimic  == CachedPlayer.LocalPlayer.PlayerControl && EvilMimic.haveKilledHacker));
-                if (players.ContainsKey(__instance.RoomType)) {
-                    List<Color> colors = players[__instance.RoomType];
-                    int i = -1;
-                    foreach (var icon in __instance.myIcons.GetFastEnumerator())
-                    {
-                        i += 1;
-                        SpriteRenderer renderer = icon.GetComponent<SpriteRenderer>();
+            static void Postfix(CounterArea __instance, [HarmonyArgument(0)] int cnt) {
+                bool showHackerInfo = ((Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && Hacker.hackerTimer > 0) || (EvilMimic.evilMimic != null && EvilMimic.evilMimic == CachedPlayer.LocalPlayer.PlayerControl && EvilMimic.haveKilledHacker));
 
-                        if (renderer != null) {
-                            if (defaultMat == null) defaultMat = renderer.material;
-                            if (newMat == null) newMat = UnityEngine.Object.Instantiate<Material>(defaultMat);
-                            if (showHackerInfo && colors.Count > i) {
-                                renderer.material = newMat;
-                                var color = colors[i];
-                                renderer.material.SetColor("_BodyColor", color);
-                                var id = Palette.PlayerColors.IndexOf(color);
-                                if (id < 0) {
-                                    renderer.material.SetColor("_BackColor", color);
-                                } else {
-                                    renderer.material.SetColor("_BackColor", Palette.ShadowColors[id]);
-                                }
-                                renderer.material.SetColor("_VisorColor", Palette.VisorColor);
-                            } else {
-                                renderer.material = defaultMat;
-                            }
-                        }
-                    }
+            /*    bool flag = __instance.myIcons.Count != cnt;
+                while (__instance.myIcons.Count < cnt)
+                {
+                    PoolableBehavior item = __instance.pool.Get<PoolableBehavior>();
+                    __instance.myIcons.Add(item);
                 }
+                while (__instance.myIcons.Count > cnt)
+                {
+                    PoolableBehavior poolableBehavior = __instance.myIcons[__instance.myIcons.Count - 1];
+                    __instance.myIcons.RemoveAt(__instance.myIcons.Count - 1);
+                    poolableBehavior.OwnerPool.Reclaim(poolableBehavior);
+                }
+                if (flag)
+                {
+                    for (int i = 0; i < __instance.myIcons.Count; i++)
+                    {
+                        int num = i % __instance.MaxColumns;
+                        int num2 = i / __instance.MaxColumns;
+                        float num3 = (float)(Mathf.Min(cnt - num2 * __instance.MaxColumns, __instance.MaxColumns) - 1) * __instance.XOffset / -2f;
+                        __instance.myIcons[i].transform.position = __instance.transform.position + new Vector3(num3 + (float)num * __instance.XOffset, (float)num2 * __instance.YOffset, -1f);
+                    }
+                }*/
+
+                /* if (players.ContainsKey(__instance.RoomType)) {
+                     List<Color> colors = players[__instance.RoomType];
+                     int i = -1;
+                     foreach (var icon in __instance.myIcons.GetFastEnumerator())
+                     {
+                         i += 1;
+                         SpriteRenderer renderer = icon.GetComponent<SpriteRenderer>();
+
+                         if (renderer != null) {
+                             if (defaultMat == null) defaultMat = renderer.material;
+                             if (newMat == null) newMat = UnityEngine.Object.Instantiate<Material>(defaultMat);
+                             if (showHackerInfo && colors.Count > i) {
+                                 renderer.material = newMat;
+                                 var color = colors[i];
+                                 renderer.material.SetColor("_BodyColor", color);
+                                 var id = Palette.PlayerColors.IndexOf(color);
+                                 if (id < 0) {
+                                     renderer.material.SetColor("_BackColor", color);
+                                 } else {
+                                     renderer.material.SetColor("_BackColor", Palette.ShadowColors[id]);
+                                 }
+                                 renderer.material.SetColor("_VisorColor", Palette.VisorColor);
+                             } else {
+                                 renderer.material = defaultMat;
+                             }
+                         }
+                     }
+                 }*/
             }
         }
     }

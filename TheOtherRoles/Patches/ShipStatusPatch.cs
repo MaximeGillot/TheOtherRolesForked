@@ -48,11 +48,9 @@ namespace TheOtherRoles.Patches {
             if (Lighter.lighter != null && Lighter.lighter.PlayerId == player.PlayerId && Lighter.lighterTimer > 0f) {
                 float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
                 __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
-            }
-
-            // If player is Crazy Tasker with increased vision
-            if (CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker.PlayerId == player.PlayerId && CrazyTasker.increasedVisionTimer > 0f)
+            } else if (CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker.PlayerId == player.PlayerId && CrazyTasker.increasedVisionTimer > 0f) 
             {
+                // If player is Crazy Tasker with increased vision
                 float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
                 __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
             }

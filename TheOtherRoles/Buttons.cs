@@ -1794,9 +1794,8 @@ namespace TheOtherRoles
                             MessageWriter writer3 = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceNinjaTrace, Hazel.SendOption.Reliable);
                             writer3.WriteBytesAndSize(buff);
                             writer3.EndMessage();
-                            RPCProcedure.placeNinjaTrace(buff);
+                            RPCProcedure.placeNinjaTrace(buff);                            
                         }
-
                         if (attempt == MurderAttemptResult.BlankKill || attempt == MurderAttemptResult.PerformKill) {
                             ninjaButton.Timer = ninjaButton.MaxTimer;
                             Ninja.ninja.killTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
@@ -1822,7 +1821,7 @@ namespace TheOtherRoles
                 () => { return Ninja.ninja != null && Ninja.ninja == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => {  // CouldUse
                     ninjaButton.Sprite = Ninja.ninjaMarked != null ? Ninja.getKillButtonSprite() : Ninja.getMarkButtonSprite(); 
-                    return (Ninja.currentTarget != null || Ninja.ninjaMarked != null) && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                    return (Ninja.currentTarget != null || Ninja.ninjaMarked != null) && CachedPlayer.LocalPlayer.PlayerControl.CanMove && Ninja.ninja.killTimer <= 0;
                 },
                 () => {  // on meeting ends
                     ninjaButton.Timer = ninjaButton.MaxTimer;
