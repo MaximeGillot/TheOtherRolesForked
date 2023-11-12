@@ -659,7 +659,7 @@ namespace TheOtherRoles.Patches {
             bool ignoreNightVision = CustomOptionHolder.camsNoNightVisionIfImpVision.getBool() && Helpers.hasImpVision(GameData.Instance.GetPlayerById(CachedPlayer.LocalPlayer.PlayerId)) || CachedPlayer.LocalPlayer.Data.IsDead;
             bool nightVisionEnabled = CustomOptionHolder.camsNightVision.getBool();
 
-            if (isLightsOut && !nightVisionIsActive && nightVisionEnabled && !ignoreNightVision) {  // only update when something changed!
+            if ((isLightsOut && !nightVisionIsActive && nightVisionEnabled && !ignoreNightVision ) || (EvilMimic.evilMimic != null && EvilMimic.haveKilledSecurityGuard)) {  // only update when something changed!
                 foreach (PlayerControl pc in CachedPlayer.AllPlayers) {
                     if (pc == Ninja.ninja && Ninja.invisibleTimer > 0f) {
                         continue;

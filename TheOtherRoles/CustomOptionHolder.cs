@@ -30,7 +30,7 @@ namespace TheOtherRoles {
         public static CustomOption morphlingSpawnRate;
         public static CustomOption morphlingCooldown;
         public static CustomOption morphlingDuration;
-
+        
         public static CustomOption camouflagerSpawnRate;
         public static CustomOption camouflagerCooldown;
         public static CustomOption camouflagerDuration;
@@ -103,6 +103,7 @@ namespace TheOtherRoles {
         public static CustomOption invisibleSpawnRate;
         public static CustomOption invisibleCooldown;
         public static CustomOption invisibleDuration;
+
 
         public static CustomOption mrFreezeSpawnRate;
         public static CustomOption mrFreezeCooldown;
@@ -538,8 +539,8 @@ namespace TheOtherRoles {
             ninjaInvisibleDuration = CustomOption.Create(385, Types.Impostor, "Time The Ninja Is Invisible", 3f, 0f, 20f, 1f, ninjaSpawnRate);
 
             invisibleSpawnRate = CustomOption.Create(510, Types.Impostor, cs(Invisible.color, "Invisible"), rates, null, true);
-            invisibleCooldown = CustomOption.Create(511, Types.Impostor, "Invisibility Cooldown", 27.5f, 1f, 60f, 0.5f, invisibleSpawnRate);
-            invisibleDuration = CustomOption.Create(512, Types.Impostor, "Invisibility Duration", 6f, 1f, 20f, 0.5f, invisibleSpawnRate);
+            invisibleCooldown = CustomOption.Create(511, Types.Impostor, "Invisibility Cooldown", 27.5f, 0f, 60f, 0.5f, invisibleSpawnRate);
+            invisibleDuration = CustomOption.Create(512, Types.Impostor, "Invisibility Duration", 6f, 1f, 120f, 0.5f, invisibleSpawnRate);
 
             mrFreezeSpawnRate = CustomOption.Create(520, Types.Impostor, cs(MrFreeze.color, "Mr Freeze"), rates, null, true);
             mrFreezeCooldown = CustomOption.Create(521, Types.Impostor, "Mr Freeze Cooldown", 27.5f, 1f, 60f, 0.5f, mrFreezeSpawnRate);
@@ -548,8 +549,8 @@ namespace TheOtherRoles {
             undertakerSpawnRate = CustomOption.Create(530, Types.Impostor, cs(Undertaker.color, "Undertaker"), rates, null, true);
 
             ghostLordSpawnRate = CustomOption.Create(540, Types.Impostor, cs(GhostLord.color, "Ghost Lord"), rates, null, true);
-            ghostLordCooldown = CustomOption.Create(541, Types.Impostor, "Ghost Lord Cooldown", 27.5f, 1f, 60f, 0.5f, ghostLordSpawnRate);
-            ghostLordDuration = CustomOption.Create(542, Types.Impostor, "Ghost Lord Duration", 6f, 1f, 20f, 0.5f, ghostLordSpawnRate);
+            ghostLordCooldown = CustomOption.Create(541, Types.Impostor, "Ghost Lord Cooldown", 27.5f, 0f, 60f, 0.5f, ghostLordSpawnRate);
+            ghostLordDuration = CustomOption.Create(542, Types.Impostor, "Ghost Lord Duration", 6f, 1f, 120f, 0.5f, ghostLordSpawnRate);
 
             transporterSpawnRate = CustomOption.Create(550, Types.Impostor, cs(Transporter.color, "Transporter"), rates, null, true);
             transporterScanCooldown = CustomOption.Create(551, Types.Impostor, "Transporter Scan Cooldown", 10f, 1f, 30f, 1f, transporterSpawnRate);
