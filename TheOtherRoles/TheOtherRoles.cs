@@ -2219,7 +2219,7 @@ namespace TheOtherRoles
             invisible = null;
             isInvis = false;
             invisibleTimer = 0f;
-            cooldown = CustomOptionHolder.invisibleCooldown.getFloat();
+           duration = 120f;
             duration = CustomOptionHolder.invisibleDuration.getFloat();
         }
 
@@ -2484,7 +2484,6 @@ namespace TheOtherRoles
         public static Color color = Palette.ImpostorRed;
 
         public static float cooldown = 30f;
-        public static float duration = 10f;
         public static float ghostTimer = 0f;
         public static bool isInGhostForm = false;
 
