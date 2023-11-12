@@ -698,28 +698,7 @@ namespace TheOtherRoles.Patches {
                         }
                     }
                 }
-                // add arrows targeting others imposter for evil mimic after killing snitch
-                if (EvilMimic.haveKilledSnitch)
-                {
-                    foreach (Arrow arrow in EvilMimic.localSnitchArrows) arrow.arrow.SetActive(false);
-                    int arrowIndex = 0;
-                    foreach (PlayerControl p in CachedPlayer.AllPlayers)
-                    {
-                        if (!p.Data.IsDead && p.Data.Role.IsImpostor && CachedPlayer.LocalPlayer.PlayerControl != p)
-                        {
-                            if (arrowIndex >= EvilMimic.localSnitchArrows.Count)
-                            {
-                                EvilMimic.localSnitchArrows.Add(new Arrow(Palette.ImpostorRed));
-                            }
-                            if (arrowIndex < EvilMimic.localSnitchArrows.Count && EvilMimic.localSnitchArrows[arrowIndex] != null)
-                            {
-                                EvilMimic.localSnitchArrows[arrowIndex].arrow.SetActive(true);
-                                EvilMimic.localSnitchArrows[arrowIndex].Update(p.transform.position, Palette.ImpostorRed);
-                            }
-                            arrowIndex++;
-                        }
-                    }
-                }
+
             }
         }
 

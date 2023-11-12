@@ -939,13 +939,11 @@ namespace TheOtherRoles
         private static Sprite sampleSprite;
         private static Sprite morphSprite;
 
-        public static float cooldown = 30f;
-        public static float duration = 10f;
-
         public static PlayerControl currentTarget;
         public static PlayerControl sampledTarget;
         public static PlayerControl morphTarget;
         public static float morphTimer = 0f;
+        public static bool isMorphed = false;
 
         public static void resetMorph()
         {
@@ -963,9 +961,8 @@ namespace TheOtherRoles
             sampledTarget = null;
             morphTarget = null;
             morphTimer = 0f;
-            cooldown = CustomOptionHolder.morphlingCooldown.getFloat();
-            duration = CustomOptionHolder.morphlingDuration.getFloat();
-        }
+            isMorphed = false;
+    }
 
         public static Sprite getSampleSprite()
         {
@@ -2199,10 +2196,9 @@ namespace TheOtherRoles
         public static PlayerControl invisible;
         public static Color color = Palette.ImpostorRed;
 
-        public static float cooldown = 30f;
-        public static float duration = 10f;
+        public static float cooldown = 30f;       
         public static float invisibleTimer = 0f;
-
+        public static float duration = 120f;
         public static bool isInvis = false;
 
         private static Sprite buttonSprite;
@@ -2218,9 +2214,9 @@ namespace TheOtherRoles
         {
             invisible = null;
             isInvis = false;
-            invisibleTimer = 0f;
-            cooldown = CustomOptionHolder.invisibleCooldown.getFloat();
+            invisibleTimer = 0f;           
             duration = CustomOptionHolder.invisibleDuration.getFloat();
+            cooldown = CustomOptionHolder.invisibleCooldown.getFloat();
         }
 
         public static void resetInvisible()
@@ -2333,6 +2329,7 @@ namespace TheOtherRoles
         public static bool haveKilledEngineer = false;
         public static bool haveKilledMayor = false;
         public static bool havekilledMedium = false;
+        public static bool havekilledCrazyTasker = false ;
         // tracker
         public static List<Arrow> localTrackerArrows = new List<Arrow>();
         // snitch
@@ -2362,6 +2359,7 @@ namespace TheOtherRoles
             haveKilledEngineer = false;
             haveKilledMayor = false;
             havekilledMedium = false;
+            havekilledCrazyTasker = false;
             if (localTrackerArrows != null)
             {
                 foreach (Arrow arrow in localTrackerArrows)
@@ -2483,8 +2481,8 @@ namespace TheOtherRoles
         public static PlayerControl ghostLord;
         public static Color color = Palette.ImpostorRed;
 
+        public static float duration = 120f;
         public static float cooldown = 30f;
-        public static float duration = 10f;
         public static float ghostTimer = 0f;
         public static bool isInGhostForm = false;
 
@@ -2508,7 +2506,7 @@ namespace TheOtherRoles
             cooldown = CustomOptionHolder.ghostLordCooldown.getFloat();
             duration = CustomOptionHolder.ghostLordDuration.getFloat();
             isInGhostForm = false;
-        }
+    }
 
     }
 

@@ -172,6 +172,7 @@ namespace TheOtherRoles
         GhostLordTurnIntoGhost,
         TransporterSwap,
         EvilMimicKillMedic,
+        EvilMimicKillSecurityGuard,
         CrazyTaskerEarnShield,
 
         // Gamemode
@@ -693,7 +694,6 @@ namespace TheOtherRoles
             PlayerControl target = Helpers.playerById(playerId);
             if (Morphling.morphling == null || target == null) return;
 
-            Morphling.morphTimer = Morphling.duration;
             Morphling.morphTarget = target;
             if (Camouflager.camouflageTimer <= 0f)
                 Morphling.morphling.setLook(target.Data.PlayerName, target.Data.DefaultOutfit.ColorId, target.Data.DefaultOutfit.HatId, target.Data.DefaultOutfit.VisorId, target.Data.DefaultOutfit.SkinId, target.Data.DefaultOutfit.PetId);
@@ -1409,6 +1409,11 @@ namespace TheOtherRoles
             EvilMimic.haveKilledMedic = true;            
         }
 
+        public static void EvilMimicKillSecurityGuard()
+        {
+            EvilMimic.haveKilledSecurityGuard = true;
+        }
+
         public static void CrazyTaskerEarnShield(byte flag)
         {
             if(flag == byte.MaxValue)
@@ -1622,6 +1627,10 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.EvilMimicKillMedic:
                     RPCProcedure.EvilMimicKillMedic();
                     break;
+                case (byte)CustomRPC.EvilMimicKillSecurityGuard:
+                    RPCProcedure.EvilMimicKillSecurityGuard();
+                    break;
+                    
                 case (byte)CustomRPC.CrazyTaskerEarnShield:
                     var shieldFlag = reader.ReadByte();
                     RPCProcedure.CrazyTaskerEarnShield(shieldFlag);

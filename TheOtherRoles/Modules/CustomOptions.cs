@@ -1308,7 +1308,7 @@ namespace TheOtherRoles {
                 settingsTMPs[i].gameObject.SetActive(true);
             }
         }
-
+        
         public static void CloseSettings() {
             foreach (var tmp in settingsTMPs)
                 if (tmp) tmp.gameObject.Destroy();

@@ -496,6 +496,11 @@ namespace TheOtherRoles {
                 {                    
                    // peux utiliser les vents sealed 
                     EvilMimic.haveKilledSecurityGuard = true;
+
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.EvilMimicKillSecurityGuard, Hazel.SendOption.Reliable, -1);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.EvilMimicKillSecurityGuard();
+
                     new CustomMessage("You have killed the security guard", 5f);
                 }
                 else if (targetRole == RoleInfo.spy)
@@ -604,6 +609,12 @@ namespace TheOtherRoles {
                     
                     EvilMimic.havekilledMedium = true;
                     new CustomMessage("You have killed the medium", 5f);
+                }
+                else if (targetRole == RoleInfo.crazyTasker)
+                {
+
+                    EvilMimic.havekilledCrazyTasker = true;
+                    new CustomMessage("You have killed the CrazyTsaker", 5f);
                 }
 
             }

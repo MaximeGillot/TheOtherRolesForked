@@ -27,14 +27,14 @@ namespace TheOtherRoles
         private static CustomButton medicShieldButton;
         private static CustomButton shifterShiftButton;
         private static CustomButton morphlingButton;
+        private static CustomButton morphlingSampleButton;
         private static CustomButton camouflagerButton;
         private static CustomButton portalmakerPlacePortalButton;
         private static CustomButton usePortalButton;
         private static CustomButton portalmakerMoveToPortalButton;
         private static CustomButton hackerButton;
         public static CustomButton hackerVitalsButton;
-        public static CustomButton hackerAdminTableButton;
-    //    public static CustomButton evilHackerAdminTableButton;
+        public static CustomButton hackerAdminTableButton;    
         private static CustomButton trackerTrackPlayerButton;
         private static CustomButton trackerTrackCorpsesButton;
         public static CustomButton vampireKillButton;
@@ -51,7 +51,7 @@ namespace TheOtherRoles
         public static CustomButton securityGuardCamButton;
         public static CustomButton arsonistButton;
         public static CustomButton vultureEatButton;
-        public static CustomButton mediumButton;
+        public static CustomButton mediumButton;    
         public static CustomButton crazyTaskerButton;
         public static CustomButton pursuerButton;
         public static CustomButton witchSpellButton;
@@ -115,15 +115,15 @@ namespace TheOtherRoles
             timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
             medicShieldButton.MaxTimer = 0f;
             shifterShiftButton.MaxTimer = 0f;
-            morphlingButton.MaxTimer = Morphling.cooldown;
+            morphlingButton.MaxTimer = 0f;
+            morphlingSampleButton.MaxTimer = 0f;
             camouflagerButton.MaxTimer = Camouflager.cooldown;
             portalmakerPlacePortalButton.MaxTimer = Portalmaker.cooldown;
             usePortalButton.MaxTimer = Portalmaker.usePortalCooldown;
             portalmakerMoveToPortalButton.MaxTimer = Portalmaker.usePortalCooldown;
             hackerButton.MaxTimer = Hacker.cooldown;
             hackerVitalsButton.MaxTimer = Hacker.cooldown;
-            hackerAdminTableButton.MaxTimer = Hacker.cooldown;
-          //  evilHackerAdminTableButton.MaxTimer = EvilHacker.cooldown;
+            hackerAdminTableButton.MaxTimer = Hacker.cooldown;          
             vampireKillButton.MaxTimer = Vampire.cooldown;
             trackerTrackPlayerButton.MaxTimer = 0f;
             garlicButton.MaxTimer = 0f;
@@ -172,11 +172,9 @@ namespace TheOtherRoles
             timeMasterShieldButton.EffectDuration = TimeMaster.shieldDuration;
             hackerButton.EffectDuration = Hacker.duration;
             hackerVitalsButton.EffectDuration = Hacker.duration;
-            hackerAdminTableButton.EffectDuration = Hacker.duration;
-       //     evilHackerAdminTableButton.EffectDuration = EvilHacker.duration;
+            hackerAdminTableButton.EffectDuration = Hacker.duration;       
             vampireKillButton.EffectDuration = Vampire.delay;
             camouflagerButton.EffectDuration = Camouflager.duration;
-            morphlingButton.EffectDuration = Morphling.duration;
             lightsOutButton.EffectDuration = Trickster.lightsOutDuration;
             arsonistButton.EffectDuration = Arsonist.duration;
             mediumButton.EffectDuration = Medium.duration;
@@ -298,7 +296,7 @@ namespace TheOtherRoles
                     targetDisplay.gameObject.SetActive(false);
                     GameObject.Destroy(targetDisplay.gameObject);
                     targetDisplay = null;
-                }
+                }                
                 return;
             }
             // Add poolable player to the button so that the target outfit is shown
@@ -629,54 +627,79 @@ namespace TheOtherRoles
                 true
             );
 
-            // Morphling morph
-            
-            morphlingButton = new CustomButton(
+            // Morphling sample
+            morphlingSampleButton = new CustomButton(
                 () => {
-                    if (Morphling.sampledTarget != null) {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MorphlingMorph, Hazel.SendOption.Reliable, -1);
-                        writer.Write(Morphling.sampledTarget.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.morphlingMorph(Morphling.sampledTarget.PlayerId);
-                        Morphling.sampledTarget = null;
-                        morphlingButton.EffectDuration = Morphling.duration;
-                        SoundEffectsManager.play("morphlingMorph");
-                    } else if (Morphling.currentTarget != null) {
+                    if (Morphling.currentTarget != null)
+                    {
+                        setButtonTargetDisplay(null, morphlingButton);
+                        TheOtherRolesPlugin.Logger.LogInfo("appuie sample button");
                         Morphling.sampledTarget = Morphling.currentTarget;
                         morphlingButton.Sprite = Morphling.getMorphSprite();
-                        morphlingButton.EffectDuration = 1f;
                         SoundEffectsManager.play("morphlingSample");
 
                         // Add poolable player to the button so that the target outfit is shown
-                        setButtonTargetDisplay(Morphling.sampledTarget, morphlingButton);
+                        setButtonTargetDisplay(Morphling.sampledTarget, morphlingButton);                        
                     }
                 },
                 () => { return Morphling.morphling != null && Morphling.morphling == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-                () => { return (Morphling.currentTarget || Morphling.sampledTarget) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-                () => { 
-                    morphlingButton.Timer = morphlingButton.MaxTimer;
-                    morphlingButton.Sprite = Morphling.getSampleSprite();
-                    morphlingButton.isEffectActive = false;
-                    morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                () => { return Morphling.currentTarget  && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => {
+                    morphlingSampleButton.Timer = 0;
+                    morphlingSampleButton.Sprite = Morphling.getSampleSprite();
+                    morphlingSampleButton.isEffectActive = false;
+                    morphlingSampleButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                     Morphling.sampledTarget = null;
-                    setButtonTargetDisplay(null);
+
                 },
                 Morphling.getSampleSprite(),
                 CustomButton.ButtonPositions.upperRowLeft,
                 __instance,
-                KeyCode.F,
-                true,
-                Morphling.duration,
-                () => {
-                    if (Morphling.sampledTarget == null) {
-                        morphlingButton.Timer = morphlingButton.MaxTimer;
-                        morphlingButton.Sprite = Morphling.getSampleSprite();
-                        SoundEffectsManager.play("morphlingMorph");
+                KeyCode.F
+            );
 
-                        // Reset the poolable player
-                        setButtonTargetDisplay(null);
+            // Morphling transform button
+            morphlingButton = new CustomButton(
+                () => {
+                    // se morph
+                    if ((Morphling.sampledTarget != null && !Morphling.isMorphed ) || (Morphling.isMorphed && Morphling.morphTarget != Morphling.sampledTarget) ) {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MorphlingMorph, Hazel.SendOption.Reliable, -1);
+                        writer.Write(Morphling.sampledTarget.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.morphlingMorph(Morphling.sampledTarget.PlayerId);
+                        SoundEffectsManager.play("morphlingMorph");
+                        Morphling.isMorphed = true;
+                        morphlingSampleButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
                     }
-                }
+                   //   morphé et ce demorph
+                    else if (Morphling.isMorphed && Morphling.morphTarget == Morphling.sampledTarget)
+                    {
+                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MorphlingMorph, Hazel.SendOption.Reliable, -1);
+                        writer.Write(Morphling.morphling.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        RPCProcedure.morphlingMorph(Morphling.morphling.PlayerId);
+
+                        morphlingButton.Timer = 0;
+                        morphlingSampleButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                        Morphling.isMorphed = false;
+                        SoundEffectsManager.play("morphlingMorph");
+                    }
+                },
+                () => { return Morphling.morphling != null && Morphling.morphling == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => { return  Morphling.sampledTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { 
+                    morphlingButton.Timer = morphlingButton.MaxTimer;
+                    morphlingButton.Sprite = Morphling.getMorphSprite();
+                    morphlingButton.isEffectActive = false;
+                    morphlingButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    Morphling.sampledTarget = null;
+                    Morphling.isMorphed = false;
+                    setButtonTargetDisplay(null);
+                },
+                Morphling.getMorphSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                __instance,
+                KeyCode.F
             );
 
             // Camouflager camouflage
@@ -2100,7 +2123,7 @@ namespace TheOtherRoles
                         invisibleWriter.Write(byte.MinValue);
                         AmongUsClient.Instance.FinishRpcImmediately(invisibleWriter);
                         RPCProcedure.setInvisible(Invisible.invisible.PlayerId, byte.MinValue);
-
+                 
                         invisibleButton.Timer = invisibleButton.MaxTimer;
                         invisibleButton.EffectDuration = Invisible.duration;
                     } else
@@ -2234,7 +2257,7 @@ namespace TheOtherRoles
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
                         RPCProcedure.ghostLordTurnIntoGhost(byte.MinValue);
 
-                        ghostLordButton.Timer = ghostLordButton.MaxTimer;
+                       ghostLordButton.Timer = ghostLordButton.MaxTimer;
                         ghostLordButton.EffectDuration = GhostLord.duration;
                         GhostLord.isInGhostForm = true;
                     }
