@@ -644,7 +644,9 @@ namespace TheOtherRoles.Modules {
 
     public class CustomHatLoader {
         public static bool running = false;
-        private const string REPO = "https://raw.githubusercontent.com/TheForgottenOrganization/TheOtherHats/master";
+        // TODO problème avec le repo car ça ne marche pas avec mon repo, à voir pk
+        // private const string REPO = "https://raw.githubusercontent.com/TheForgottenOrganization/TheOtherHats/master";
+        private const string REPO = "https://raw.githubusercontent.com/Eisbison/TheOtherHats/master";
 
         public static List<CustomHatOnline> hatdetails = new List<CustomHatOnline>();
         private static Task hatFetchTask = null;
