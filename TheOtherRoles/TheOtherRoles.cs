@@ -741,7 +741,7 @@ namespace TheOtherRoles
                 Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
                 Il2CppSystem.Collections.Generic.List<byte> list = new Il2CppSystem.Collections.Generic.List<byte>(10);
 
-                List<NormalPlayerTask> list4 = MapUtilities.CachedShipStatus.NormalTasks.ToList<NormalPlayerTask>();
+                List<NormalPlayerTask> list4 = MapUtilities.CachedShipStatus.ShortTasks.ToList<NormalPlayerTask>();
                 list4.ForEach(delegate (NormalPlayerTask t)
                 {
                     t.Length = NormalPlayerTask.TaskLength.Short;
@@ -1065,9 +1065,10 @@ namespace TheOtherRoles
         {
             byte mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
             UseButtonSettings button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.PolusAdminButton]; // Polus
-            if (mapId == 0 || mapId == 3) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
-            else if (mapId == 1) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
-            else if (mapId == 4) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
+            if (Helpers.isSkeld() || mapId == 3) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
+            else if (Helpers.isMira()) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
+            else if (Helpers.isAirship()) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
+            else if (Helpers.isFungle()) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton];  // 
             adminSprite = button.Image;
             return adminSprite;
         }
@@ -1425,7 +1426,7 @@ namespace TheOtherRoles
     {
         public static PlayerControl cleaner;
         public static Color color = Palette.ImpostorRed;
-
+        public static List<Arrow> localArrows = new List<Arrow>();
         public static float cooldown = 30f;
 
         private static Sprite buttonSprite;
@@ -1440,6 +1441,13 @@ namespace TheOtherRoles
         {
             cleaner = null;
             cooldown = CustomOptionHolder.cleanerCooldown.getFloat();
+            if (localArrows != null)
+            {
+                foreach (Arrow arrow in localArrows)
+                    if (arrow?.arrow != null)
+                        UnityEngine.Object.Destroy(arrow.arrow);
+            }
+            localArrows = new List<Arrow>();
         }
     }
 
@@ -1552,6 +1560,14 @@ namespace TheOtherRoles
             if (staticVentSealedSprite) return staticVentSealedSprite;
             staticVentSealedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.StaticVentSealed.png", 160f);
             return staticVentSealedSprite;
+        }
+
+        private static Sprite fungleVentSealedSprite;
+        public static Sprite getFungleVentSealedSprite()
+        {
+            if (fungleVentSealedSprite) return fungleVentSealedSprite;
+            fungleVentSealedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.FungleVentSealed.png", 160f);
+            return fungleVentSealedSprite;
         }
 
         private static Sprite submergedCentralUpperVentSealedSprite;
@@ -2820,8 +2836,10 @@ namespace TheOtherRoles
                     chameleonPlayer.SetHatAndVisorAlpha(visibility);
                     chameleonPlayer.cosmetics.skin.layer.color = chameleonPlayer.cosmetics.skin.layer.color.SetAlpha(visibility);
                     chameleonPlayer.cosmetics.nameText.color = chameleonPlayer.cosmetics.nameText.color.SetAlpha(visibility);
-                    chameleonPlayer.cosmetics.currentPet.rend.color = chameleonPlayer.cosmetics.currentPet.rend.color.SetAlpha(petVisibility);
-                    chameleonPlayer.cosmetics.currentPet.shadowRend.color = chameleonPlayer.cosmetics.currentPet.shadowRend.color.SetAlpha(petVisibility);
+                    foreach (var rend in chameleonPlayer.cosmetics.currentPet.renderers)
+                        rend.color = rend.color.SetAlpha(petVisibility);
+                    foreach (var shadowRend in chameleonPlayer.cosmetics.currentPet.shadows)
+                        shadowRend.color = shadowRend.color.SetAlpha(petVisibility);
                 }
                 catch { }
             }
