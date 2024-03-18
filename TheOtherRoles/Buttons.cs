@@ -1239,7 +1239,7 @@ namespace TheOtherRoles
                 },
                 () => {
                     return Trickster.trickster != null && Trickster.trickster == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead
-                                                           && JackInTheBox.hasJackInTheBoxLimitReached() && JackInTheBox.boxesConvertedToVents;
+                                                           && !JackInTheBox.hasJackInTheBoxLimitReached() && !JackInTheBox.boxesConvertedToVents;
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !JackInTheBox.hasJackInTheBoxLimitReached(); },
                 () => { placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;},

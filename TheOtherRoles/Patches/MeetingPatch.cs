@@ -699,7 +699,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
-            // Add meeting extra button, i.e. Swapper Confirm Button or Mayor Toggle Double Vote Button. Swapper Button uses ExtraButtonText on the Left of the Button. (Future meeting buttons can easily be added here)
+        /*    // Add meeting extra button, i.e. Swapper Confirm Button or Mayor Toggle Double Vote Button. Swapper Button uses ExtraButtonText on the Left of the Button. (Future meeting buttons can easily be added here)
             if (addSwapperButtons || addMayorButton ) {
                 Transform meetingUI = UnityEngine.Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
 
@@ -747,7 +747,7 @@ namespace TheOtherRoles.Patches {
                         meetingExtraButton.parent.gameObject.SetActive(true);
                     }
                 })));
-            }
+            }*/
 
             // Add Swapper Buttons for Evil Mimic
             if (EvilMimic.evilMimic != null && CachedPlayer.LocalPlayer.PlayerControl == EvilMimic.evilMimic && !EvilMimic.evilMimic.Data.IsDead && EvilMimic.haveKilledSwapper)
@@ -824,7 +824,7 @@ namespace TheOtherRoles.Patches {
                     meetingExtraButtonLabel.text = Helpers.cs(Color.red, "Confirm Swap");
                 } else if (addMayorButton) {
                     meetingExtraButtonLabel.transform.localScale = new Vector3(meetingExtraButtonLabel.transform.localScale.x * 1.5f, meetingExtraButtonLabel.transform.localScale.x * 1.7f, meetingExtraButtonLabel.transform.localScale.x * 1.7f);
-                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "Double Vote: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "On ") : Helpers.cs(Color.red, "Off")));
+                    meetingExtraButtonLabel.text = Helpers.cs(Mayor.color, "Double Vote: " + (Mayor.voteTwice ? Helpers.cs(Color.green, "On") : Helpers.cs(Color.red, "Off")));
                 }
                 PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
                 passiveButton.OnClick.RemoveAllListeners();

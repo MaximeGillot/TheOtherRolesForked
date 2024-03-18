@@ -631,7 +631,8 @@ namespace TheOtherRoles {
                     // créer une vent à l'endroit ou il est mort ?
                     EvilMimic.haveKilledEngineer = true;
                     new CustomMessage("You have killed the engineer", 5f);
-                      Vent ElectricBuildingVent;
+                     
+                    Vent ElectricBuildingVent;
                       Vent ScienceBuildingVent;
                       Vent SubBathroomVent;
                       Vent BathroomVent;
