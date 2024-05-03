@@ -20,8 +20,7 @@ namespace TheOtherRoles.Modules {
         //private static Sprite horseModeOnSprite = null;
         private static AnnouncementPopUp popUp;
 
-        private static void Prefix(MainMenuManager __instance) {
-            CustomHatLoader.LaunchHatFetcher();
+        private static void Prefix(MainMenuManager __instance) {            
             var template = GameObject.Find("ExitGameButton");
             var template2 = GameObject.Find("CreditsButton");
             if (template == null || template2 == null) return;
@@ -130,7 +129,7 @@ ugackMiner53 - Idea and core code for the Prop Hunt game mode</size>";
                         DataManager.Player.Announcements.SetAnnouncements(new Announcement[] { creditsAnnouncement });
                         popUp.CreateAnnouncementList();
                         popUp.UpdateAnnouncementText(creditsAnnouncement.Number);
-                        popUp.visibleAnnouncements[0].PassiveButton.OnClick.RemoveAllListeners();
+                        popUp.visibleAnnouncements._items[0].PassiveButton.OnClick.RemoveAllListeners();
                         DataManager.Player.Announcements.allAnnouncements = backup;
                     }
                 })));

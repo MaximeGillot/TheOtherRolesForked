@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Version>4.4.2</Version>
+        <Version>4.5.0</Version>
         <Description>TheOtherRoles</Description>
         <Authors>Eisbison</Authors>
 		<LangVersion>latest</LangVersion>
@@ -18,16 +18,18 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="Resources\FungleVentSealed.png" />
       <None Remove="Resources\LoggerBackgroundBlue.png" />
       <None Remove="Resources\LoggerBackgroundRed.png" />
       <None Remove="Resources\LoggerBackgroundYellow.png" />
       <None Remove="Resources\LoggerButton.png" />
       <None Remove="Resources\UnlockManifold.png" />
+      <None Remove="Resources\Vent.png" />
     </ItemGroup>
    
 	<ItemGroup>
-		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2023.7.11" />
-        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.671" />
+    <PackageReference Include="AmongUs.GameLibs.Steam" Version="2024.3.5" />
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.671" />
 		<PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
         <PackageReference Include="Reactor" Version="2.2.0" />
     </ItemGroup>

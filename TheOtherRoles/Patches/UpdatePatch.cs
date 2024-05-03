@@ -231,7 +231,21 @@ namespace TheOtherRoles.Patches {
                     if (target != null)  player.NameText.text += $" ({(Helpers.isLighterColor(target) ? "L" : "D")})";
                 }
             }
+
+            // Add medic shield info:
+            if (MeetingHud.Instance != null && Medic.medic != null && Medic.shielded != null && Medic.shieldVisible(Medic.shielded))
+            {
+                foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+                    if (player.TargetPlayerId == Medic.shielded.PlayerId)
+                    {
+                        player.NameText.text = Helpers.cs(Medic.color, "[") + player.NameText.text + Helpers.cs(Medic.color, "]");
+                        // player.HighlightedFX.color = Medic.color;
+                        // player.HighlightedFX.enabled = true;
+                    }
+            }
         }
+
+
 
         static void updateShielded() {
             if (Medic.shielded == null) return;
@@ -288,8 +302,8 @@ namespace TheOtherRoles.Patches {
         }
 
         public static void miniUpdate() {
-            if (Mini.mini == null || Camouflager.camouflageTimer > 0f || Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f || Mini.mini == Ninja.ninja && Ninja.isInvisble || SurveillanceMinigamePatch.nightVisionIsActive) return;
-                
+            if (Mini.mini == null || Camouflager.camouflageTimer > 0f || Helpers.MushroomSabotageActive() || Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f || Mini.mini == Ninja.ninja && Ninja.isInvisble || SurveillanceMinigamePatch.nightVisionIsActive) return;
+
             float growingProgress = Mini.growingProgress();
             float scale = growingProgress * 0.35f + 0.35f;
             string suffix = "";

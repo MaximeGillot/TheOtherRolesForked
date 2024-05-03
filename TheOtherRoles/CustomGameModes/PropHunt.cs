@@ -122,6 +122,20 @@ namespace TheOtherRoles.CustomGameModes {
             return Helpers.loadSpriteFromResources($"TheOtherRoles.Resources.IntroAnimation.intro_{index + 1000}.png", 150f, cache: false);
         }
 
+        public static void updateWhitelistedObjects()
+        {
+            string allNames = Helpers.readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
+            bool debug = false;
+            if (debug)
+            {
+                allNames = Helpers.readTextFromFile(System.IO.Directory.GetCurrentDirectory() + "\\Props.txt");
+            }
+            TheOtherRolesPlugin.Logger.LogMessage($"after debug");
+            whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+            TheOtherRolesPlugin.Logger.LogMessage($"after split");
+
+            TheOtherRolesPlugin.Logger.LogMessage($"Last element: {whitelistedObjects.Last()}");
+        }
 
         public static void propTargetAndTimerDisplayUpdate() {
             
@@ -344,9 +358,9 @@ namespace TheOtherRoles.CustomGameModes {
             try {
                 Collider2D bestCollider = null;
                 float bestDist = 9999;
-                if (whitelistedObjects == null || whitelistedObjects.Count == 0) {
-                    string allNames = Helpers.readTextFromResources("TheOtherRoles.Resources.Txt.Props.txt");
-                    whitelistedObjects = allNames.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+                if (whitelistedObjects == null || whitelistedObjects.Count == 0 || verbose)
+                {
+                    updateWhitelistedObjects();
                 }
                 foreach (Collider2D collider in Physics2D.OverlapCircleAll(origin.transform.position, radius)) {
                     if (verbose) {

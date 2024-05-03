@@ -1,10 +1,15 @@
+using InnerNet;
+using Reactor.Utilities.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using UnityEngine;
+using static TheOtherRoles.TheOtherRoles;
 
-namespace TheOtherRoles.Objects 
+namespace TheOtherRoles.Objects
 {
     public class FootprintHolder : MonoBehaviour
     {
@@ -19,13 +24,13 @@ namespace TheOtherRoles.Objects
             set => _instance = value;
 
         }
-        
+
         private static Sprite _footprintSprite;
         private static Sprite FootprintSprite => _footprintSprite ??= Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Footprint.png", 600f);
 
         private static bool AnonymousFootprints => TheOtherRoles.Detective.anonymousFootprints;
         private static float FootprintDuration => TheOtherRoles.Detective.footprintDuration;
-        
+
         private class Footprint
         {
             public GameObject GameObject;
@@ -46,12 +51,12 @@ namespace TheOtherRoles.Objects
             }
         }
 
-       
+
 
         private readonly ConcurrentBag<Footprint> _pool = new();
         private readonly List<Footprint> _activeFootprints = new();
         private readonly List<Footprint> _toRemove = new();
-        
+
         [HideFromIl2Cpp]
         public void MakeFootprint(PlayerControl player)
         {
@@ -61,42 +66,45 @@ namespace TheOtherRoles.Objects
             }
 
             print.Lifetime = FootprintDuration;
-            
+
             var pos = player.transform.position;
             pos.z = pos.y / 1000f + 0.001f;
             print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, UnityEngine.Random.Range(0.0f, 360.0f)));
             print.GameObject.SetActive(true);
             print.Owner = player;
-            print.Data = player.Data;                                  
+            print.Data = player.Data;
             _activeFootprints.Add(print);
         }
 
-        private void Update()
+        private static float updateDt = 0.10f;
+
+        private void Start()
         {
-            var dt = Time.deltaTime;
+            InvokeRepeating(nameof(FootprintUpdate), updateDt, updateDt);
+        }
+
+        private void FootprintUpdate()
+        {
+            var dt = updateDt;
             _toRemove.Clear();
             foreach (var activeFootprint in _activeFootprints)
             {
                 var p = activeFootprint.Lifetime / FootprintDuration;
-                
+
                 if (activeFootprint.Lifetime <= 0)
                 {
                     _toRemove.Add(activeFootprint);
                     continue;
                 }
-                
+
                 Color color;
-                if (AnonymousFootprints || Camouflager.camouflageTimer > 0)
+                if (AnonymousFootprints || Camouflager.camouflageTimer > 0 || Helpers.MushroomSabotageActive())
                 {
                     color = Palette.PlayerColors[6];
                 }
                 else if (activeFootprint.Owner == Morphling.morphling && Morphling.morphTimer > 0 && Morphling.morphTarget && Morphling.morphTarget.Data != null)
                 {
                     color = Palette.PlayerColors[Morphling.morphTarget.Data.DefaultOutfit.ColorId];
-                }
-                else if (activeFootprint.Owner == Invisible.invisible && Invisible.invisibleTimer > 0 )
-                {
-                    color = Palette.PlayerColors[6];
                 }
                 else
                 {
@@ -108,7 +116,7 @@ namespace TheOtherRoles.Objects
 
                 activeFootprint.Lifetime -= dt;
             }
-            
+
             foreach (var footprint in _toRemove)
             {
                 footprint.GameObject.SetActive(false);

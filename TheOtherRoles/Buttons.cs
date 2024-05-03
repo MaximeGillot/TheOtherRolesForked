@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using TheOtherRoles.Players;
 using TheOtherRoles.Utilities;
 using TheOtherRoles.CustomGameModes;
+using TheOtherRoles.Patches;
 
 
 namespace TheOtherRoles
@@ -379,13 +380,13 @@ namespace TheOtherRoles
             // Engineer Open door
             engineerOpenDoorButton = new CustomButton(
                 () => {
-                    PlainDoor targetDoor = null;
+                    OpenableDoor targetDoor = null;
                     float targetDoorDistance = float.MaxValue;
                     float range = 2;
 
-                    foreach (PlainDoor door in MapUtilities.CachedShipStatus.AllDoors)
+                    foreach (OpenableDoor door in MapUtilities.CachedShipStatus.AllDoors)
                     {
-                        if (!door.Open)
+                        if (!door.IsOpen)
                         {
                             DeconControl decon = door.GetComponentInChildren<DeconControl>();
                             if (decon != null) { continue; }
@@ -402,11 +403,14 @@ namespace TheOtherRoles
                             }
                         }
                     }
+                    TheOtherRolesPlugin.Logger.LogInfo("id porte : " + targetDoor.ToString);
                     if (targetDoor == null) return;
 
-                    if(!targetDoor.Open)
+                    if(!targetDoor.IsOpen)
                     {
-                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Doors, targetDoor.Id | 64);
+                        TheOtherRolesPlugin.Logger.LogInfo("id porte : " + targetDoor.Id);
+                        // TODO peut etre probleme
+                        MapUtilities.CachedShipStatus.RpcRepairSystem(SystemTypes.Doors, (byte)(targetDoor.Id | 64));
                         targetDoor.SetDoorway(true);                        
                     }
                     SoundEffectsManager.play("engineerRepair");
@@ -643,7 +647,7 @@ namespace TheOtherRoles
                     }
                 },
                 () => { return Morphling.morphling != null && Morphling.morphling == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
-                () => { return Morphling.currentTarget  && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return Morphling.currentTarget  && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Helpers.MushroomSabotageActive(); },
                 () => {
                     morphlingSampleButton.Timer = 0;
                     morphlingSampleButton.Sprite = Morphling.getSampleSprite();
@@ -827,11 +831,11 @@ namespace TheOtherRoles
 
                    Hacker.chargesVitals--;
                },
-               () => { return Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 0 && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 3; },
+               () => { return Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && GameOptionsManager.Instance.currentGameOptions.MapId != 0 && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 3; },
                () => {
                    if (hackerVitalsChargesText != null) hackerVitalsChargesText.text = $"{Hacker.chargesVitals} / {Hacker.toolsNumber}";
-                   hackerVitalsButton.actionButton.graphic.sprite = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1 ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
-                   hackerVitalsButton.actionButton.OverrideText(GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1 ? "DOORLOG" : "VITALS");
+                   hackerVitalsButton.actionButton.graphic.sprite = Helpers.isMira() ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
+                   hackerVitalsButton.actionButton.OverrideText(Helpers.isMira() ? "DOORLOG" : "VITALS");
                    return Hacker.chargesVitals > 0;
                },
                () => {
@@ -849,12 +853,12 @@ namespace TheOtherRoles
                    hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
                    if(!hackerAdminTableButton.isEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                    if (Minigame.Instance) {
-                       if (GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1) Hacker.doorLog.ForceClose();
+                       if (Helpers.isMira()) Hacker.doorLog.ForceClose();
                        else Hacker.vitals.ForceClose();
                    }
                },
                false,
-              GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1 ? "DOORLOG" : "VITALS"
+              Helpers.isMira() ? "DOORLOG" : "VITALS"
            );
 
             // Hacker Vitals Charges
@@ -941,12 +945,15 @@ namespace TheOtherRoles
                                 }
                                 if (p == 1f) {
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                                    Helpers.checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, showAnimation: false);
-                                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
-                                    writer.Write(byte.MaxValue);
-                                    writer.Write(byte.MaxValue);
-                                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                    RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+                                    var res = Helpers.checkMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, showAnimation: false);
+                                    if (res == MurderAttemptResult.PerformKill)
+                                    {
+                                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
+                                        writer.Write(byte.MaxValue);
+                                        writer.Write(byte.MaxValue);
+                                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                                        RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+                                    }
                                 }
                             })));
                             SoundEffectsManager.play("vampireBite");
@@ -1230,7 +1237,10 @@ namespace TheOtherRoles
                     RPCProcedure.placeJackInTheBox(buff);
                     SoundEffectsManager.play("tricksterPlaceBox");
                 },
-                () => { return Trickster.trickster != null && Trickster.trickster == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && !JackInTheBox.hasJackInTheBoxLimitReached(); },
+                () => {
+                    return Trickster.trickster != null && Trickster.trickster == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead
+                                                           && !JackInTheBox.hasJackInTheBoxLimitReached() && !JackInTheBox.boxesConvertedToVents;
+                },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !JackInTheBox.hasJackInTheBoxLimitReached(); },
                 () => { placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;},
                 Trickster.getPlaceBoxButtonSprite(),
@@ -1374,7 +1384,7 @@ namespace TheOtherRoles
                         RPCProcedure.sealVent(SecurityGuard.ventTarget.Id);
                         SecurityGuard.ventTarget = null;
                         
-                    } else if (GameOptionsManager.Instance.currentNormalGameOptions.MapId != 1 && !SubmergedCompatibility.IsSubmerged) { // Place camera if there's no vent and it's not MiraHQ or Submerged
+                    } else if (!Helpers.isMira() && !Helpers.isFungle() && !SubmergedCompatibility.IsSubmerged) { // Place camera if there's no vent and it's not MiraHQ or Submerged
                         var pos = CachedPlayer.LocalPlayer.transform.position;
                         byte[] buff = new byte[sizeof(float) * 2];
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0*sizeof(float), sizeof(float));
@@ -1390,7 +1400,7 @@ namespace TheOtherRoles
                 },
                 () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
                 () => {
-                    securityGuardButton.actionButton.graphic.sprite = (SecurityGuard.ventTarget == null && GameOptionsManager.Instance.currentNormalGameOptions.MapId != 1 && !SubmergedCompatibility.IsSubmerged) ? SecurityGuard.getPlaceCameraButtonSprite() : SecurityGuard.getCloseVentButtonSprite(); 
+                    securityGuardButton.actionButton.graphic.sprite = (SecurityGuard.ventTarget == null && !Helpers.isMira() && !Helpers.isFungle() && !SubmergedCompatibility.IsSubmerged) ? SecurityGuard.getPlaceCameraButtonSprite() : SecurityGuard.getCloseVentButtonSprite(); 
                     if (securityGuardButtonScrewsText != null) securityGuardButtonScrewsText.text = $"{SecurityGuard.remainingScrews}/{SecurityGuard.totalScrews}";
 
                     if (SecurityGuard.ventTarget != null)
@@ -1413,12 +1423,12 @@ namespace TheOtherRoles
 
             securityGuardCamButton = new CustomButton(
                 () => {
-                    if (GameOptionsManager.Instance.currentNormalGameOptions.MapId != 1) {
+                    if (!Helpers.isMira()) {
                         if (SecurityGuard.minigame == null) {
                             byte mapId = GameOptionsManager.Instance.currentNormalGameOptions.MapId;
-                            var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("Surv_Panel") || x.name.Contains("Cam"));
-                            if (mapId == 0 || mapId == 3) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
-                            else if (mapId == 4) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
+                            var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("Surv_Panel") || x.name.Contains("Cam") || x.name.Contains("BinocularsSecurityConsole"));
+                            if (Helpers.isSkeld() || mapId == 3) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
+                            else if (Helpers.isAirship()) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
                             if (e == null || Camera.main == null) return;
                             SecurityGuard.minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                         }
@@ -1440,12 +1450,14 @@ namespace TheOtherRoles
                     if (SecurityGuard.cantMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
                     CachedPlayer.LocalPlayer.NetTransform.Halt(); // Stop current movement 
                 },
-                () => { return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews < Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice)
-                               && !SubmergedCompatibility.IsSubmerged; },
+                () => {
+                    return SecurityGuard.securityGuard != null && SecurityGuard.securityGuard == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead && SecurityGuard.remainingScrews < Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice)
+                               && !SubmergedCompatibility.IsSubmerged;
+                },
                 () => {
                     if (securityGuardChargesText != null) securityGuardChargesText.text = $"{SecurityGuard.charges} / {SecurityGuard.maxCharges}";
-                    securityGuardCamButton.actionButton.graphic.sprite = GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1 ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
-                    securityGuardCamButton.actionButton.OverrideText(GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1 ? "DOORLOG" : "SECURITY");
+                    securityGuardCamButton.actionButton.graphic.sprite = Helpers.isMira() ? SecurityGuard.getLogSprite() : SecurityGuard.getCamSprite();
+                    securityGuardCamButton.actionButton.OverrideText(Helpers.isMira() ? "DOORLOG" : "SECURITY");
                     return CachedPlayer.LocalPlayer.PlayerControl.CanMove && SecurityGuard.charges > 0;
                 },
                 () => {
@@ -1467,7 +1479,7 @@ namespace TheOtherRoles
                     CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                 },
                 false,
-                GameOptionsManager.Instance.currentNormalGameOptions.MapId == 1 ? "DOORLOG" : "SECURITY"
+                Helpers.isMira() ? "DOORLOG" : "SECURITY"
             );
 
             // Security Guard cam button charges
@@ -1850,7 +1862,7 @@ namespace TheOtherRoles
                 () => { return Ninja.ninja != null && Ninja.ninja == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => {  // CouldUse
                     ninjaButton.Sprite = Ninja.ninjaMarked != null ? Ninja.getKillButtonSprite() : Ninja.getMarkButtonSprite(); 
-                    return (Ninja.currentTarget != null || Ninja.ninjaMarked != null) && CachedPlayer.LocalPlayer.PlayerControl.CanMove && Ninja.ninja.killTimer <= 0;
+                    return (Ninja.currentTarget != null || Ninja.ninjaMarked != null && !TransportationToolPatches.isUsingTransportation(Ninja.ninjaMarked)) && CachedPlayer.LocalPlayer.PlayerControl.CanMove && Ninja.ninja.killTimer <= 0;
                 },
                 () => {  // on meeting ends
                     ninjaButton.Timer = ninjaButton.MaxTimer;
@@ -2491,6 +2503,7 @@ namespace TheOtherRoles
                 () => { return PropHunt.isPropHuntGM && !PlayerControl.LocalPlayer.Data.Role.IsImpostor && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () => {
                     propSpriteRenderer.sprite = PropHunt.currentTarget?.GetComponent<SpriteRenderer>()?.sprite;
+                    if (propSpriteRenderer.sprite == null) propSpriteRenderer.sprite = PropHunt.currentTarget?.transform.GetComponentInChildren<SpriteRenderer>()?.sprite;
                     if (propSpriteRenderer.sprite != null)
                         propSpriteHolder.transform.localScale *= 1 / propSpriteRenderer.bounds.size.magnitude;
                     return PropHunt.currentTarget != null && PropHunt.currentTarget?.GetComponent<SpriteRenderer>()?.sprite != null;
