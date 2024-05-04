@@ -277,17 +277,23 @@ namespace TheOtherRoles
             {
                 if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
                 {
-                    Undertaker.deadBodyDraged = array[i];
+                    Undertaker.deadBodyDraged = array[i];                   
                 }
             }
         }
 
-        public static void dropBody(byte playerId)
+        public static void dropBody(byte[] buff)
         {
-            if (Undertaker.undertaker == null || Undertaker.deadBodyDraged == null) return;
+            if (Undertaker.undertaker == null) return;
+            Vector3 position = Vector3.zero;
+            position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+            position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+            position.z = position.y / 1000 + 0.001f;
+
+            Undertaker.isDraging = false;
             var deadBody = Undertaker.deadBodyDraged;
+            deadBody.transform.position = position;
             Undertaker.deadBodyDraged = null;
-            deadBody.transform.position = new Vector3(Undertaker.undertaker.transform.localPosition.x, Undertaker.undertaker.transform.localPosition.y, Undertaker.undertaker.transform.localPosition.z - 0.001f);
         }
 
         public static void TransporterSwap(byte playerId)
@@ -918,6 +924,11 @@ namespace TheOtherRoles
                 Witch.futureSpelled = new List<PlayerControl>();
             if (player != null) {
                 Witch.futureSpelled.Add(player);
+
+                if(CachedPlayer.LocalPlayer.Data.Role.IsImpostor)
+                {
+                    new CustomMessage(player.name + " is witched", 5f);
+                }
             }            
         }
 
@@ -1746,7 +1757,7 @@ namespace TheOtherRoles
                     RPCProcedure.dragBody(reader.ReadByte());
                     break;
                 case (byte)CustomRPC.DropBody:
-                    RPCProcedure.dropBody(reader.ReadByte());
+                    RPCProcedure.dropBody(reader.ReadBytesAndSize());
                     break;
                 case (byte)CustomRPC.TransporterSwap:
                     RPCProcedure.TransporterSwap(reader.ReadByte());

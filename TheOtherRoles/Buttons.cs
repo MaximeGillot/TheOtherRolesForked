@@ -2229,11 +2229,18 @@ namespace TheOtherRoles
                     }
                     else
                     {
-                        var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DropBody, SendOption.Reliable, -1);
-                        writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        var pos = CachedPlayer.LocalPlayer.transform.position;
+                        byte[] buff = new byte[sizeof(float) * 2];
+                        Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                        Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                        var writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DropBody, Hazel.SendOption.Reliable);
+                        writer.WriteBytesAndSize(buff);
+                        writer.EndMessage();
+                        RPCProcedure.dropBody(buff);
                         Undertaker.deadBodyDraged = null;
                         Undertaker.isDraging = false;
+
                     }
 
                 },
@@ -2331,7 +2338,7 @@ namespace TheOtherRoles
             zoomOutButton = new CustomButton(
                 () => { Helpers.toggleZoom();
                 },
-                () => { if (CachedPlayer.LocalPlayer.PlayerControl == null || !CachedPlayer.LocalPlayer.Data.IsDead || CachedPlayer.LocalPlayer.Data.Role.IsImpostor) return false;
+                () => { if (CachedPlayer.LocalPlayer.PlayerControl == null || !CachedPlayer.LocalPlayer.Data.IsDead) return false;
                     var (playerCompleted, playerTotal) = TasksHandler.taskInfo(CachedPlayer.LocalPlayer.Data);
                     int numberOfLeftTasks = playerTotal - playerCompleted;
                     return numberOfLeftTasks <= 0 || !CustomOptionHolder.finishTasksBeforeHauntingOrZoomingOut.getBool();
