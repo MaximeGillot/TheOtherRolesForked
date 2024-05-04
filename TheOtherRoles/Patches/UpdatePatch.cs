@@ -285,7 +285,7 @@ namespace TheOtherRoles.Patches {
                 {
                     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                     {
-                        if (p != MrFreeze.mrFreeze)
+                        if (p != MrFreeze.mrFreeze && !p.Data.IsDead)
                         {
                             p.MyPhysics.Speed = 0;
                         }
@@ -295,7 +295,11 @@ namespace TheOtherRoles.Patches {
                 {
                     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                     {
-                        p.MyPhysics.Speed = MrFreeze.originalSpeed.Value;
+                        if(p.MyPhysics.Speed == 0 )
+                        {
+                            p.MyPhysics.Speed = MrFreeze.originalSpeed.Value;
+                        }
+                        
                     }
                 }
             }

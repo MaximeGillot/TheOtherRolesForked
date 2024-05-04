@@ -287,7 +287,7 @@ namespace TheOtherRoles
             if (Undertaker.undertaker == null || Undertaker.deadBodyDraged == null) return;
             var deadBody = Undertaker.deadBodyDraged;
             Undertaker.deadBodyDraged = null;
-            deadBody.transform.position = new Vector3(Undertaker.undertaker.transform.position.x, Undertaker.undertaker.transform.position.y, Undertaker.undertaker.transform.position.z);
+            deadBody.transform.position = new Vector3(Undertaker.undertaker.transform.localPosition.x, Undertaker.undertaker.transform.localPosition.y, Undertaker.undertaker.transform.localPosition.z - 0.001f);
         }
 
         public static void TransporterSwap(byte playerId)
@@ -918,7 +918,7 @@ namespace TheOtherRoles
                 Witch.futureSpelled = new List<PlayerControl>();
             if (player != null) {
                 Witch.futureSpelled.Add(player);
-            }
+            }            
         }
 
         public static void placeNinjaTrace(byte[] buff) {
