@@ -607,9 +607,16 @@ namespace TheOtherRoles {
                 }
                 else if (targetRole == RoleInfo.timeMaster)
                 {
-                    // TODO rajouter bonus
+                    // REset sabotage, à tester
+
                     EvilMimic.haveKilledTimeMaster = true;
                     new CustomMessage("You have killed the time master", 5f);
+
+                    var sabSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].TryCast<SabotageSystemType>();
+                    if (sabSystem != null)
+                    {
+                        sabSystem.Timer = 0.0f;
+                    }
                 }
                 else if (targetRole == RoleInfo.detective)
                 {
@@ -626,9 +633,7 @@ namespace TheOtherRoles {
                 }
                 else if (targetRole == RoleInfo.engineer)
                 {
-                    // activer camo pendant sabotage ?
-                    // activer light pendant sabotage comm et activer comm pendant sabotage ligt ?
-                    // créer une vent à l'endroit ou il est mort ?
+                    // toutes les vents sont reliées
                     EvilMimic.haveKilledEngineer = true;
                     new CustomMessage("You have killed the engineer", 5f);
                      

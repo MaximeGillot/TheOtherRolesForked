@@ -722,11 +722,11 @@ namespace TheOtherRoles
             {reward.haveBloddyModifier , "You earn bloody modifier" }, // done, ok
             {reward.haveMedicShield , "You earn a medic shield for 1 round" }, // marche pas
             {reward.haveDetectiveFootstep , "You earn detective footstep for 1 round" }, // done, ok           
-            {reward.sawColorVote , "You earn color vote at meeting" }, // done, à tester
+            {reward.sawColorVote , "You earn color vote at meeting" }, // done, ok
             {reward.nothing , "you earn nothing" }, // done, ok 
             {reward.easyTasker , "you are now easy tasker" }, // done, ok
             {reward.increasedVision , "Increased vision for the next " + increasedVisionDuration + " seconds"  }, // done, ok
-            {reward.trackingEveryone , "tracking everyone for the next " + trackingEveryoneDuration + " seconds"  }, // done, à tester
+            {reward.trackingEveryone , "tracking everyone for the next " + trackingEveryoneDuration + " seconds"  }, // done, ok
         };
 
         public static Sprite getClaimEasyTaskButtonSpirit()

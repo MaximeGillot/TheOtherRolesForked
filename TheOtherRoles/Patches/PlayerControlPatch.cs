@@ -754,7 +754,7 @@ namespace TheOtherRoles.Patches {
             if (Undertaker.undertaker == null || Undertaker.undertaker.Data.IsDead) return;
             if (Undertaker.deadBodyDraged != null)
             {
-                Vector3 currentPosition = Undertaker.undertaker.transform.position;
+                Vector3 currentPosition = Undertaker.undertaker.transform.localPosition;
                 Undertaker.deadBodyDraged.transform.position = currentPosition;
             }
 
