@@ -927,7 +927,7 @@ namespace TheOtherRoles
 
                 if(CachedPlayer.LocalPlayer.Data.Role.IsImpostor)
                 {
-                    new CustomMessage(player.name + " is witched", 5f);
+                    new CustomMessage(player.Data.PlayerName + " is witched", 5f); 
                 }
             }            
         }
