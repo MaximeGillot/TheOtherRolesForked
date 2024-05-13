@@ -74,6 +74,7 @@ namespace TheOtherRoles
             EvilHacker.clearAndReload();
             EvilMimic.clearAndReload();
             Bomber.clearAndReload();
+            Cloner.clearAndReload();
 
             // Modifier
             Bait.clearAndReload();
@@ -2341,6 +2342,48 @@ namespace TheOtherRoles
         }
     }
 
+    public static class Cloner
+    {
+        public static PlayerControl cloner;
+        public static Color color = Palette.ImpostorRed;
+      
+        public static String roomRegistered = "Dropship";
+        public static String currentRoom = "Dropship";
+        public static int nbDuplicate = 0;
+        
+        private static Sprite buttonSprite;
+        private static Sprite buttonPlusOneSprite;
+        private static Sprite buttonMinusOneSprite;
+        public static Sprite getButtonSprite()
+        {
+            if (buttonSprite) return buttonSprite;
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ClonerButton.png", 115f);
+            return buttonSprite;
+        }
+
+        public static Sprite getButtonPlusOneSprite()
+        {
+            if (buttonPlusOneSprite) return buttonPlusOneSprite;
+            buttonPlusOneSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ClonerButtonPlusOne.png", 115f);
+            return buttonPlusOneSprite;
+        }
+
+        public static Sprite getButtonMinusOneSprite()
+        {
+            if (buttonMinusOneSprite) return buttonMinusOneSprite;
+            buttonMinusOneSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ClonerButtonMinusOne.png", 115f);
+            return buttonMinusOneSprite;
+        }
+
+        public static void clearAndReload()
+        {
+            cloner = null;
+            roomRegistered = "Dropship";
+            currentRoom = "Dropship";
+            nbDuplicate = 0;
+        }
+    }
+
     public static class EvilMimic
     {
         public static PlayerControl evilMimic;
@@ -2544,6 +2587,7 @@ namespace TheOtherRoles
 
     public static class Bomber
     {
+        public static PlayerControl dummy = null;
         public static PlayerControl bomber = null;
         public static Color color = Palette.ImpostorRed;
 

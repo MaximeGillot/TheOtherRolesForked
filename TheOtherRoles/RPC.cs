@@ -18,6 +18,8 @@ using AmongUs.GameOptions;
 using Assets.CoreScripts;
 using System.Drawing;
 using Color = UnityEngine.Color;
+using static UnityEngine.GraphicsBuffer;
+using Hazel.Dtls;
 
 namespace TheOtherRoles
 {
@@ -74,6 +76,7 @@ namespace TheOtherRoles
         CrazyTasker,
         EvilHacker,
         EvilMimic,
+        Cloner,
         Crewmate,
         Impostor,
 
@@ -175,6 +178,9 @@ namespace TheOtherRoles
         EvilMimicKillMedic,
         EvilMimicKillSecurityGuard,
         CrazyTaskerEarnShield,
+        PlaceClone,
+        IncreaseNbClone,
+        DecreaseNbClone,
 
         // Gamemode
         SetGuesserGm,
@@ -475,6 +481,9 @@ namespace TheOtherRoles
                         break;
                     case RoleId.CrazyTasker:
                         CrazyTasker.crazyTasker = player;
+                        break;
+                    case RoleId.Cloner:                        
+                        Cloner.cloner = player;
                         break;
                     }
                     if (AmongUsClient.Instance.AmHost && Helpers.roleCanUseVents(player) && !player.Data.Role.IsImpostor)
@@ -863,6 +872,7 @@ namespace TheOtherRoles
             if (player == Bomber.bomber) Bomber.clearAndReload();
             if (player == EvilHacker.evilHacker) EvilHacker.clearAndReload();
             if (player == EvilMimic.evilMimic) EvilMimic.clearAndReload();
+            if (player == Cloner.cloner) Cloner.clearAndReload();
 
             // Other roles
             if (player == Jester.jester) Jester.clearAndReload();
@@ -1428,6 +1438,25 @@ namespace TheOtherRoles
             new Bomb(position);
         }
 
+        public static void placeClone(byte[] roomName)
+        {
+            Cloner.roomRegistered = Il2CppSystem.Text.Encoding.ASCII.GetString(roomName);
+            TheOtherRolesPlugin.Logger.LogInfo("placeClone BitConverter:  " + Il2CppSystem.Text.Encoding.ASCII.GetString(roomName));
+        }
+
+        public static void increaseNbClone()
+        {
+            Cloner.nbDuplicate++;
+            TheOtherRolesPlugin.Logger.LogInfo("increaseNbClone:  " + Cloner.nbDuplicate);
+        }
+
+        public static void decreaseNbClone()
+        {
+            Cloner.nbDuplicate--;
+            TheOtherRolesPlugin.Logger.LogInfo("increaseNbClone:  " + Cloner.nbDuplicate);
+        }
+
+
         public static void defuseBomb() {
             try {
                 SoundEffectsManager.playAtPosition("bombDefused", Bomber.bomb.bomb.transform.position, range: Bomber.hearRange);
@@ -1437,7 +1466,6 @@ namespace TheOtherRoles
             bomberButton.isEffectActive = false;
             bomberButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
         }
-
         public static void shareRoom(byte playerId, byte roomId) {
             if (Snitch.playerRoomMap.ContainsKey(playerId)) Snitch.playerRoomMap[playerId] = roomId;
             else Snitch.playerRoomMap.Add(playerId, roomId);
@@ -1769,7 +1797,15 @@ namespace TheOtherRoles
                 case (byte)CustomRPC.MrFreezeFreeze:
                     RPCProcedure.mrFreezeFreeze();
                     break;
-
+                case (byte)CustomRPC.PlaceClone:
+                    RPCProcedure.placeClone(reader.ReadBytesAndSize());
+                    break;
+                case (byte)CustomRPC.IncreaseNbClone:
+                    RPCProcedure.increaseNbClone();
+                    break;
+                case (byte)CustomRPC.DecreaseNbClone:
+                    RPCProcedure.decreaseNbClone();
+                    break;
                 // Game mode
                 case (byte)CustomRPC.SetGuesserGm:
                     byte guesserGm = reader.ReadByte();

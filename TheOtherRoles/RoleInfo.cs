@@ -55,7 +55,7 @@ namespace TheOtherRoles
         public static RoleInfo ghostLord = new RoleInfo("Ghost Lord", GhostLord.color, "Kill everyone and turn into ghost", "Suprise Crewmates", RoleId.GhostLord);
         public static RoleInfo evilHacker = new RoleInfo("Evil Hacker", EvilHacker.color, "Hack systems to confuse golems", "confuse Crewmates", RoleId.EvilHacker);
         public static RoleInfo evilMimic = new RoleInfo("Evil Mimic", EvilMimic.color, "kill golems and earn their abilities", "learn from Crewmates", RoleId.EvilMimic);
-
+        public static RoleInfo cloner = new RoleInfo("Cloner", Cloner.color, "duplicate yourself to fool golems", "duplicate yourself", RoleId.Cloner);
 
         public static RoleInfo detective = new RoleInfo("Detective", Detective.color, "Find the <color=#FF1919FF>Impostors</color> by examining footprints", "Examine footprints", RoleId.Detective);
         public static RoleInfo timeMaster = new RoleInfo("Time Master", TimeMaster.color, "Save yourself with your time shield", "Use your time shield", RoleId.TimeMaster);
@@ -137,6 +137,7 @@ namespace TheOtherRoles
             mrFreeze,
             evilHacker,
             evilMimic,
+            cloner,
             goodGuesser,
             badGuesser,
             lover,
@@ -268,6 +269,7 @@ namespace TheOtherRoles
             if (p == EvilHacker.evilHacker) infos.Add(evilHacker);
             if (p == EvilMimic.evilMimic) infos.Add(evilMimic);
             if (p == CrazyTasker.crazyTasker) infos.Add(crazyTasker);
+            if (p == Cloner.cloner) infos.Add(cloner);
 
 
             // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek, prop hunt prop ...

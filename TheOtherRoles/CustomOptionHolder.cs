@@ -120,6 +120,8 @@ namespace TheOtherRoles {
         public static CustomOption evilHackerDuration;
         public static CustomOption evilHackerNoMove;
 
+        public static CustomOption clonerSpawnRate;
+
         public static CustomOption evilMimicSpawnRate;
         public static CustomOption evilMimicReducedCooldownKillingSheriff;
 
@@ -572,6 +574,8 @@ namespace TheOtherRoles {
             evilHackerCooldown = CustomOption.Create(561, Types.Impostor, "Evil Hacker Cooldown", 27.5f, 1f, 60f, 0.5f, evilHackerSpawnRate);
             evilHackerDuration = CustomOption.Create(562, Types.Impostor, "Evil Hacker Duration", 6f, 1f, 20f, 0.5f, evilHackerSpawnRate);
             evilHackerNoMove = CustomOption.Create(563, Types.Impostor, "Cant Move During Mobile Gadget Duration", true, evilHackerSpawnRate);
+
+            clonerSpawnRate = CustomOption.Create(580, Types.Impostor, cs(EvilHacker.color, "Cloner"), rates, null, true);
 
             evilMimicSpawnRate = CustomOption.Create(570, Types.Impostor, cs(EvilMimic.color, "Evil Mimic"), rates, null, true);
             evilMimicReducedCooldownKillingSheriff = CustomOption.Create(571, Types.Impostor, "Bonus Cooldown After Killing Sheriff", 2.5f, 0f, 30f, 1f, evilMimicSpawnRate);
