@@ -60,6 +60,9 @@ namespace TheOtherRoles
         public static CustomButton mayorMeetingButton;
         public static CustomButton thiefKillButton;
         public static CustomButton trapperButton;
+        public static CustomButton clonerButton;
+        public static CustomButton clonerButtonPlusOne;
+        public static CustomButton clonerButtonMinusOne;
         public static CustomButton bomberButton;
         public static CustomButton defuseButton;
         public static CustomButton zoomOutButton;
@@ -89,6 +92,8 @@ namespace TheOtherRoles
 
         public static TMPro.TMP_Text securityGuardButtonScrewsText;
         public static TMPro.TMP_Text securityGuardChargesText;
+        public static TMPro.TMP_Text ClonerRoomRegisteredText;
+        public static TMPro.TMP_Text ClonerNbDuplicateText;        
         public static TMPro.TMP_Text deputyButtonHandcuffsText;
         public static TMPro.TMP_Text pursuerButtonBlanksText;
         public static TMPro.TMP_Text hackerAdminTableChargesText;
@@ -149,6 +154,12 @@ namespace TheOtherRoles
             mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
             trapperButton.MaxTimer = Trapper.cooldown;
             bomberButton.MaxTimer = Bomber.bombCooldown;
+            clonerButton.MaxTimer = 0f;
+            clonerButton.Timer = 0f;
+            clonerButtonPlusOne.MaxTimer = 0f;
+            clonerButtonPlusOne.Timer = 0f;
+            clonerButtonMinusOne.MaxTimer = 0f;
+            clonerButtonMinusOne.Timer = 0f;
             hunterLighterButton.MaxTimer = Hunter.lightCooldown;
             hunterAdminTableButton.MaxTimer = Hunter.AdminCooldown;
             hunterArrowButton.MaxTimer = Hunter.ArrowCooldown;
@@ -1675,7 +1686,10 @@ namespace TheOtherRoles
 
                 },
                 () => { // has button
-                    return CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead;
+                    return false;
+                    //TODO à corriger
+
+                   // return CrazyTasker.crazyTasker != null && CrazyTasker.crazyTasker == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead;
                 },
                 () => { // could use
                       return NormalPlayerTask.AllTasksCompleted(CrazyTasker.crazyTasker); ;                    
@@ -1962,25 +1976,103 @@ namespace TheOtherRoles
                 KeyCode.F
             );
 
+
+            // cloner button
+            clonerButton = new CustomButton(
+                () => {
+
+                    Cloner.roomRegistered = Cloner.currentRoom;
+                    byte[] bytes = Il2CppSystem.Text.Encoding.ASCII.GetBytes(Cloner.roomRegistered);
+
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceClone, Hazel.SendOption.Reliable);
+                    writer.WriteBytesAndSize(bytes);
+                    writer.EndMessage();
+                    RPCProcedure.placeClone(bytes);
+                   
+                    SoundEffectsManager.play("trapperTrap");
+
+                },
+                () => { return Cloner.cloner != null && Cloner.cloner == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => {
+                   if (ClonerRoomRegisteredText != null) ClonerRoomRegisteredText.text = $"{Cloner.roomRegistered}";
+                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { Cloner.nbDuplicate = 0; },
+                Cloner.getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F
+            );
+
+            ClonerRoomRegisteredText = GameObject.Instantiate(clonerButton.actionButton.cooldownTimerText, clonerButton.actionButton.cooldownTimerText.transform.parent);
+            ClonerRoomRegisteredText.text = "";
+            ClonerRoomRegisteredText.enableWordWrapping = false;
+            ClonerRoomRegisteredText.transform.localScale = Vector3.one * 0.5f;
+            ClonerRoomRegisteredText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+            ;  
+
+
+            // cloner -1 button
+            clonerButtonMinusOne = new CustomButton(
+                () => {
+                    RPCProcedure.decreaseNbClone();         
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.DecreaseNbClone, Hazel.SendOption.Reliable);
+                    writer.EndMessage();
+                },
+                () => { return Cloner.cloner != null && Cloner.cloner == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => {  return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => {},
+                Cloner.getButtonMinusOneSprite(),
+                CustomButton.ButtonPositions.lowerRowCenter,
+                __instance,
+                KeyCode.F
+            );
+
+
+            // cloner +1 button
+            clonerButtonPlusOne = new CustomButton(
+                () => {
+
+                    RPCProcedure.increaseNbClone();
+                    MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.IncreaseNbClone, Hazel.SendOption.Reliable);
+                    writer.EndMessage();
+
+                },
+                () => { return Cloner.cloner != null && Cloner.cloner == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+                () => { if (ClonerNbDuplicateText != null) ClonerNbDuplicateText.text = $"{Cloner.nbDuplicate} clones";
+                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => {},
+                Cloner.getButtonPlusOneSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                __instance,
+                KeyCode.F
+            );
+
+            ClonerNbDuplicateText = GameObject.Instantiate(clonerButtonPlusOne.actionButton.cooldownTimerText, clonerButtonPlusOne.actionButton.cooldownTimerText.transform.parent);
+            ClonerNbDuplicateText.text = "";
+            ClonerNbDuplicateText.enableWordWrapping = false;
+            ClonerNbDuplicateText.transform.localScale = Vector3.one * 0.5f;
+            ClonerNbDuplicateText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+
+
             // Bomber button
             bomberButton = new CustomButton(
                 () => {
-                    if (Helpers.checkMuderAttempt(Bomber.bomber, Bomber.bomber) != MurderAttemptResult.BlankKill) {
-                        var pos = CachedPlayer.LocalPlayer.transform.position;
-                        byte[] buff = new byte[sizeof(float) * 2];
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                          if (Helpers.checkMuderAttempt(Bomber.bomber, Bomber.bomber) != MurderAttemptResult.BlankKill) {
+                          var pos = CachedPlayer.LocalPlayer.transform.position;
+                          byte[] buff = new byte[sizeof(float) * 2];
+                          Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                          Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                        MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceBomb, Hazel.SendOption.Reliable);
-                        writer.WriteBytesAndSize(buff);
-                        writer.EndMessage();
-                        RPCProcedure.placeBomb(buff);
+                          MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceBomb, Hazel.SendOption.Reliable);
+                          writer.WriteBytesAndSize(buff);
+                          writer.EndMessage();
+                          RPCProcedure.placeBomb(buff);
 
-                        SoundEffectsManager.play("trapperTrap");
-                    }
+                          SoundEffectsManager.play("trapperTrap");
+                      }
 
-                    bomberButton.Timer = bomberButton.MaxTimer;
-                    Bomber.isPlanted = true;
+                      bomberButton.Timer = bomberButton.MaxTimer;
+                      Bomber.isPlanted = true;
                 },
                 () => { return Bomber.bomber != null && Bomber.bomber == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Bomber.isPlanted; },

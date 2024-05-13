@@ -15,6 +15,7 @@ using Reactor.Utilities.Extensions;
 using AmongUs.GameOptions;
 using static Il2CppSystem.Net.Http.Headers.Parser;
 
+
 namespace TheOtherRoles.Patches {
 
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
@@ -373,93 +374,176 @@ namespace TheOtherRoles.Patches {
         [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.Update))]
         class MapCountOverlayUpdatePatch
         {
-            /*  static bool Prefix(MapCountOverlay __instance)
-              {
-                  __instance.timer += Time.deltaTime;
-                  if (__instance.timer < 0.1f)
+            static bool Prefix(MapCountOverlay __instance)
+            {
+                __instance.timer += Time.deltaTime;
+                if (__instance.timer < 0.1f)
+
+                {
+                    return false;
+                }
+                __instance.timer = 0f;
+                if (!__instance.isSab && PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                {
+                    __instance.isSab = true;
+                    __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
+                    __instance.SabotageText.gameObject.SetActive(true);
+                    return false;
+                }
+                if (__instance.isSab && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+
+                {
+                    __instance.isSab = false;
+                    __instance.BackgroundColor.SetColor(Color.green);
+                    __instance.SabotageText.gameObject.SetActive(false);
+                }
+               HashSet<int> hashSet = new HashSet<int>();
+                for (int i = 0; i < __instance.CountAreas.Length; i++)
+                {
+                    CounterArea counterArea = __instance.CountAreas[i];
+                    if (!PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                    {
+                        PlainShipRoom plainShipRoom;
+                        if (ShipStatus.Instance.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
+                        {
+                            int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
+                            int num2 = 0;
+                            for (int j = 0; j < num; j++)
+                            {
+                                Collider2D collider2D = __instance.buffer[j];
+                                if (collider2D.CompareTag("DeadBody") && __instance.includeDeadBodies)
+                                {
+                                    DeadBody component = collider2D.GetComponent<DeadBody>();
+                                    if (component != null && hashSet.Add((int)component.ParentId))
+                                    {
+                                        num2++;
+                                    }
+                                }
+
+                                else if (!collider2D.isTrigger)
+                                {
+                                    PlayerControl component2 = collider2D.GetComponent<PlayerControl>();
+                                    if (component2 && component2.Data != null && !component2.Data.Disconnected && !component2.Data.IsDead && (__instance.showLivePlayerPosition || !component2.AmOwner) && hashSet.Add((int)component2.PlayerId))
+                                    {
+                                        num2++;                                       
+
+                                    }
+                                }
+                            }
+
+                            if (Cloner.cloner != null && Cloner.roomRegistered != null && counterArea.RoomType.ToString() == Cloner.roomRegistered)
+                            {
+                                num2 += Cloner.nbDuplicate;
+                            }
+                            TheOtherRolesPlugin.Logger.LogInfo(" admin current room id:  " + counterArea.RoomType.ToString());
+                            TheOtherRolesPlugin.Logger.LogInfo("admin current room name:  " + counterArea.name);
+
+                            counterArea.UpdateCount(num2);
+                        }
+
+                        else
+                        {
+                            Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType.ToString());
+                        }
+                    }
+
+                    else
+                    {
+                        counterArea.UpdateCount(0);
+                    }
+                }
+                return false;
+            }
+        
+
+                /*  static bool Prefix(MapCountOverlay __instance)
                   {
-                      return false;
-                  }
-                  __instance.timer = 0f;
-                  if (!__instance.isSab && PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
-                  {
-                      __instance.isSab = true;
-                      __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
-                      __instance.SabotageText.gameObject.SetActive(true);
-                      return false;
-                  }
-                  if (__instance.isSab && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
-                  {
-                      __instance.isSab = false;
-                      __instance.BackgroundColor.SetColor(Color.green);
-                      __instance.SabotageText.gameObject.SetActive(false);
-                  }
-                  HashSet<int> hashSet = new HashSet<int>();
-                  for (int i = 0; i < __instance.CountAreas.Length; i++)
-                  {
-                      CounterArea counterArea = __instance.CountAreas[i];
-                      List<Color> roomColors = new List<Color>();
-                      players.Add(counterArea.RoomType, roomColors);
-                      if (!PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                      __instance.timer += Time.deltaTime;
+                      if (__instance.timer < 0.1f)
                       {
-                          PlainShipRoom plainShipRoom;
-                          if (ShipStatus.Instance.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
+                          return false;
+                      }
+                      __instance.timer = 0f;
+                      if (!__instance.isSab && PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                      {
+                          __instance.isSab = true;
+                          __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
+                          __instance.SabotageText.gameObject.SetActive(true);
+                          return false;
+                      }
+                      if (__instance.isSab && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+                      {
+                          __instance.isSab = false;
+                          __instance.BackgroundColor.SetColor(Color.green);
+                          __instance.SabotageText.gameObject.SetActive(false);
+                      }
+                      HashSet<int> hashSet = new HashSet<int>();
+                      for (int i = 0; i < __instance.CountAreas.Length; i++)
+                      {
+                          CounterArea counterArea = __instance.CountAreas[i];
+                          List<Color> roomColors = new List<Color>();
+                          players.Add(counterArea.RoomType, roomColors);
+                          if (!PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
                           {
-                              int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
-                              int num2 = 0;
-                              for (int j = 0; j < num; j++)
+                              PlainShipRoom plainShipRoom;
+                              if (ShipStatus.Instance.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
                               {
-                                  Collider2D collider2D = __instance.buffer[j];
-                                  if (collider2D.CompareTag("DeadBody") && __instance.includeDeadBodies)
+                                  int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
+                                  int num2 = 0;
+                                  for (int j = 0; j < num; j++)
                                   {
-                                      DeadBody component = collider2D.GetComponent<DeadBody>();
-                                      if (component != null && hashSet.Add((int)component.ParentId))
-                                      {                                        
-                                          num2++;
-                                          GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-                                          if(playerInfo != null)
-                                          {
-                                              var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
-                                              if (Hacker.onlyColorType)
-                                                  color = Helpers.isD(playerInfo.PlayerId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
-                                              roomColors.Add(color);
-                                          }
-                                      }
-                                  }
-                                  else if (!collider2D.isTrigger)
-                                  {
-                                      PlayerControl component2 = collider2D.GetComponent<PlayerControl>();
-                                      if (component2 && component2.Data != null && !component2.Data.Disconnected && !component2.Data.IsDead && (__instance.showLivePlayerPosition || !component2.AmOwner) && hashSet.Add((int)component2.PlayerId))
+                                      Collider2D collider2D = __instance.buffer[j];
+                                      if (collider2D.CompareTag("DeadBody") && __instance.includeDeadBodies)
                                       {
-                                          num2++;
-                                          if (component2?.cosmetics?.currentBodySprite?.BodySprite?.material != null)
-                                          {
-                                              Color color = component2.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
-                                              if (Hacker.onlyColorType)
+                                          DeadBody component = collider2D.GetComponent<DeadBody>();
+                                          if (component != null && hashSet.Add((int)component.ParentId))
+                                          {                                        
+                                              num2++;
+                                              GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                              if(playerInfo != null)
                                               {
-                                                  color = Helpers.isLighterColor(component2) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                                  var color = Palette.PlayerColors[playerInfo.DefaultOutfit.ColorId];
+                                                  if (Hacker.onlyColorType)
+                                                      color = Helpers.isD(playerInfo.PlayerId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                                  roomColors.Add(color);
                                               }
-                                              roomColors.Add(color);
+                                          }
+                                      }
+                                      else if (!collider2D.isTrigger)
+                                      {
+                                          PlayerControl component2 = collider2D.GetComponent<PlayerControl>();
+                                          if (component2 && component2.Data != null && !component2.Data.Disconnected && !component2.Data.IsDead && (__instance.showLivePlayerPosition || !component2.AmOwner) && hashSet.Add((int)component2.PlayerId))
+                                          {
+                                              num2++;
+                                              if (component2?.cosmetics?.currentBodySprite?.BodySprite?.material != null)
+                                              {
+                                                  Color color = component2.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
+                                                  if (Hacker.onlyColorType)
+                                                  {
+                                                      color = Helpers.isLighterColor(component2) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                                  }
+                                                  roomColors.Add(color);
+                                              }
                                           }
                                       }
                                   }
+                                  counterArea.UpdateCount(num2);
                               }
-                              counterArea.UpdateCount(num2);
+                              else
+                              {                            
+                                  Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType.ToString());
+                              }
                           }
                           else
-                          {                            
-                              Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType.ToString());
-                          }
+                          {
+                              counterArea.UpdateCount(0);
+                          }                    
                       }
-                      else
-                      {
-                          counterArea.UpdateCount(0);
-                      }                    
+                      return false;
                   }
-                  return false;
-              }
-              }*/
-        }
+                  }*/
+            
+            }
 
         [HarmonyPatch(typeof(CounterArea), nameof(CounterArea.UpdateCount))]
         class CounterAreaUpdateCountPatch {
