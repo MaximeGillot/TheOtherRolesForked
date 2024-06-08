@@ -116,6 +116,9 @@ namespace TheOtherRoles
 
             CredentialsPatch.PingTrackerPatch.modStamp = new GameObject();
             Object.DontDestroyOnLoad(CredentialsPatch.PingTrackerPatch.modStamp);
+
+            CredentialsPatch.PingTrackerPatch.modStamp = new GameObject();
+            Object.DontDestroyOnLoad(CredentialsPatch.PingTrackerPatch.modStamp);
             
             Types = AccessTools.GetTypesFromAssembly(Assembly);
             

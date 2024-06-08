@@ -43,6 +43,7 @@ namespace TheOtherRoles
         public static CustomButton jackalKillButton;
         public static CustomButton sidekickKillButton;
         private static CustomButton jackalSidekickButton;
+        public static CustomButton jackalAndSidekickSabotageLightsButton;
         private static CustomButton eraserButton;
         private static CustomButton placeJackInTheBoxButton;        
         private static CustomButton lightsOutButton;
@@ -56,6 +57,8 @@ namespace TheOtherRoles
         public static CustomButton crazyTaskerButton;
         public static CustomButton pursuerButton;
         public static CustomButton witchSpellButton;
+        public static CustomButton yoyoButton;
+        public static CustomButton yoyoAdminTableButton;
         public static CustomButton ninjaButton;
         public static CustomButton mayorMeetingButton;
         public static CustomButton thiefKillButton;
@@ -154,6 +157,9 @@ namespace TheOtherRoles
             mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
             trapperButton.MaxTimer = Trapper.cooldown;
             bomberButton.MaxTimer = Bomber.bombCooldown;
+            yoyoButton.MaxTimer = Yoyo.markCooldown;
+            yoyoAdminTableButton.MaxTimer = Yoyo.adminCooldown;
+            yoyoAdminTableButton.EffectDuration = 10f;
             clonerButton.MaxTimer = 0f;
             clonerButton.Timer = 0f;
             clonerButtonPlusOne.MaxTimer = 0f;
@@ -1159,6 +1165,27 @@ namespace TheOtherRoles
             portalmakerButtonText2.transform.localScale = Vector3.one * 0.5f;
             portalmakerButtonText2.transform.localPosition += new Vector3(-0.05f, 0.55f, -1f);
 
+            jackalAndSidekickSabotageLightsButton = new CustomButton(
+                () => {
+                    ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
+                },
+                () => {
+                    return (Jackal.jackal != null && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl && Jackal.canSabotageLights ||
+                            Sidekick.sidekick != null && Sidekick.sidekick == CachedPlayer.LocalPlayer.PlayerControl && Sidekick.canSabotageLights) && !CachedPlayer.LocalPlayer.Data.IsDead;
+                },
+                () => {
+                    if (Helpers.sabotageTimer() > jackalAndSidekickSabotageLightsButton.Timer || Helpers.sabotageActive())
+                        jackalAndSidekickSabotageLightsButton.Timer = Helpers.sabotageTimer() + 5f;  // this will give imps time to do another sabotage.
+                    return Helpers.canUseSabotage();
+                },
+                () => {
+                    jackalAndSidekickSabotageLightsButton.Timer = Helpers.sabotageTimer() + 5f;
+                },
+                Trickster.getLightsOutButtonSprite(),
+                CustomButton.ButtonPositions.upperRowCenter,
+                __instance,
+                KeyCode.G
+            );
 
 
             // Jackal Sidekick Button
@@ -2417,6 +2444,144 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.F
             );
+
+            yoyoButton = new CustomButton(
+               () => {
+                   var pos = CachedPlayer.LocalPlayer.transform.position;
+                   byte[] buff = new byte[sizeof(float) * 2];
+                   Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                   Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                   if (Yoyo.markedLocation == null)
+                   {
+                       TheOtherRolesPlugin.Logger.LogMessage($"marked location is null in button press");
+                       MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoMarkLocation, Hazel.SendOption.Reliable);
+                       writer.WriteBytesAndSize(buff);
+                       writer.EndMessage();
+                       RPCProcedure.yoyoMarkLocation(buff);
+                       SoundEffectsManager.play("tricksterPlaceBox");
+                       yoyoButton.Sprite = Yoyo.getBlinkButtonSprite();
+                       yoyoButton.Timer = 10f;
+                       yoyoButton.HasEffect = false;
+                       yoyoButton.buttonText = "Blink";
+                   }
+                   else
+                   {
+                       TheOtherRolesPlugin.Logger.LogMessage("in else for some reason");
+                       // Jump to location
+                       TheOtherRolesPlugin.Logger.LogMessage($"trying to blink!");
+                       var exit = (Vector3)Yoyo.markedLocation;
+                       if (SubmergedCompatibility.IsSubmerged)
+                       {
+                           SubmergedCompatibility.ChangeFloor(exit.y > -7);
+                       }
+                       MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, Hazel.SendOption.Reliable);
+                       writer.Write(Byte.MaxValue);
+                       writer.WriteBytesAndSize(buff);
+                       writer.EndMessage();
+                       RPCProcedure.yoyoBlink(true, buff);
+                       yoyoButton.EffectDuration = Yoyo.blinkDuration;
+                       yoyoButton.Timer = 10f;
+                       yoyoButton.HasEffect = true;
+                       yoyoButton.buttonText = "Returning...";
+                       SoundEffectsManager.play("morphlingMorph");
+                   }
+               },
+               () => { return Yoyo.yoyo != null && Yoyo.yoyo == CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.Data.IsDead; },
+               () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+               () => {
+                   if (Yoyo.markStaysOverMeeting)
+                   {
+                       yoyoButton.Timer = 10f;
+                   }
+                   else
+                   {
+                       Yoyo.markedLocation = null;
+                       yoyoButton.Timer = yoyoButton.MaxTimer;
+                       yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
+                       yoyoButton.buttonText = "Mark Location";
+                   }
+               },
+               Yoyo.getMarkButtonSprite(),
+               CustomButton.ButtonPositions.upperRowLeft,
+               __instance,
+               KeyCode.F,
+               false,
+               Yoyo.blinkDuration,
+               () => {
+                   if (TransportationToolPatches.isUsingTransportation(Yoyo.yoyo))
+                   {
+                       yoyoButton.Timer = 0.5f;
+                       yoyoButton.DeputyTimer = 0.5f;
+                       yoyoButton.isEffectActive = true;
+                       yoyoButton.actionButton.cooldownTimerText.color = new Color(0F, 0.8F, 0F);
+                       return;
+                   }
+                   else if (Yoyo.yoyo.inVent)
+                   {
+                       __instance.ImpostorVentButton.DoClick();
+                   }
+                   // jump back!
+                   var pos = CachedPlayer.LocalPlayer.transform.position;
+                   byte[] buff = new byte[sizeof(float) * 2];
+                   Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                   Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                   var exit = (Vector3)Yoyo.markedLocation;
+                   if (SubmergedCompatibility.IsSubmerged)
+                   {
+                       SubmergedCompatibility.ChangeFloor(exit.y > -7);
+                   }
+                   MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.YoyoBlink, Hazel.SendOption.Reliable);
+                   writer.Write((byte)0);
+                   writer.WriteBytesAndSize(buff);
+                   writer.EndMessage();
+                   RPCProcedure.yoyoBlink(false, buff);
+                   yoyoButton.Timer = yoyoButton.MaxTimer;
+                   yoyoButton.isEffectActive = false;
+                   yoyoButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+                   yoyoButton.HasEffect = false;
+                   yoyoButton.Sprite = Yoyo.getMarkButtonSprite();
+                   yoyoButton.buttonText = "Mark Location";
+                   SoundEffectsManager.play("morphlingMorph");
+                   if (Minigame.Instance)
+                   {
+                       Minigame.Instance.Close();
+                   }
+               },
+               buttonText: "Mark Location"
+           );
+
+            yoyoAdminTableButton = new CustomButton(
+               () => {
+                   if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
+                   {
+                       HudManager __instance = FastDestroyableSingleton<HudManager>.Instance;
+                       __instance.InitMap();
+                       MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: true);
+                   }
+               },
+               () => { return Yoyo.yoyo != null && Yoyo.yoyo == CachedPlayer.LocalPlayer.PlayerControl && Yoyo.hasAdminTable && !CachedPlayer.LocalPlayer.Data.IsDead; },
+               () => {
+                   return true;
+               },
+               () => {
+                   yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
+                   yoyoAdminTableButton.isEffectActive = false;
+                   yoyoAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
+               },
+               Hacker.getAdminSprite(),
+               CustomButton.ButtonPositions.lowerRowCenter,
+               __instance,
+               KeyCode.G,
+               true,
+               0f,
+               () => {
+                   yoyoAdminTableButton.Timer = yoyoAdminTableButton.MaxTimer;
+                   if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
+               },
+               GameOptionsManager.Instance.currentNormalGameOptions.MapId == 3,
+               "ADMIN"
+           );
 
 
 

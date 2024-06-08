@@ -125,6 +125,7 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Invisible, CustomOptionHolder.invisibleSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.MrFreeze, CustomOptionHolder.mrFreezeSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Bomber, CustomOptionHolder.bomberSpawnRate.getSelection());
+            impSettings.Add((byte)RoleId.Yoyo, CustomOptionHolder.yoyoSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.EvilHacker, CustomOptionHolder.evilHackerSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.EvilMimic, CustomOptionHolder.evilMimicSpawnRate.getSelection());
             impSettings.Add((byte)RoleId.Cloner, CustomOptionHolder.clonerSpawnRate.getSelection());

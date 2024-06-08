@@ -432,10 +432,12 @@ namespace TheOtherRoles.Patches {
             if (Tracker.arrow?.arrow != null) {
                 if (Tracker.tracker == null || CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker) {
                     Tracker.arrow.arrow.SetActive(false);
+                    if (Tracker.DangerMeterParent) Tracker.DangerMeterParent.SetActive(false);
                     return;
                 }
 
-                if (Tracker.tracker != null && Tracker.tracked != null && CachedPlayer.LocalPlayer.PlayerControl == Tracker.tracker && !Tracker.tracker.Data.IsDead) {
+                if (Tracker.tracked != null && !Tracker.tracker.Data.IsDead)
+                {
                     Tracker.timeUntilUpdate -= Time.fixedDeltaTime;
 
                     if (Tracker.timeUntilUpdate <= 0f) {
@@ -449,12 +451,21 @@ namespace TheOtherRoles.Patches {
                             }
                         }
 
-                        Tracker.arrow.Update(position);
-                        Tracker.arrow.arrow.SetActive(trackedOnMap);
+                        if (Tracker.trackingMode == 1 || Tracker.trackingMode == 2) Arrow.UpdateProximity(position);
+                        if (Tracker.trackingMode == 0 || Tracker.trackingMode == 2)
+                        {
+                            Tracker.arrow.Update(position);
+                            Tracker.arrow.arrow.SetActive(trackedOnMap);
+                        }
                         Tracker.timeUntilUpdate = Tracker.updateIntervall;
                     } else {
-                        Tracker.arrow.Update();
+                        if (Tracker.trackingMode == 0 || Tracker.trackingMode == 2) Tracker.arrow.Update();
                     }
+                }
+                else if (Tracker.tracker.Data.IsDead)
+                {
+                    Tracker.DangerMeterParent?.SetActive(false);
+                    Tracker.Meter?.gameObject.SetActive(false);
                 }
             }
 
@@ -1262,6 +1273,8 @@ namespace TheOtherRoles.Patches {
                 ghostLordUpdate();
                 // Thief
                 thiefSetTarget();
+                // yoyo
+                Silhouette.UpdateAll();
 
                 hackerUpdate();
                 swapperUpdate();
