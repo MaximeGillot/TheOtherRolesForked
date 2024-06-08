@@ -38,7 +38,7 @@ Even more roles are coming soon. :)
 | Freezer | [Nice Guesser](#guesser) |  |  |
 | Transporteur | [Logger](#logger) |  |  |
 | Ghost Lord | [CrazyTasker](#CrazyTasker) |  |  |
-| Bomber (#bomber) | |  |  |
+| [Bomber](#bomber) | |  |  |
 | Cloner | |  |  |
 | [Yo-Yo](#yoyo) | [CrazyTasker](#CrazyTasker) |  |  |
 
