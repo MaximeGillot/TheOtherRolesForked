@@ -36,7 +36,7 @@ namespace TheOtherRoles.Patches {
 
         [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.FixedUpdate))]
         static void Postfix(MapBehaviour __instance) {
-            if (__instance.infectedOverlay.gameObject.active && PlayerControl.LocalPlayer.Data.IsDead)
+            if (__instance.infectedOverlay.gameObject.active && PlayerControl.LocalPlayer.Data.IsDead && CustomOptionHolder.deadImpsBlockSabotage.getBool())
             {
                 __instance.Close();
             }
@@ -225,7 +225,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
             // Show location of all players on the map for ghosts!
-            if (PlayerControl.LocalPlayer.Data.IsDead && (!PlayerControl.LocalPlayer.Data.Role.IsImpostor))
+            if (PlayerControl.LocalPlayer.Data.IsDead && (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || CustomOptionHolder.deadImpsBlockSabotage.getBool()))
             {
                 foreach (PlayerControl player in CachedPlayer.AllPlayers)
                 {
