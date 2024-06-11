@@ -15,7 +15,7 @@ namespace TheOtherRoles.Patches
 
         public static void Prefix(DangerMeter __instance, ref Color color)
         {
-            if (CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker) return;
+            if (CachedPlayer.LocalPlayer.PlayerControl != Tracker.tracker || CachedPlayer.LocalPlayer.PlayerControl != Sonar.sonar) return;
             if (__instance == HudManager.Instance.DangerMeter) return;
 
             color = color.SetAlpha(0.5f);

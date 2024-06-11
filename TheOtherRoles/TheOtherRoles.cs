@@ -50,6 +50,7 @@ namespace TheOtherRoles
             Jackal.clearAndReload();
             Logger.clearAndReload();
             CrazyTasker.clearAndReload();
+            Sonar.clearAndReload();
             Sidekick.clearAndReload();
             Eraser.clearAndReload();
             Spy.clearAndReload();
@@ -1178,6 +1179,29 @@ namespace TheOtherRoles
             corpsesTrackingCooldown = CustomOptionHolder.trackerCorpsesTrackingCooldown.getFloat();
             corpsesTrackingDuration = CustomOptionHolder.trackerCorpsesTrackingDuration.getFloat();
             trackingMode = CustomOptionHolder.trackerTrackingMethod.getSelection();
+            if (DangerMeterParent)
+            {
+                Meter.gameObject.Destroy();
+                DangerMeterParent.Destroy();
+            }
+        }
+    }
+
+    public static class Sonar
+    {
+        public static PlayerControl sonar;
+        public static Color color = new Color32(100, 58, 20, byte.MaxValue);
+        public static float timeUntilUpdate = 0f;
+        public static float updateIntervall = 5f;
+
+        public static GameObject DangerMeterParent;
+        public static DangerMeter Meter;
+
+        public static void clearAndReload()
+        {
+            timeUntilUpdate = 0f;
+            updateIntervall = CustomOptionHolder.sonarUpdateIntervall.getFloat();
+            sonar = null;            
             if (DangerMeterParent)
             {
                 Meter.gameObject.Destroy();
@@ -2410,6 +2434,7 @@ namespace TheOtherRoles
         public static bool haveKilledSpy = false;
         public static bool haveKilledSnitch = false;
         public static bool haveKilledTracker = false;
+        public static bool haveKilledSonar = false;
         public static bool haveKilledSeer = false;
         public static bool haveKilledSwapper = false;
         public static bool haveKilledMedic = false;
@@ -2430,6 +2455,11 @@ namespace TheOtherRoles
         public static byte playerId1 = Byte.MaxValue;
         public static byte playerId2 = Byte.MaxValue;
 
+        public static float timeUntilUpdate = 0f;
+        public static float updateIntervall = 1f;
+
+        public static GameObject DangerMeterParent;
+        public static DangerMeter Meter;
 
         public static void clearAndReload()
         {
@@ -2442,6 +2472,7 @@ namespace TheOtherRoles
             haveKilledTracker = false;
             haveKilledSeer = false;
             haveKilledSwapper = false;
+            haveKilledSonar = false;
             haveKilledMedic = false;
             haveKilledTimeMaster = false;
             haveKilledDetective = false;
@@ -2467,7 +2498,15 @@ namespace TheOtherRoles
             sheriffKillingBonus = CustomOptionHolder.evilMimicReducedCooldownKillingSheriff.getFloat();
             playerId1 = Byte.MaxValue;
             playerId2 = Byte.MaxValue;
-
+            
+            //sonar killed
+            updateIntervall = 1f;
+            timeUntilUpdate = 0f;
+            if (DangerMeterParent)
+            {
+                Meter.gameObject.Destroy();
+                DangerMeterParent.Destroy();
+            }
         }
     }
 

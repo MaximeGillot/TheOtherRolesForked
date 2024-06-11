@@ -75,6 +75,7 @@ namespace TheOtherRoles
         Transporter,
         Invisible,
         CrazyTasker,
+        Sonar,
         EvilHacker,
         EvilMimic,
         Cloner,
@@ -386,7 +387,10 @@ namespace TheOtherRoles
                     case RoleId.Tracker:
                         Tracker.tracker = player;
                         break;
-                    case RoleId.Vampire:
+                    case RoleId.Sonar:
+                        Sonar.sonar = player;
+                        break;
+                        case RoleId.Vampire:
                         Vampire.vampire = player;
                         break;
                     case RoleId.Snitch:
@@ -862,6 +866,7 @@ namespace TheOtherRoles
             if (player == Medium.medium) Medium.clearAndReload();
             if (player == Trapper.trapper) Trapper.clearAndReload();
             if (player == CrazyTasker.crazyTasker) CrazyTasker.clearAndReload();
+            if (player == Sonar.sonar) Sonar.clearAndReload();
 
             // Impostor roles
             if (player == Morphling.morphling) Morphling.clearAndReload();

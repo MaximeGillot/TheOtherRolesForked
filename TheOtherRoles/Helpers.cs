@@ -605,6 +605,12 @@ namespace TheOtherRoles {
                     EvilMimic.haveKilledTracker = true;
                     new CustomMessage("You have killed the tracker", 5f);
                 }
+                else if (targetRole == RoleInfo.sonar)
+                {
+                    // Add a danger meter to imposter 
+                    EvilMimic.haveKilledSonar = true;
+                    new CustomMessage("You have killed the sonar", 5f);
+                }
                 else if (targetRole == RoleInfo.seer)
                 {
                     // get flash when other impo kill crewmate

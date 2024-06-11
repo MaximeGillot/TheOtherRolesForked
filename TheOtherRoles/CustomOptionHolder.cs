@@ -23,6 +23,7 @@ namespace TheOtherRoles {
 
         public static CustomOption anyPlayerCanStopStart;
         public static CustomOption enableEventMode;
+        public static CustomOption deadImpsBlockSabotage;
 
         public static CustomOption mafiaSpawnRate;
         public static CustomOption janitorCooldown;
@@ -295,6 +296,9 @@ namespace TheOtherRoles {
         public static CustomOption trapperAnonymousMap;
         public static CustomOption trapperInfoType;
         public static CustomOption trapperTrapDuration;
+
+        public static CustomOption sonarSpawnRate;
+        public static CustomOption sonarUpdateIntervall;
 
         public static CustomOption bomberSpawnRate;
         public static CustomOption bomberBombDestructionTime;
@@ -785,6 +789,9 @@ namespace TheOtherRoles {
             trapperInfoType = CustomOption.Create(453, Types.Crewmate, "Trap Information Type", new string[] { "Role", "Good/Evil Role", "Name" }, trapperSpawnRate);
             trapperTrapDuration = CustomOption.Create(454, Types.Crewmate, "Trap Duration", 5f, 1f, 15f, 1f, trapperSpawnRate);
 
+            sonarSpawnRate = CustomOption.Create(600, Types.Crewmate, cs(Sonar.color, "Sonar"), rates, null, true);
+            sonarUpdateIntervall = CustomOption.Create(601, Types.Crewmate, "Sonar Update Intervall", 1f, 0.1f, 5f, 0.1f, sonarSpawnRate);
+
             // Modifier (1000 - 1999)
             modifiersAreHidden = CustomOption.Create(1009, Types.Modifier, cs(Color.yellow, "Hide After Death Modifiers"), true, null, true);
 
@@ -931,6 +938,7 @@ namespace TheOtherRoles {
             finishTasksBeforeHauntingOrZoomingOut = CustomOption.Create(9, Types.General, "Finish Tasks Before Haunting Or Zooming Out", true);
             camsNightVision = CustomOption.Create(11, Types.General, "Cams Switch To Night Vision If Lights Are Off", false, null, true);
             camsNoNightVisionIfImpVision = CustomOption.Create(12, Types.General, "Impostor Vision Ignores Night Vision Cams", false, camsNightVision, false);
+            deadImpsBlockSabotage = CustomOption.Create(13, Types.General, cs(Palette.ImpostorRed, "Block Dead Impostor From Sabotaging"), false, null, false);
 
 
             dynamicMap = CustomOption.Create(500, Types.General, "Play On A Random Map", false, null, true);
