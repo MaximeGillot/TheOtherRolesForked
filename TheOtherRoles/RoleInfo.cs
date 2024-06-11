@@ -76,7 +76,8 @@ namespace TheOtherRoles
         public static RoleInfo vulture = new RoleInfo("Vulture", Vulture.color, "Eat corpses to win", "Eat dead bodies", RoleId.Vulture, true);
         public static RoleInfo medium = new RoleInfo("Medium", Medium.color, "Question the souls of the dead to gain information", "Question the souls", RoleId.Medium);
         public static RoleInfo crazyTasker = new RoleInfo("Crazy tasker", CrazyTasker.color, "do quest to earn abilitie", "quest faster", RoleId.CrazyTasker);
-        
+        public static RoleInfo sonar = new RoleInfo("Sonar", Sonar.color, "detect proximity crew to safe them", "detect crewmate", RoleId.Sonar);
+
         public static RoleInfo trapper = new RoleInfo("Trapper", Trapper.color, "Place traps to find the Impostors", "Place traps", RoleId.Trapper);
         public static RoleInfo lawyer = new RoleInfo("Lawyer", Lawyer.color, "Defend your client", "Defend your client", RoleId.Lawyer, true);
         public static RoleInfo prosecutor = new RoleInfo("Prosecutor", Lawyer.color, "Vote out your target", "Vote out your target", RoleId.Prosecutor, true);
@@ -174,6 +175,7 @@ namespace TheOtherRoles
             medium,
             trapper,
             crazyTasker,
+            sonar,
             bloody,
             antiTeleport,
             tiebreaker,
@@ -246,6 +248,7 @@ namespace TheOtherRoles
             if (p == Swapper.swapper) infos.Add(swapper);
             if (p == Seer.seer) infos.Add(seer);
             if (p == Hacker.hacker) infos.Add(hacker);
+            if (p == Sonar.sonar) infos.Add(sonar);
             if (p == Tracker.tracker) infos.Add(tracker);
             if (p == Snitch.snitch) infos.Add(snitch);
             if (p == Logger.logger) infos.Add(logger);

@@ -427,6 +427,52 @@ namespace TheOtherRoles.Patches {
             }
         }
 
+        static void sonarUpdate()
+        {
+  
+                if (Sonar.sonar == null || CachedPlayer.LocalPlayer.PlayerControl != Sonar.sonar)
+                {
+                    if (Sonar.DangerMeterParent) Sonar.DangerMeterParent.SetActive(false);
+                    return;
+                }
+
+                if (!Sonar.sonar.Data.IsDead)
+                {
+                    Sonar.timeUntilUpdate -= Time.fixedDeltaTime;
+
+                    if (Sonar.timeUntilUpdate <= 0f)
+                    { 
+                        Vector3 positionOfClosestPlayer = new Vector3(10000,10000,10000);                        
+                        Vector3 sonarCurentPosition = Sonar.sonar.transform.position;
+                       float distanceClosestPlayer = Vector3.Distance(sonarCurentPosition, positionOfClosestPlayer);
+
+
+
+                    foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                    {
+                        Vector3 playerPosition = p.transform.position;
+                        if(p != Sonar.sonar && !p.Data.IsDead)
+                        {
+                            if (Vector3.Distance(sonarCurentPosition, playerPosition) < distanceClosestPlayer)
+                            {
+                                positionOfClosestPlayer = playerPosition;
+                                distanceClosestPlayer = Vector3.Distance(sonarCurentPosition, positionOfClosestPlayer);
+                            }
+                        }  
+   
+                    }
+
+                        DangerMeterSonar.UpdateProximity(positionOfClosestPlayer);
+                        Sonar.timeUntilUpdate = Sonar.updateIntervall;
+                    }
+                }
+                else
+                {                   
+                    Sonar.DangerMeterParent?.SetActive(false);
+                    Sonar.Meter?.gameObject.SetActive(false);
+                }            
+        }
+
         static void trackerUpdate() {
             // Handle player tracking
             if (Tracker.arrow?.arrow != null) {
@@ -688,6 +734,46 @@ namespace TheOtherRoles.Patches {
             if (numberOfTasks <= Snitch.taskCountForReveal) Snitch.isRevealed = true;
         }
 
+        static void evilMimicSonarUpdate()
+        {
+  
+                if (!EvilMimic.evilMimic.Data.IsDead)
+                {
+                    EvilMimic.timeUntilUpdate -= Time.fixedDeltaTime;
+
+                    if (EvilMimic.timeUntilUpdate <= 0f)
+                    { 
+                        Vector3 positionOfClosestPlayer = new Vector3(10000,10000,10000);                        
+                        Vector3 sonarCurentPosition = EvilMimic.evilMimic.transform.position;
+                       float distanceClosestPlayer = Vector3.Distance(sonarCurentPosition, positionOfClosestPlayer);
+
+
+
+                    foreach (PlayerControl p in CachedPlayer.AllPlayers)
+                    {
+                        Vector3 playerPosition = p.transform.position;
+                        if(p != EvilMimic.evilMimic && !p.Data.IsDead)
+                        {
+                            if (Vector3.Distance(sonarCurentPosition, playerPosition) < distanceClosestPlayer)
+                            {
+                                positionOfClosestPlayer = playerPosition;
+                                distanceClosestPlayer = Vector3.Distance(sonarCurentPosition, positionOfClosestPlayer);
+                            }
+                        }  
+   
+                    }
+
+                        DangerMeterEvilMimic.UpdateProximity(positionOfClosestPlayer);
+                        EvilMimic.timeUntilUpdate = EvilMimic.updateIntervall;
+                    }
+                }
+                else
+                {
+                    EvilMimic.DangerMeterParent?.SetActive(false);
+                    EvilMimic.Meter?.gameObject.SetActive(false);
+                }            
+        }
+
         static void  EvilMimicUpdate()
         {
             // update evil mimic if he have killed tracker
@@ -717,7 +803,14 @@ namespace TheOtherRoles.Patches {
                     }
                 }
 
-            }
+                // evil mimic have killed the sonar
+                if (EvilMimic.haveKilledSonar)
+                {
+                    evilMimicSonarUpdate();
+                }
+
+
+                }
         }
 
         static void transporterArrowUpdate()
@@ -1226,6 +1319,8 @@ namespace TheOtherRoles.Patches {
                 engineerUpdate();
                 // Tracker
                 trackerUpdate();
+                // Sonar
+                sonarUpdate();
                 // Jackal
                 jackalSetTarget();
                 // Sidekick
